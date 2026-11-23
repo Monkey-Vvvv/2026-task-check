@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="围绕语言机制、浏览器交互与工程实践，整理能解释现象、能落到代码里的学习收获。"><link rel="icon" href="data:,">
+<title>《JavaScript高级程序设计（第5版）》读书笔记</title><style>
+    :root{--bg:#f6f2e9;--paper:#fffdf7;--ink:#25251f;--muted:#6b6a61;--line:#ddd6c7;--accent:#b44b2a;--accent2:#1f6a61;--code:#202722;--codeInk:#e9f1e8;--shadow:0 14px 40px #40372714;--sans:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--serif:"Noto Serif SC","Songti SC",SimSun,serif}
+    [data-theme="dark"]{--bg:#161a18;--paper:#202521;--ink:#eef0e9;--muted:#aeb5ab;--line:#394139;--accent:#f08a63;--accent2:#79c7b6;--code:#101411;--codeInk:#dce9dc;--shadow:none}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.82 var(--serif)}button,input{font:inherit}button{cursor:pointer}.progress{position:fixed;z-index:30;left:0;top:0;width:0;height:4px;background:linear-gradient(90deg,var(--accent),#e3a93f);transition:width .15s}
+    .layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:30px 22px;background:var(--paper);border-right:1px solid var(--line);overflow:auto}.brand{font:800 21px/1.3 var(--sans);color:var(--accent);margin-bottom:6px}.subtitle{font:13px/1.5 var(--sans);color:var(--muted);margin-bottom:20px}.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:18px}.tools input{min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}.iconbtn{border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:7px 10px}.toc a{display:block;padding:6px 9px;margin:1px 0;border-left:3px solid transparent;color:var(--muted);text-decoration:none;font:14px/1.35 var(--sans);border-radius:0 6px 6px 0}.toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+    main{width:min(900px,calc(100% - 48px));margin:0 auto;padding:74px 0 120px}.hero{padding-bottom:60px;border-bottom:1px solid var(--line)}.eyebrow{font:700 13px var(--sans);letter-spacing:.16em;color:var(--accent);text-transform:uppercase}h1{max-width:780px;font:900 clamp(38px,6vw,72px)/1.05 var(--sans);letter-spacing:-.04em;margin:15px 0 22px}.lead{font-size:21px;color:var(--muted);max-width:720px}.notice{border-left:4px solid var(--accent2);padding:14px 18px;background:color-mix(in srgb,var(--accent2) 8%,var(--paper));border-radius:0 10px 10px 0;margin:30px 0}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:32px 0}.route div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:15px;font:14px/1.5 var(--sans);box-shadow:var(--shadow)}.route b{display:block;color:var(--accent);margin-bottom:4px}.chapter{padding:70px 0 20px;border-bottom:1px solid var(--line)}.chapter-head{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:start}.num{font:900 50px/1 var(--sans);color:color-mix(in srgb,var(--accent) 35%,var(--line))}h2{font:850 35px/1.25 var(--sans);margin:0 0 10px}h3{font:800 23px/1.35 var(--sans);margin:48px 0 12px}h4{font:800 18px/1.4 var(--sans);margin:30px 0 8px}.question{font:15px var(--sans);color:var(--accent2);margin:0}.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:28px 0}.term{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 15px}.term b{font-family:var(--sans);color:var(--accent)}.term span{display:block;color:var(--muted);font-size:15px;line-height:1.65}.section{position:relative}.takeaway{padding:12px 15px;margin:14px 0;border-radius:8px;background:color-mix(in srgb,var(--accent) 8%,var(--paper));font-size:15px}.takeaway b{font-family:var(--sans);color:var(--accent)}code{font-family:Consolas,monospace;background:color-mix(in srgb,var(--accent2) 10%,var(--paper));padding:.12em .35em;border-radius:4px}pre{overflow:auto;background:var(--code);color:var(--codeInk);padding:18px;border-radius:10px;font:14px/1.65 Consolas,monospace}.diagram{white-space:pre;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;font:14px/1.6 Consolas,monospace;color:var(--accent2)}table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px}th,td{padding:10px 12px;border:1px solid var(--line);text-align:left}th{background:color-mix(in srgb,var(--accent2) 9%,var(--paper));font-family:var(--sans)}details.quiz{margin:24px 0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 17px}details summary{font:700 16px var(--sans);color:var(--accent2)}.chapter-summary{margin:36px 0 12px;padding:20px;border-top:2px solid var(--accent);border-bottom:1px solid var(--line)}.chapter-summary b{font-family:var(--sans)}.filtered-out{display:none}.footer{padding-top:70px;color:var(--muted);font:14px/1.7 var(--sans)}.mobile-menu{display:none}
+    .term-en{display:inline!important;margin-left:.45em;color:var(--accent2)!important;font:600 12px/1.4 var(--sans)!important;letter-spacing:.04em}.story,.lab{margin:30px 0;padding:20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.story{border-top:4px solid var(--accent2)}.lab{border-top:4px solid var(--accent)}.lab h3,.story h3{margin-top:0}.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.lab-grid>*{min-width:0}.lab-grid h4{margin-top:8px}.story pre,.lab pre{max-width:100%}.explain{padding:12px 15px;border-left:3px solid var(--accent2);background:color-mix(in srgb,var(--accent2) 7%,transparent);font-size:15px}.platform{display:inline-block;padding:3px 8px;border-radius:20px;background:color-mix(in srgb,var(--accent) 12%,transparent);font:700 12px var(--sans);color:var(--accent)}.deep{display:none;margin:18px 0 26px;border-left:3px solid var(--accent2);padding:4px 0 4px 18px}.detail-mode .deep{display:block}.deep h4{margin:16px 0 5px}.deep p{margin:5px 0 12px}.deep .pitfall{padding:10px 13px;background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:8px}.detail-badge{display:none}.detail-mode .detail-badge{display:inline-block;margin-left:8px;padding:4px 9px;border-radius:20px;background:var(--accent2);color:var(--paper);font:700 12px var(--sans)}
+    @media(max-width:850px){.layout{display:block}.sidebar{position:sticky;z-index:20;top:0;width:100%;height:auto;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand,.subtitle{display:none}.tools{margin:0}.mobile-menu{display:inline}.toc{display:none;max-height:55vh;overflow:auto;margin-top:10px}.sidebar.open .toc{display:block}main{width:min(100% - 30px,720px);padding-top:42px}.route,.lab-grid{grid-template-columns:1fr 1fr}.chapter-head{grid-template-columns:52px 1fr}.num{font-size:36px}h2{font-size:29px}.terms{grid-template-columns:1fr}}@media(max-width:560px){.route,.lab-grid{grid-template-columns:1fr}}
+    @media print{.sidebar,.progress,.quiz{display:none!important}.layout{display:block}main{width:100%;padding:0}.chapter{break-before:page}.hero{min-height:95vh}body{background:#fff;color:#111;font-size:12pt}.term,.route div{box-shadow:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress{transition:none}}
+
+main{width:min(920px,calc(100% - 64px))}h1{font-size:clamp(36px,4.4vw,60px);line-height:1.18;letter-spacing:-.025em}.hero{padding-bottom:36px}.chapter{padding-top:48px}.chapter h3{margin-top:30px}.chapter h2{font-size:30px}.chapter-head{grid-template-columns:58px 1fr}.num{font-size:38px}.chapter p{margin:16px 0}.route{grid-template-columns:repeat(3,1fr)}a{color:var(--accent2);text-underline-offset:3px}pre code{background:transparent;padding:0;color:inherit}li{margin:7px 0}.meta{color:var(--muted);font:14px/1.7 var(--sans)}.table-wrap{overflow:auto}table{min-width:480px}th{white-space:nowrap}.source{font:14px/1.7 var(--sans);color:var(--muted)}.no-results{padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:8px}.tools{grid-template-columns:minmax(0,1fr) auto}.tools input{width:100%}.status{font:12px/1.6 var(--sans);color:var(--muted);margin:8px 0 14px}.simple .hero h1{font-size:clamp(34px,4vw,52px)}.simple main{max-width:860px}.simple .chapter{padding-top:34px}.simple h2{font-size:27px}.simple .num{font-size:30px}.note-links{font:14px/1.8 var(--sans)}.note-links a{display:block;margin:6px 0}summary{cursor:pointer}.lab h3{margin-top:0}.tools .mobile-menu{grid-column:1/-1}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}p,li,td{overflow-wrap:anywhere}.diagram{line-height:1.8}.toc a{line-height:1.6}.back{font:13px var(--sans)}
+@media(max-width:850px){main{width:calc(100% - 32px)}html{scroll-padding-top:110px}.sidebar{padding:10px 16px}.status{margin:3px 0 0}.tools{grid-template-columns:minmax(0,1fr) auto auto}.tools .mobile-menu{grid-column:auto}.route{grid-template-columns:1fr}.chapter-head{grid-template-columns:38px minmax(0,1fr)}.chapter h2{font-size:26px}.num{font-size:29px}pre,.diagram{font-size:12px}.sidebar.open .toc{max-height:48vh}}
+@media print{html{scroll-behavior:auto}body,[data-theme="dark"] body{background:white;color:black}main,.simple main{width:100%;max-width:none;padding:0}.hero{min-height:0;padding-bottom:16px}.chapter{break-before:auto;padding:20px 0 0}.chapter h2{font-size:19pt}.chapter h3{font-size:14pt}.chapter-head,pre,table,.takeaway,.notice{break-inside:avoid}pre{white-space:pre-wrap;background:#f2f2f2;color:#111;border:1px solid #aaa}a{color:#111}.filtered-out{display:block!important}.quiz{display:block!important}.quiz>*{display:block!important}.quiz summary{display:block!important}.no-results,.back,.note-links{display:none!important}.footer{padding-top:25px}.table-wrap{overflow:visible}table{min-width:0}.notice,.takeaway,.term{background:#f6f6f6;color:#111}.num{color:#666}.lead,.meta,.source,.question{color:#444}}
+:root:not([data-theme="dark"]){--bg:#eff5fc;--paper:#fafdff;--line:#d3deeb;--title-size:clamp(27px,2.6vw,38px)}.hero h1,.simple .hero h1{font-size:var(--title-size,clamp(27px,2.6vw,38px));line-height:1.35;letter-spacing:-.015em;max-width:none;margin:14px 0 20px}@media print{:root,[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#111;--muted:#444;--line:#aaa;--accent:#333;--accent2:#333;--code:#f3f3f3;--codeInk:#111}.hero h1,.simple .hero h1{font-size:24pt}}</style></head>
+<body class="book">
+<div class="progress" id="progress" aria-hidden="true"></div><div class="layout">
+<aside class="sidebar" id="sidebar"><div class="brand">从语法到可靠交互</div><div class="subtitle">读书笔记 · 核心专题</div>
+<div class="tools"><input type="search" id="search" aria-label="搜索笔记正文" placeholder="搜索正文关键词…"><button class="iconbtn" id="theme" aria-label="切换深浅色" aria-pressed="false">◐</button><button class="iconbtn mobile-menu" id="menu" aria-controls="toc" aria-expanded="false">目录</button></div>
+<div id="search-status" class="status" role="status" aria-live="polite"></div><nav class="toc" id="toc" aria-label="笔记目录"><a href="#top">阅读起点</a><a href="#section-1">01 · 先分清语言与运行环境</a><a href="#section-2">02 · 类型、转换与数据边界</a><a href="#section-3">03 · 变量、作用域与闭包</a><a href="#section-4">04 · 对象、复制与原型</a><a href="#section-5">05 · 函数、this 与类</a><a href="#section-6">06 · 集合、迭代与二进制数据</a><a href="#section-7">07 · 期约、async 与事件循环</a><a href="#section-8">08 · DOM、事件与页面更新</a><a href="#section-9">09 · Fetch、取消与请求竞争</a><a href="#section-10">10 · 模块、代理与反射</a><a href="#section-11">11 · 表单、JSON 与本地存储</a><a href="#section-12">12 · 性能、内存与工作者线程</a><a href="#section-13">13 · 新版能力与兼容性意识</a><a href="#section-14">14 · 综合练习：可靠的设备状态轮询</a><a href="#section-15">15 · 阅读收获与复习清单</a><a href="#references">参考资料</a></nav></aside>
+<main><header class="hero" id="top"><div class="eyebrow">2026 · LEARNING NOTES</div><p class="meta">读书笔记 · 核心专题 · 整理日期 2026-11-23</p><h1>《JavaScript高级程序设计（第5版）》读书笔记</h1><p class="lead">围绕语言机制、浏览器交互与工程实践，整理能解释现象、能落到代码里的学习收获。</p>
+<div class="notice"><p>书籍：[美]马特·弗里斯比（Matt Frisbie）著，李松峰译。按语言基础、浏览器交互和工程实践三条主线整理，配合代码、误区与自测，用于阅读后的理解与复习。</p></div><div class="route"><div><b>语言基础</b>类型 · 作用域 · 对象 · 集合</div><div><b>交互机制</b>异步 · DOM · 网络 · 存储</div><div><b>工程应用</b>模块 · 性能 · 兼容性 · 综合练习</div></div><p class="meta">左侧目录可跳转；搜索按节筛选正文，清空或按 Esc 恢复；深浅色可切换。打印会展开自测答案并保留全文。</p></header>
+<p class="no-results" id="no-results" hidden>没有找到匹配章节。请更换关键词，或清空搜索查看全文。</p>
+<section class="chapter" id="section-1">
+<div class="chapter-head"><div class="num">01</div><div><h2>先分清语言与运行环境</h2><p class="question">同样叫 JavaScript，为什么浏览器和设备端服务能做的事不同？</p></div></div>
+
+<p>读这本书时，首先要建立三层视角：ECMAScript 定义语法、类型和语言行为；引擎负责解析与执行；宿主环境提供网络、文件、DOM、定时器等能力。把这三层混在一起，就容易把“浏览器有这个接口”误认为“所有 JavaScript 都有这个接口”。</p>
+<p>例如设备管理页面可以访问 <code>document</code> 更新设备状态，而 Node.js 脚本可使用文件系统模块整理日志。它们共享语言核心，却依赖不同的宿主 API。排查问题时，应先确认报错来自语法、业务逻辑、浏览器权限，还是设备侧服务。</p>
+<h3>脚本加载与执行时机</h3>
+<p>普通外部脚本在解析遇到时通常会阻塞 HTML 解析；<code>defer</code> 让经典外部脚本下载与解析并行，在文档解析完成后按顺序执行；<code>async</code> 下载完成后尽快执行，不能依赖多个脚本的先后顺序。模块脚本默认具有类似 defer 的执行时机，并使用模块作用域和严格模式。</p>
+<p class="meta">JavaScript</p><pre><code>// 这是语言能力，不依赖 DOM。
+const isOnline = status =&gt; status === &#x27;online&#x27;;
+console.log(isOnline(&#x27;online&#x27;)); // true
+
+// 这是浏览器宿主能力，不能直接放到普通 Node.js 环境。
+// document.querySelector(&#x27;#status&#x27;).textContent = &#x27;在线&#x27;;</code></pre>
+<h3>阅读方法</h3><p>这份笔记按主题重新组织，不把专题编号当作原书章号。重点是回答“为什么这样运行、在业务里怎么用、在哪些地方容易出错”。书籍第 5 版覆盖到 ECMAScript 2024，但功能是否可用仍取决于实际浏览器或设备 WebView，不能用出版年份代替兼容性检查。</p>
+<div class="takeaway"><b>我的理解：</b>学语法的同时记录它属于语言还是宿主；报错先找层次，再找 API。</div><details class="quiz"><summary>自测｜为什么 setTimeout 不属于 ECMAScript 的核心语法？</summary><p>它由宿主提供调度能力；JavaScript 语言本身定义函数和调用方式，并不规定所有环境都必须有浏览器定时器。</p></details><p class="source">延伸核对：<a href="https://www.ituring.com.cn/book/3393">图灵官方｜书籍版本与介绍</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Language_overview">MDN｜JavaScript 语言概览</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-2">
+<div class="chapter-head"><div class="num">02</div><div><h2>类型、转换与数据边界</h2><p class="question">接口返回的“0”和数字 0，为什么可能产生完全不同的页面状态？</p></div></div>
+
+<p>基本类型包括 Undefined、Null、Boolean、Number、BigInt、String、Symbol；其余通常按对象理解。接口字段不可靠时，类型问题会沿着比较、运算和渲染扩散。<code>typeof null</code> 的结果是历史遗留的 <code>object</code>，判断数组用 <code>Array.isArray</code> 更清楚。</p>
+<p>我倾向于在数据入口完成归一化，而不是让各个单元格各自猜测。用严格相等比较明确的值，避免在业务判断里依赖隐式转换。<code>||</code> 会把 0、空字符串和 false 都看成需要兜底；<code>??</code> 仅在 null 或 undefined 时采用右侧值，适合保留有效的零值。</p>
+<p class="meta">JavaScript</p><pre><code>const raw = { count: &#x27;0&#x27;, enabled: false, name: &#x27;&#x27; };
+const count = Number(raw.count);
+console.log(Number.isFinite(count)); // true
+console.log(count || 10);            // 10：误伤有效的 0
+console.log(count ?? 10);            // 0
+console.log(Boolean(&#x27;false&#x27;));       // true：非空字符串
+console.log(0.1 + 0.2 === 0.3);       // false
+
+function parseCount(value) {
+  if (value == null || String(value).trim() === &#x27;&#x27;) return null;
+  const n = Number(value);
+  return Number.isSafeInteger(n) &amp;&amp; n &gt;= 0 ? n : null;
+}</code></pre>
+<h3>数字、标识符与时间</h3><p>Number 使用双精度浮点表示，金额和精确计数需要明确精度策略；整数标识符超出安全整数范围时不应先转 Number 再转字符串。BigInt 可表示更大的整数，但不能直接与 Number 混合做算术，默认 JSON 序列化也不支持 BigInt。</p>
+<p>日期字符串必须说明时区与格式；把设备本地时间、UTC 时间和浏览器时间混用，可能造成历史记录看似丢失。对于接口字段，应分别记录“传输格式、页面展示格式、缺省值和非法值处理”。可选链适合访问可能缺失的对象，不应把真正的接口异常全部静默成空白。</p>
+<div class="takeaway"><b>我的理解：</b>类型转换应是可见的数据规则，不能只靠页面“看起来能显示”。</div><details class="quiz"><summary>自测｜接口给出 enabled: "false"，为什么 Boolean(enabled) 不可靠？</summary><p>字符串 "false" 非空，所以结果为 true。应按接口协议显式比较或映射，并对未知值报错或给出明确缺省策略。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Language_overview">MDN｜JavaScript 语言概览</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-3">
+<div class="chapter-head"><div class="num">03</div><div><h2>变量、作用域与闭包</h2><p class="question">函数已经返回，为什么内部变量还能被记住？</p></div></div>
+
+<p>作用域决定名字在哪里可见，生命周期决定绑定和数据能保留多久。<code>var</code> 以函数作用域为主；<code>let</code> 和 <code>const</code> 具有块级作用域，并存在初始化前不可访问的暂时性死区。const 约束绑定不能重新赋值，不表示绑定的对象内容不可修改。</p>
+<p>闭包是函数与它创建时的词法环境之间的联系。它保存的是对绑定的访问能力，不是自动复制一份创建瞬间的快照。工厂函数、事件处理、缓存和防抖都利用了这一点。相同机制也会导致旧回调继续持有过期状态或大型对象。</p>
+<p class="meta">JavaScript</p><pre><code>function createCounter(start = 0) {
+  let value = start;
+  return {
+    next: () =&gt; ++value,
+    read: () =&gt; value
+  };
+}
+const counter = createCounter(2);
+console.log(counter.next(), counter.read()); // 3 3
+
+const callbacks = [];
+for (let i = 0; i &lt; 3; i++) callbacks.push(() =&gt; i);
+console.log(callbacks.map(fn =&gt; fn())); // [0, 1, 2]
+// 若循环改用 var i，三个回调会访问同一绑定，最终都读到 3。</code></pre>
+<h3>用闭包实现防抖</h3><p>防抖是多次触发后，只在最后一次触发的一段等待时间后执行。它适合输入框搜索；节流则约束一段时间内的执行频率，更适合连续滚动等场景。页面离开时要取消尚未执行的计时器，避免回调继续更新已失效的视图。</p>
+<p class="meta">JavaScript</p><pre><code>function debounce(fn, delay) {
+  let timer;
+  function wrapped(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() =&gt; fn.apply(this, args), delay);
+  }
+  wrapped.cancel = () =&gt; clearTimeout(timer);
+  return wrapped;
+}
+const search = debounce(query =&gt; console.log(query), 300);
+search(&#x27;相&#x27;);
+search(&#x27;相机&#x27;); // 约 300 ms 后仅输出“相机”
+// 离开页面时调用 search.cancel()。</code></pre><div class="takeaway"><b>我的理解：</b>闭包的价值是保留受控状态；使用时也要考虑谁负责释放监听器、定时器和引用。</div><details class="quiz"><summary>自测｜const device = {} 后还能 device.online = true 吗？</summary><p>可以。const 阻止 device 重新绑定到别的值，不会冻结对象内部属性。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures">MDN｜闭包</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-4">
+<div class="chapter-head"><div class="num">04</div><div><h2>对象、复制与原型</h2><p class="question">复制了设备配置，为什么改新配置会影响旧配置？</p></div></div>
+
+<p>对象之间可以共享同一份内部对象。对象赋值复制的是引用值，展开语法和 Object.assign 只做浅层复制。如果表单编辑的是原始行对象，用户还没保存就可能改变列表展示，取消按钮也无法恢复。这类问题需要先明确“谁拥有数据、在哪里创建草稿、何时提交”。</p>
+<p class="meta">JavaScript</p><pre><code>const original = { id: &#x27;cam-1&#x27;, config: { fps: 25 } };
+const shallow = { ...original };
+shallow.config.fps = 10;
+console.log(original.config.fps); // 10
+
+// 对支持结构化克隆的普通数据可这样创建独立草稿。
+const draft = structuredClone(original);
+draft.config.fps = 30;
+console.log(original.config.fps); // 10
+// 函数、DOM 节点等不能直接按此方式复制。</code></pre>
+<h3>原型链解决什么问题</h3><p>访问属性时，如果对象自身没有该属性，会沿原型链继续查找。实例可共享原型上的方法，避免给每个实例复制相同函数。对象自有属性、继承属性和访问器不是一回事；遍历或处理外部数据时，应明确是否只接受自有属性。</p>
+<p class="meta">JavaScript</p><pre><code>const defaults = { timeout: 3000 };
+const config = Object.create(defaults);
+config.url = &#x27;/api/status&#x27;;
+console.log(config.timeout);                  // 3000：继承属性
+console.log(Object.hasOwn(config, &#x27;timeout&#x27;)); // false
+console.log(Object.keys(config));             // [&#x27;url&#x27;]
+const { timeout } = config;
+console.log(timeout);                         // 3000</code></pre>
+<p>JSON 往返并不是通用深拷贝：日期会变成字符串，undefined、函数和 Symbol 等可能丢失，循环引用会失败。复制配置时，应优先按业务字段构造明确的数据结构。<code>Object.freeze</code> 也只是浅冻结，冻结外层对象不等于所有嵌套层都不可变。</p>
+<div class="takeaway"><b>我的理解：</b>遇到数据联动，先画对象之间的共享关系，再决定复制哪一层。</div><details class="quiz"><summary>自测｜Object.keys 与 for...in 的重要区别是什么？</summary><p>Object.keys 返回对象自身可枚举的字符串键；for...in 还会遍历原型链上的可枚举字符串属性。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects">MDN｜对象</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-5">
+<div class="chapter-head"><div class="num">05</div><div><h2>函数、this 与类</h2><p class="question">同一个方法换一种调用方式，为什么 this 就变了？</p></div></div>
+
+<p>普通函数的 this 主要取决于调用方式。<code>obj.fn()</code> 与先取出 <code>fn</code> 再单独调用，不具有相同接收者。箭头函数没有自己的 this，它使用创建位置外层的 this；因此不能把“全部换成箭头函数”当作解决方案。</p>
+<p class="meta">JavaScript</p><pre><code>const device = {
+  name: &#x27;边缘设备&#x27;,
+  getName() { return this.name; }
+};
+console.log(device.getName()); // 边缘设备
+const getName = device.getName.bind(device);
+console.log(getName());        // 边缘设备
+
+class Device {
+  #status = &#x27;offline&#x27;;
+  constructor(id) { this.id = id; }
+  setOnline() { this.#status = &#x27;online&#x27;; }
+  describe() { return `${this.id}: ${this.#status}`; }
+}
+const camera = new Device(&#x27;cam-1&#x27;);
+camera.setOnline();
+console.log(camera.describe()); // cam-1: online</code></pre>
+<h3>类与原型的联系</h3><p>class 提供清晰的对象构造和继承语法，实例方法通常定义在原型上，静态方法属于类本身。私有字段使用语言级访问限制，不等同于给字段名加下划线。把箭头函数放在实例字段里可固定 this，但每个实例会创建独立函数，应按需要选择。</p>
+<p>设备类型之间如果只共享少数行为，组合往往比多层继承更容易维护。例如把网络请求、状态轮询和显示格式分别作为能力传入，而不是让每种相机都继承一条越来越长的类链。函数参数应尽量明确，默认参数只在参数为 undefined 时生效，传 null 不会自动采用默认值。</p>
+<div class="takeaway"><b>我的理解：</b>函数不只看“定义在哪”，还要看“以什么方式调用”；类用来表达稳定的数据和行为边界。</div><details class="quiz"><summary>自测｜为什么把 device.getName 直接作为回调可能出问题？</summary><p>回调被其他代码调用时，接收者不一定还是 device。需要 bind、闭包包装或符合语义的箭头函数字段来保持正确上下文。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects">MDN｜对象</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-6">
+<div class="chapter-head"><div class="num">06</div><div><h2>集合、迭代与二进制数据</h2><p class="question">设备列表、状态索引和协议字节，为什么不适合都用普通数组？</p></div></div>
+
+<p>数组适合有顺序的记录；Map 适合按键维护索引；Set 适合去重和成员判断。选择结构应来自访问方式，而不是“哪个 API 更熟”。对一批设备反复按 id 查找时，可以先构造 Map，再在循环里直接读取，避免反复遍历整份列表。</p>
+<p class="meta">JavaScript</p><pre><code>const devices = [
+  { id: &#x27;a&#x27;, online: true },
+  { id: &#x27;b&#x27;, online: false }
+];
+const byId = new Map(devices.map(item =&gt; [item.id, item]));
+console.log(byId.get(&#x27;b&#x27;).online); // false
+const selected = new Set([&#x27;a&#x27;, &#x27;a&#x27;, &#x27;b&#x27;]);
+console.log([...selected]);       // [&#x27;a&#x27;, &#x27;b&#x27;]
+
+function* batches(items, size) {
+  if (!Number.isInteger(size) || size &lt;= 0) {
+    throw new RangeError(&#x27;size 必须为正整数&#x27;);
+  }
+  for (let i = 0; i &lt; items.length; i += size) yield items.slice(i, i + size);
+}
+console.log([...batches([1, 2, 3, 4, 5], 2)]);
+// [[1, 2], [3, 4], [5]]</code></pre>
+<h3>迭代协议与生成器</h3><p>可迭代对象通过 Symbol.iterator 提供迭代器，迭代器的 next 返回 value 和 done。for...of 取的是迭代产生的值；for...in 主要面向可枚举属性键。生成器使用 yield 暂停并在下次请求时继续，适合把分批处理的规则单独封装，但不会自动把同步计算变成后台线程。</p>
+<h3>ArrayBuffer、TypedArray 与 DataView</h3><p>ArrayBuffer 表示字节存储，TypedArray 用固定元素类型解释这片存储，DataView 适合按协议指定偏移和字节序读写。它们经常出现在设备协议、图像数据和文件处理中。不同视图可以共享同一个 buffer，因此“创建了新视图”不等于“复制了数据”。</p>
+<p class="meta">JavaScript</p><pre><code>const buffer = new ArrayBuffer(4);
+const view = new DataView(buffer);
+view.setUint16(0, 258, true);  // true 表示小端
+console.log(view.getUint16(0, true)); // 258
+console.log([...new Uint8Array(buffer)]); // [2, 1, 0, 0]</code></pre><div class="takeaway"><b>我的理解：</b>先选择合适的数据组织方式，再写处理循环；二进制数据始终明确长度、偏移和字节序。</div><details class="quiz"><summary>自测｜Map 的键为什么比普通对象的键更灵活？</summary><p>Map 可使用任意值作为键，包括对象；普通对象的属性键主要是字符串或 Symbol，其他键会发生转换。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray">MDN｜TypedArray</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-7">
+<div class="chapter-head"><div class="num">07</div><div><h2>期约、async 与事件循环</h2><p class="question">代码写在后面，为什么输出反而先出现？</p></div></div>
+
+<p>异步不等于多线程。常见浏览器页面脚本在主线程上执行，耗时的网络请求可由宿主推进，完成后再安排回调。Promise 表达将来完成或失败的结果；then 和 catch 注册后续处理，不会把耗时的同步循环自动移出主线程。</p>
+<p class="meta">JavaScript</p><pre><code>console.log(&#x27;A&#x27;);
+setTimeout(() =&gt; console.log(&#x27;B&#x27;), 0);
+Promise.resolve().then(() =&gt; console.log(&#x27;C&#x27;));
+async function run() {
+  console.log(&#x27;D&#x27;);
+  await Promise.resolve();
+  console.log(&#x27;E&#x27;);
+}
+run();
+console.log(&#x27;F&#x27;);
+// 浏览器中的顺序：A D F C E B</code></pre>
+<p>先执行当前调用栈上的同步语句；await 后的代码稍后继续；Promise 的后续处理进入微任务调度。在当前任务结束后的微任务检查点，通常会先清空微任务，再有机会进入后续任务。零毫秒定时器表示可尽快安排，并不保证立刻执行或严格计时。</p>
+<h3>并发组合要匹配失败语义</h3>
+<div class="table-wrap"><table><thead><tr><th>组合方式</th><th>适合的问题</th><th>需要记住</th></tr></thead><tbody><tr><td>Promise.all</td><td>多个结果都必需</td><td>任一拒绝会使组合拒绝；不会自动取消其他请求</td></tr><tr><td>Promise.allSettled</td><td>批量操作后汇总成功与失败</td><td>每项都给出状态，适合批量设备操作结果展示</td></tr><tr><td>Promise.race</td><td>采用最先落定的结果</td><td>超时分支胜出也不会自动停止原请求</td></tr><tr><td>Promise.any</td><td>只要有一个成功</td><td>全部拒绝时才以 AggregateError 拒绝</td></tr></tbody></table></div>
+<p>一组互不依赖的请求可先发起再一起等待；但大量设备同时请求需要并发上限，不能把 Promise.all 当作资源调度器。错误要在能解释和处理的位置捕获；没有 return 的 then 回调、遗漏 await 的 async 调用，都可能让上层过早认为任务完成。</p>
+<div class="takeaway"><b>我的理解：</b>判断异步顺序时，先标记同步语句、Promise 后续和定时器，再分析依赖；不要凭代码行号猜。</div><details class="quiz"><summary>自测｜try { fetch(url); } catch 能捕获稍后发生的网络错误吗？</summary><p>不能捕获该 Promise 之后的拒绝。应 await fetch(url) 后在 async 函数内 try/catch，或返回 Promise 并使用 catch。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model">MDN｜执行模型</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises">MDN｜期约</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-8">
+<div class="chapter-head"><div class="num">08</div><div><h2>DOM、事件与页面更新</h2><p class="question">一个列表里有很多按钮，应该给每个按钮都注册监听吗？</p></div></div>
+
+<p>DOM 是浏览器把文档暴露给脚本的对象模型。节点查询、属性修改、事件绑定都发生在这层。理解原生 DOM 能帮助判断框架问题发生在哪里，但在已有 Vue 等框架项目中，应通过框架状态更新页面，避免绕过框架直接修改同一片节点。</p>
+<p>事件通常经历捕获、目标和冒泡阶段。target 是最初触发事件的节点，currentTarget 是当前正在执行监听器的节点；点击按钮内部的图标时，两者常常不同。事件委托把监听器放到稳定的父节点，由冒泡机制识别实际操作对象，适合动态增删的列表。</p>
+<p class="meta">JavaScript</p><pre><code>// 假设页面存在 #device-list，子项按钮带 data-device-id。
+const list = document.querySelector(&#x27;#device-list&#x27;);
+const listener = new AbortController();
+if (list) {
+  list.addEventListener(&#x27;click&#x27;, event =&gt; {
+    if (!(event.target instanceof Element)) return;
+    const button = event.target.closest(&#x27;button[data-device-id]&#x27;);
+    if (!button || !list.contains(button)) return;
+    console.log(&#x27;操作设备：&#x27;, button.dataset.deviceId);
+  }, { signal: listener.signal });
+}
+// 页面销毁时执行 listener.abort()，一并移除该监听器。</code></pre>
+<h3>内容安全与布局开销</h3><p>将接口字符串展示为普通文本时使用 textContent；把未处理的输入拼进 innerHTML 会把内容当作标记解析。确实需要展示富文本时，应使用经过验证的清洗方案。防止脚本注入不是简单替换几个字符，也不能只靠前端表单限制。</p>
+<p>布局查询与样式写入交替进行可能触发反复布局。先批量读取，再批量写入；动画使用 requestAnimationFrame 配合时间差，而不是假设每 16 ms 都能执行一次。页面不可见时，定时器和动画调度可能变化，不适合拿浏览器定时器作为设备控制的精密时钟。</p>
+<div class="takeaway"><b>我的理解：</b>事件处理先确认触发者与监听者，页面更新同时考虑安全、生命周期与渲染成本。</div><details class="quiz"><summary>自测｜preventDefault 与 stopPropagation 有什么区别？</summary><p>前者阻止可取消事件的默认行为，后者阻止事件继续传播。阻止冒泡不会自动取消链接跳转或表单提交。</p></details><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-9">
+<div class="chapter-head"><div class="num">09</div><div><h2>Fetch、取消与请求竞争</h2><p class="question">快速切换设备后，为什么旧设备的响应会覆盖新设备？</p></div></div>
+
+<p>网络请求的完成顺序不一定等于发起顺序。选择设备 A 后立即选择 B，如果 A 的响应更慢，最后返回的 A 数据可能覆盖正在展示的 B。这个问题不是把请求改成 async 就能解决，需要显式处理过期结果。</p>
+<p>Fetch 遇到 HTTP 404 或 500 通常仍会返回 Response，只有检查 ok 或 status 才能判断 HTTP 是否成功；网络故障、权限限制或取消等则可能造成 Promise 拒绝。解析 JSON 也可能失败，因此“请求成功”和“得到符合业务结构的数据”是两道检查。</p>
+<p class="meta">JavaScript</p><pre><code>async function requestJSON(url, signal) {
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}
+
+let activeController;
+let sequence = 0;
+async function loadDevice(id) {
+  const current = ++sequence;
+  activeController?.abort();
+  const controller = new AbortController();
+  activeController = controller;
+  const timeout = setTimeout(() =&gt; controller.abort(), 5000);
+  try {
+    const data = await requestJSON(
+      `/api/devices/${encodeURIComponent(id)}`, controller.signal
+    );
+    if (current !== sequence) return; // 旧响应不再更新当前视图
+    console.log(&#x27;可展示的数据：&#x27;, data);
+  } catch (error) {
+    if (current !== sequence) return;
+    if (controller.signal.aborted) {
+      console.log(&#x27;请求已取消或超时&#x27;);
+    } else {
+      console.error(&#x27;加载设备失败&#x27;, error);
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+}</code></pre>
+<h3>取消、重试与状态展示</h3><p>AbortController 负责发出取消信号，序号检查负责保证展示结果仍属于当前请求。两者解决的层面不同。示例把取消与超时放在同一提示里；实际页面如果需要区分，记录取消原因即可。加载状态同样要校验当前序号，避免旧请求的 finally 关闭新请求的加载提示。</p>
+<p>只读请求可按策略有限重试；新增任务、重启设备、升级等操作必须先考虑幂等性与服务端实际状态，不能见到超时就立即重复发送。跨域、认证和权限是服务契约的一部分，前端也不能用 no-cors 绕过正常的数据读取限制。</p>
+<div class="takeaway"><b>我的理解：</b>一次可靠请求包括 HTTP 检查、数据检查、超时取消、过期结果处理和可解释的错误状态。</div><details class="quiz"><summary>自测｜Promise.race 配一个超时 Promise，是否就取消了 fetch？</summary><p>没有。race 只决定哪个结果先交给调用者；停止可取消的请求需要 AbortSignal 等机制。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN｜Fetch</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-10">
+<div class="chapter-head"><div class="num">10</div><div><h2>模块、代理与反射</h2><p class="question">代码文件拆开了，为什么还是会相互影响？</p></div></div>
+
+<p>模块化的价值是把依赖关系和公开能力说清楚。一个模块应围绕稳定职责组织，例如请求客户端、设备字段转换、状态计算，而不是只有一个巨大的工具文件。ES 模块有独立作用域、静态依赖和活绑定；默认导出与具名导出应按项目约定保持一致。</p>
+<p class="meta">JavaScript</p><pre><code>// device-format.js
+export function onlineText(value) {
+  return value === true ? &#x27;在线&#x27; : value === false ? &#x27;离线&#x27; : &#x27;未知&#x27;;
+}
+export const refreshInterval = 5000;
+
+// 页面模块中：
+// import { onlineText } from &#x27;./device-format.js&#x27;;
+// console.log(onlineText(true));</code></pre>
+<p>模块顶层副作用，例如导入时立即注册监听或启动轮询，会让生命周期难以掌握。更清楚的做法是导出启动函数，并返回停止函数。动态 import 适合按需加载重模块，但拆分并不总是越细越好；需要结合加载次数、体积和缓存来判断。</p>
+<h3>Proxy 与 Reflect 的分工</h3><p>Proxy 拦截属性读取、写入等操作，Reflect 提供对应操作的标准转发能力。代理是理解响应式机制的入口，但浅代理不会自动让所有嵌套数据都被监听。框架里的依赖收集、调度和缓存，远多于一个 set 拦截器。</p>
+<p class="meta">JavaScript</p><pre><code>const target = { online: false };
+const observed = new Proxy(target, {
+  set(object, key, value, receiver) {
+    const before = Reflect.get(object, key, receiver);
+    const success = Reflect.set(object, key, value, receiver);
+    if (success &amp;&amp; !Object.is(before, value)) {
+      console.log(&#x27;字段变化：&#x27;, key, before, &#x27;-&gt;&#x27;, value);
+    }
+    return success;
+  }
+});
+observed.online = true; // 输出字段变化
+target.online = false; // 绕过代理，不触发上述拦截</code></pre><div class="takeaway"><b>我的理解：</b>模块管理依赖，代理改变操作入口；理解机制后，更应遵循项目已经建立的边界。</div><details class="quiz"><summary>自测｜为什么修改原始 target 不会触发 observed 的 set？</summary><p>拦截发生在代理对象的操作入口。绕过代理直接访问原始对象，就没有经过该代理。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">MDN｜模块</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy">MDN｜Proxy</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-11">
+<div class="chapter-head"><div class="num">11</div><div><h2>表单、JSON 与本地存储</h2><p class="question">把页面数据保存下来，哪些信息可能悄悄丢掉？</p></div></div>
+
+<p>表单是用户输入到业务数据的边界。数字输入框读出来通常仍是字符串，复选框应读取 checked，时间输入要说明时区和精度。前端校验提高使用体验；权限、取值范围和业务约束仍必须由服务端验证。</p>
+<h3>JSON 是交换格式，不是完整的对象快照</h3><p>JSON 支持的结构有限：对象、数组、字符串、数字、布尔值和 null。函数、Symbol、undefined、日期对象和循环引用等不能按原样保留。定义存储结构时应主动挑选需要的数据，而不是把整个页面状态或类实例直接序列化。</p>
+<p class="meta">JavaScript</p><pre><code>const record = {
+  version: 1,
+  filters: { keyword: &#x27;相机&#x27;, onlineOnly: false }
+};
+function saveFilters(value) {
+  try {
+    localStorage.setItem(&#x27;device-filters-v1&#x27;, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    console.warn(&#x27;筛选条件未保存&#x27;, error);
+    return false;
+  }
+}
+function readFilters() {
+  try {
+    const raw = localStorage.getItem(&#x27;device-filters-v1&#x27;);
+    if (!raw) return null;
+    const value = JSON.parse(raw);
+    if (value?.version !== 1) return null;
+    const filters = value.filters;
+    if (typeof filters?.keyword !== &#x27;string&#x27; ||
+        typeof filters?.onlineOnly !== &#x27;boolean&#x27;) return null;
+    return filters;
+  } catch {
+    return null;
+  }
+}
+saveFilters(record);</code></pre>
+<p>localStorage 是同步字符串存储，适合少量偏好；大量结构化记录可考虑 IndexedDB。写入可能因配额或环境限制失败，读取也可能遇到旧版本数据或手工修改的数据。需要增加版本号、校验和迁移策略。存储并不保证永久存在，也不等同于备份。</p>
+<p>浏览器中可被脚本访问的存储不能当作保密保险箱。日志导出、错误追踪和截图里，也应避免带出认证信息或不必要的现场数据。与设备数据相关的表单，最好明确区分“未修改、已修改、保存中、失败、成功”状态，避免用户误判操作结果。</p>
+<div class="takeaway"><b>我的理解：</b>序列化前定义数据契约，反序列化后重新校验；不要信任本地缓存天然正确。</div><details class="quiz"><summary>自测｜JSON.parse 成功是否说明数据可以直接用于业务？</summary><p>不说明。它只能证明文本符合 JSON 语法，不能证明字段类型、版本和业务含义正确。</p></details><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-12">
+<div class="chapter-head"><div class="num">12</div><div><h2>性能、内存与工作者线程</h2><p class="question">页面越来越慢，是算法慢、渲染慢，还是资源没有释放？</p></div></div>
+
+<p>性能优化先拆链路，再用数据定位。设备列表卡顿可能来自接口等待、重复转换、DOM 数量过多、同步解析大文件，也可能来自离开页面后仍然运行的计时器。把所有问题都归为“JavaScript 慢”，无法决定下一步。</p>
+<h3>三类常见排查</h3>
+<div class="table-wrap"><table><thead><tr><th>表现</th><th>优先观察</th><th>可能的改进</th></tr></thead><tbody><tr><td>切换页面越来越卡</td><td>事件监听、轮询、WebSocket 是否重复创建</td><td>集中管理启动与停止，离开时释放</td></tr><tr><td>一次加载阻塞很久</td><td>Performance 中的长任务、JSON 体积、渲染节点量</td><td>分页或虚拟列表、分块处理、减少重复计算</td></tr><tr><td>持续运行后内存上升</td><td>堆快照、被保留对象、无界缓存</td><td>限制缓存大小，清理过期记录和闭包引用</td></tr><tr><td>更新频繁但数据变化很少</td><td>重复请求、重绘和字段计算次数</td><td>合并更新，仅在依赖变化时重新计算</td></tr></tbody></table></div>
+<p>垃圾回收基于可达性等机制，不代表“暂时没用到就立刻释放”。全局集合持续保存历史数据、闭包持有大型数组、未移除的监听器都可能延长数据生命周期。WeakMap 有助于把附加信息关联到对象，但不能替代资源生命周期设计。</p>
+<h3>Worker 适合搬走独立计算</h3><p>Web Worker 可在独立工作者中执行脚本，不能直接操作 DOM。普通消息通常通过结构化克隆传递，可转移的 ArrayBuffer 则能转移所有权；转移后发送方原 buffer 会分离，不能继续当作原数据使用。共享内存有额外限制，不应视为普通消息的默认替代品。</p>
+<p class="meta">JavaScript</p><pre><code>// worker.js：保存为独立文件，通过 HTTP 服务加载。
+self.onmessage = event =&gt; {
+  const values = new Float32Array(event.data);
+  let sum = 0;
+  for (const value of values) sum += value;
+  self.postMessage(sum);
+};
+
+// 页面脚本：
+// const worker = new Worker(&#x27;./worker.js&#x27;);
+// const values = new Float32Array([1, 2, 3]);
+// worker.onmessage = event =&gt; console.log(event.data); // 6
+// worker.postMessage(values.buffer, [values.buffer]);
+// 此时 values.buffer 的所有权已转移；结束后 worker.terminate()。</code></pre>
+<p>设备 WebView 的内存和 CPU 可能明显弱于开发电脑。优化验收要在目标环境中看交互延迟、长任务、内存走势与持续运行情况，而不是只看一次桌面刷新。缓存、并发和 Worker 都会引入额外复杂度，应在测量后使用。</p>
+<div class="takeaway"><b>我的理解：</b>性能问题先找时间和内存花在哪里，再选择优化手段；每个长期资源都要有结束路径。</div><details class="quiz"><summary>自测｜把计算放进 Promise.then 会自动避免主线程卡顿吗？</summary><p>不会。then 回调仍可能在同一线程执行，耗时同步计算照样阻塞。独立计算可考虑 Worker 或分块调度。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">MDN｜Web Worker</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-13">
+<div class="chapter-head"><div class="num">13</div><div><h2>新版能力与兼容性意识</h2><p class="question">书里出现的新 API，是否可以直接用在所有设备上？</p></div></div>
+
+<p>第 5 版的学习价值之一，是把较新的语言能力纳入同一张知识地图。但标准收录、浏览器实现、项目构建支持是三件事。尤其是离线部署或长期不升级的设备浏览器，不能仅凭开发电脑运行正常就认定可交付。</p>
+<p>我把新能力分成两类记录：语法变化由解析器决定能否读懂；内建方法需要运行环境提供实现。构建工具转译语法，并不意味着自动补齐全部 API。部署前应核实最低运行版本、构建目标、兼容性处理和实际回归结果。</p>
+<div class="table-wrap"><table><thead><tr><th>能力</th><th>适用场景</th><th>学习时的边界</th></tr></thead><tbody><tr><td>toSorted / toReversed / toSpliced</td><td>得到数组变更后的副本</td><td>属于较新的数组复制式方法；不等同于嵌套对象深拷贝</td></tr><tr><td>Object.groupBy / Map.groupBy</td><td>按状态、类型等规则分组</td><td>ECMAScript 2024 能力；检查实际支持情况</td></tr><tr><td>Promise.withResolvers</td><td>把期约与 resolve/reject 一起取得</td><td>不是自动取消机制，也不会自动处理超时</td></tr><tr><td>动态 import / 顶层 await</td><td>按需加载及模块初始化</td><td>检查模块支持与加载依赖，避免形成难排查的等待链</td></tr></tbody></table></div><p class="meta">JavaScript</p><pre><code>// 为便于在旧环境理解，先用普遍可用的写法表达同一规则。
+const devices = [
+  { id: &#x27;a&#x27;, online: true },
+  { id: &#x27;b&#x27;, online: false },
+  { id: &#x27;c&#x27;, online: true }
+];
+const grouped = devices.reduce((result, device) =&gt; {
+  const key = device.online ? &#x27;online&#x27; : &#x27;offline&#x27;;
+  (result[key] ??= []).push(device);
+  return result;
+}, Object.create(null));
+console.log(grouped.online.length); // 2
+
+// 支持 Object.groupBy 的环境可表达为：
+// Object.groupBy(devices, d =&gt; d.online ? &#x27;online&#x27; : &#x27;offline&#x27;);</code></pre>
+<p>学习新写法时，先用熟悉的语法解释其数据流，再比较新 API 减少了什么样板代码。对于不支持现代语法的旧环境，上面的 ??= 也需要转译或改写。运行时特性检测只能检测能被解析并执行的代码，不能拯救解析阶段就报错的新语法。</p>
+<div class="takeaway"><b>我的理解：</b>新语法提高表达能力，兼容性策略保证它能在目标设备上运行；两者都属于工程能力。</div><details class="quiz"><summary>自测｜if 判断浏览器版本，能让旧浏览器忽略不支持的新语法吗？</summary><p>通常不能。脚本在执行条件判断前就需要被解析；应通过构建目标、分包或可被旧解析器接受的代码解决。</p></details><p class="source">延伸核对：<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy">MDN｜Object.groupBy</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers">MDN｜Promise.withResolvers</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-14">
+<div class="chapter-head"><div class="num">14</div><div><h2>综合练习：可靠的设备状态轮询</h2><p class="question">如何把闭包、异步、取消和生命周期串成一个小功能？</p></div></div>
+
+<p>下面是学习用的轮询器，使用自包含的模拟请求，因此可以直接复制到现代浏览器控制台观察。它不声称是已在现场运行的项目代码。重点是：上一次请求结束后再安排下一次；停止时中止当前请求；过期回调不能重新启动轮询。</p>
+<p class="meta">JavaScript</p><pre><code>function fakeFetchStatus(signal) {
+  return new Promise((resolve, reject) =&gt; {
+    if (signal.aborted) {
+      reject(new DOMException(&#x27;已取消&#x27;, &#x27;AbortError&#x27;));
+      return;
+    }
+    const cancel = () =&gt; {
+      clearTimeout(timer);
+      reject(new DOMException(&#x27;已取消&#x27;, &#x27;AbortError&#x27;));
+    };
+    const timer = setTimeout(() =&gt; {
+      signal.removeEventListener(&#x27;abort&#x27;, cancel);
+      resolve({ id: &#x27;demo-device&#x27;, online: true });
+    }, 200);
+    signal.addEventListener(&#x27;abort&#x27;, cancel, { once: true });
+  });
+}
+
+function createPoller(load, onData, onError, interval = 1000) {
+  let generation = 0;
+  let timer;
+  let controller;
+
+  function stop() {
+    generation++;
+    clearTimeout(timer);
+    controller?.abort();
+  }
+
+  function start() {
+    stop();
+    const current = generation;
+    async function tick() {
+      if (current !== generation) return;
+      const request = new AbortController();
+      controller = request;
+      const deadline = setTimeout(() =&gt; request.abort(), 3000);
+      try {
+        const data = await load(request.signal);
+        if (current === generation) onData(data);
+      } catch (error) {
+        if (current === generation) onError(error);
+      } finally {
+        clearTimeout(deadline);
+        if (current === generation) timer = setTimeout(tick, interval);
+      }
+    }
+    void tick();
+  }
+  return { start, stop };
+}
+
+const poller = createPoller(fakeFetchStatus, console.log, console.error);
+poller.start();
+setTimeout(() =&gt; poller.stop(), 3500); // 演示结束并清理资源</code></pre>
+<h3>怎样验收这个练习</h3><ol><li>正常运行：观察周期性输出，单次请求不重叠。</li><li>连续调用 start：旧请求应被取消，不应产生多条并行轮询链。</li><li>调用 stop：之后不应继续输出，也不应由旧 finally 再安排下一轮。</li><li>把模拟延迟改为超过 3000 ms：应走取消/超时路径，然后按策略进入下一轮。</li></ol>
+<p>这里假定 load 尊重传入的 AbortSignal。真实请求可替换为 Fetch，并增加 HTTP 与业务数据校验；错误回调在本例中只作日志输出，实际界面还需要失败次数、退避、离线提示和恢复策略。回调自身也应保持可靠，不能把业务异常当成网络异常反复重试。</p>
+<div class="takeaway"><b>我的理解：</b>综合能力体现在边界条件：切换、停止、失败、超时和重复启动，都需要有明确行为。</div><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-15">
+<div class="chapter-head"><div class="num">15</div><div><h2>阅读收获与复习清单</h2><p class="question">读完后应该能解释、实现和检查哪些事情？</p></div></div>
+
+<p>这本书帮助我把零散的 API 使用经验串成系统认识：从“会调用方法”进一步理解作用域、对象关系和异步调度。对管理页面开发来说，基础机制最终落在接口数据处理、交互状态、资源释放与目标环境兼容性上。</p>
+<div class="table-wrap"><table><thead><tr><th>能力主题</th><th>应能独立解释</th><th>可做的练习</th></tr></thead><tbody><tr><td>数据边界</td><td>缺失、零值、字符串与数字的区别</td><td>给设备状态字段建立显式转换规则</td></tr><tr><td>作用域与对象</td><td>闭包捕获绑定，浅拷贝共享嵌套引用</td><td>实现可取消防抖和独立表单草稿</td></tr><tr><td>异步与请求</td><td>任务顺序、失败传播和旧响应竞争</td><td>为查询加入取消、超时和序号校验</td></tr><tr><td>页面与资源</td><td>事件委托、监听器和轮询生命周期</td><td>记录每个资源的创建者与释放时机</td></tr><tr><td>工程习惯</td><td>模块边界、兼容性和测量依据</td><td>把重复逻辑收敛为职责清晰的函数</td></tr></tbody></table></div>
+<h3>我会优先带回工作的三个习惯</h3><ol><li><b>先整理输入：</b>接口字段进入业务前统一处理类型、单位、默认值和非法值。</li><li><b>先写状态流转：</b>列出加载、成功、空数据、失败、取消，考虑用户连续操作时的结果归属。</li><li><b>先保留证据：</b>性能优化记录测量环境和前后变化，故障排查记录复现条件与关键日志。</li></ol>
+<h3>复习顺序</h3><p>第一轮复习类型、闭包、对象复制和异步顺序；第二轮练习 DOM 事件、请求竞争和模块拆分；第三轮在目标设备环境观察性能、兼容性和持续运行。每次复习都选一个小问题验证，不用“看完一章”替代“能解释一个现象”。</p>
+<details class="quiz"><summary>自测｜如果只能用一句话概括这次阅读的收获？</summary><p>把 JavaScript 从一组可调用的 API，理解为语言机制、宿主能力和工程约束共同构成的系统，并能用小实验验证自己的判断。</p></details><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="references"><h2>参考资料</h2><p class="source">以下为核对版本和技术定义的官方资料；正文解释、业务分析和练习为重新整理。外部链接需联网，笔记正文可离线阅读。</p><ul><li><a href="https://www.ituring.com.cn/book/3393">图灵官方｜书籍版本与介绍</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Language_overview">MDN｜JavaScript 语言概览</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures">MDN｜闭包</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects">MDN｜对象</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model">MDN｜执行模型</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises">MDN｜期约</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN｜Fetch</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">MDN｜模块</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray">MDN｜TypedArray</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy">MDN｜Proxy</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">MDN｜Web Worker</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy">MDN｜Object.groupBy</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers">MDN｜Promise.withResolvers</a></li></ul></section><footer class="footer"><p>整理：2026-11-23 · 学习资料归档。教学示例与示例数字仅说明方法，实际项目参数与结论以原始记录和目标环境验证为准。</p><div class="note-links"><b>同组学习资料</b><a href="%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B.html">已有读书笔记｜《链接、装载与库》</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B601%E2%80%94%E7%91%9E%E8%8A%AF%E5%BE%AE%E7%9B%92%E5%AD%90%E4%B8%8E%E7%AE%97%E5%8A%9B%E6%A3%92%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0.html">瑞芯微盒子与算力棒使用笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B602%E2%80%94%E8%A1%A8%E9%9D%A2%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html">表面检测技术学习笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B603%E2%80%94%E8%A7%86%E8%A7%89%E4%B8%89%E7%BB%B4%E5%AE%9A%E4%BD%8D%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html">视觉三维定位技术学习笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B604%E2%80%94AI%E8%BE%85%E5%8A%A9%E6%96%87%E6%A1%A3%E5%B7%A5%E4%BD%9C%E5%AE%9E%E8%B7%B5%E7%AC%94%E8%AE%B0.html">AI 辅助文档工作实践笔记</a></div><p><a href="#top">回到顶部 ↑</a></p></footer></main></div>
+<script>
+(() => {
+  const chapters = [...document.querySelectorAll('.chapter')];
+  const search = document.getElementById('search');
+  const status = document.getElementById('search-status');
+  const empty = document.getElementById('no-results');
+  const links = [...document.querySelectorAll('.toc a')];
+  function updateSearch() {
+    const query = search.value.trim().toLocaleLowerCase();
+    let count = 0;
+    chapters.forEach(section => {
+      const match = !query || section.textContent.toLocaleLowerCase().includes(query);
+      section.classList.toggle('filtered-out', !match);
+      const link = links.find(item => item.hash === '#' + section.id);
+      if (link) link.hidden = !match;
+      if (match) count++;
+    });
+    status.textContent = query ? `匹配 ${count} / ${chapters.length} 节` : `共 ${chapters.length} 节 · 支持全文筛选`;
+    empty.hidden = count !== 0;
+    updateProgress();
+  }
+  search.addEventListener('input', updateSearch);
+  search.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { search.value = ''; updateSearch(); }
+  });
+  const theme = document.getElementById('theme');
+  function setTheme(value) {
+    document.documentElement.dataset.theme = value;
+    theme.setAttribute('aria-pressed', String(value === 'dark'));
+    theme.title = value === 'dark' ? '切换为浅色' : '切换为深色';
+  }
+  try { setTheme(localStorage.getItem('learning-notes-theme') === 'dark' ? 'dark' : 'light'); }
+  catch { setTheme('light'); }
+  theme.addEventListener('click', () => {
+    const value = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    setTheme(value);
+    try { localStorage.setItem('learning-notes-theme', value); } catch {}
+  });
+  const sidebar = document.getElementById('sidebar');
+  const menu = document.getElementById('menu');
+  menu.addEventListener('click', () => {
+    const open = sidebar.classList.toggle('open');
+    menu.setAttribute('aria-expanded', String(open));
+  });
+  links.forEach(link => link.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    menu.setAttribute('aria-expanded', 'false');
+  }));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting);
+      if (!visible.length) return;
+      const id = visible[visible.length - 1].target.id;
+      links.forEach(link => {
+        const active = link.hash === '#' + id;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-12% 0px -66% 0px' });
+    chapters.forEach(section => observer.observe(section));
+  }
+  function updateProgress() {
+    const root = document.documentElement;
+    const maximum = root.scrollHeight - root.clientHeight;
+    document.getElementById('progress').style.width = (maximum > 0 ? root.scrollTop / maximum * 100 : 0) + '%';
+  }
+  addEventListener('scroll', updateProgress, { passive: true });
+  addEventListener('resize', updateProgress);
+  let printState = [];
+  addEventListener('beforeprint', () => {
+    printState = [...document.querySelectorAll('details')].map(element => [element, element.open]);
+    printState.forEach(([element]) => { element.open = true; });
+  });
+  addEventListener('afterprint', () => {
+    printState.forEach(([element, wasOpen]) => { element.open = wasOpen; });
+    printState = [];
+  });
+  updateSearch();
+})();
+</script></body></html>

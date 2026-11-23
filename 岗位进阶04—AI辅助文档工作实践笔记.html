@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="用 AI 整理材料、组织结构和生成初稿，用证据、核验与版式检查把住交付质量。"><link rel="icon" href="data:,">
+<title>AI 辅助文档工作实践笔记</title><style>
+    :root{--bg:#f6f2e9;--paper:#fffdf7;--ink:#25251f;--muted:#6b6a61;--line:#ddd6c7;--accent:#b44b2a;--accent2:#1f6a61;--code:#202722;--codeInk:#e9f1e8;--shadow:0 14px 40px #40372714;--sans:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--serif:"Noto Serif SC","Songti SC",SimSun,serif}
+    [data-theme="dark"]{--bg:#161a18;--paper:#202521;--ink:#eef0e9;--muted:#aeb5ab;--line:#394139;--accent:#f08a63;--accent2:#79c7b6;--code:#101411;--codeInk:#dce9dc;--shadow:none}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.82 var(--serif)}button,input{font:inherit}button{cursor:pointer}.progress{position:fixed;z-index:30;left:0;top:0;width:0;height:4px;background:linear-gradient(90deg,var(--accent),#e3a93f);transition:width .15s}
+    .layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:30px 22px;background:var(--paper);border-right:1px solid var(--line);overflow:auto}.brand{font:800 21px/1.3 var(--sans);color:var(--accent);margin-bottom:6px}.subtitle{font:13px/1.5 var(--sans);color:var(--muted);margin-bottom:20px}.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:18px}.tools input{min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}.iconbtn{border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:7px 10px}.toc a{display:block;padding:6px 9px;margin:1px 0;border-left:3px solid transparent;color:var(--muted);text-decoration:none;font:14px/1.35 var(--sans);border-radius:0 6px 6px 0}.toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+    main{width:min(900px,calc(100% - 48px));margin:0 auto;padding:74px 0 120px}.hero{padding-bottom:60px;border-bottom:1px solid var(--line)}.eyebrow{font:700 13px var(--sans);letter-spacing:.16em;color:var(--accent);text-transform:uppercase}h1{max-width:780px;font:900 clamp(38px,6vw,72px)/1.05 var(--sans);letter-spacing:-.04em;margin:15px 0 22px}.lead{font-size:21px;color:var(--muted);max-width:720px}.notice{border-left:4px solid var(--accent2);padding:14px 18px;background:color-mix(in srgb,var(--accent2) 8%,var(--paper));border-radius:0 10px 10px 0;margin:30px 0}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:32px 0}.route div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:15px;font:14px/1.5 var(--sans);box-shadow:var(--shadow)}.route b{display:block;color:var(--accent);margin-bottom:4px}.chapter{padding:70px 0 20px;border-bottom:1px solid var(--line)}.chapter-head{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:start}.num{font:900 50px/1 var(--sans);color:color-mix(in srgb,var(--accent) 35%,var(--line))}h2{font:850 35px/1.25 var(--sans);margin:0 0 10px}h3{font:800 23px/1.35 var(--sans);margin:48px 0 12px}h4{font:800 18px/1.4 var(--sans);margin:30px 0 8px}.question{font:15px var(--sans);color:var(--accent2);margin:0}.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:28px 0}.term{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 15px}.term b{font-family:var(--sans);color:var(--accent)}.term span{display:block;color:var(--muted);font-size:15px;line-height:1.65}.section{position:relative}.takeaway{padding:12px 15px;margin:14px 0;border-radius:8px;background:color-mix(in srgb,var(--accent) 8%,var(--paper));font-size:15px}.takeaway b{font-family:var(--sans);color:var(--accent)}code{font-family:Consolas,monospace;background:color-mix(in srgb,var(--accent2) 10%,var(--paper));padding:.12em .35em;border-radius:4px}pre{overflow:auto;background:var(--code);color:var(--codeInk);padding:18px;border-radius:10px;font:14px/1.65 Consolas,monospace}.diagram{white-space:pre;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;font:14px/1.6 Consolas,monospace;color:var(--accent2)}table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px}th,td{padding:10px 12px;border:1px solid var(--line);text-align:left}th{background:color-mix(in srgb,var(--accent2) 9%,var(--paper));font-family:var(--sans)}details.quiz{margin:24px 0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 17px}details summary{font:700 16px var(--sans);color:var(--accent2)}.chapter-summary{margin:36px 0 12px;padding:20px;border-top:2px solid var(--accent);border-bottom:1px solid var(--line)}.chapter-summary b{font-family:var(--sans)}.filtered-out{display:none}.footer{padding-top:70px;color:var(--muted);font:14px/1.7 var(--sans)}.mobile-menu{display:none}
+    .term-en{display:inline!important;margin-left:.45em;color:var(--accent2)!important;font:600 12px/1.4 var(--sans)!important;letter-spacing:.04em}.story,.lab{margin:30px 0;padding:20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.story{border-top:4px solid var(--accent2)}.lab{border-top:4px solid var(--accent)}.lab h3,.story h3{margin-top:0}.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.lab-grid>*{min-width:0}.lab-grid h4{margin-top:8px}.story pre,.lab pre{max-width:100%}.explain{padding:12px 15px;border-left:3px solid var(--accent2);background:color-mix(in srgb,var(--accent2) 7%,transparent);font-size:15px}.platform{display:inline-block;padding:3px 8px;border-radius:20px;background:color-mix(in srgb,var(--accent) 12%,transparent);font:700 12px var(--sans);color:var(--accent)}.deep{display:none;margin:18px 0 26px;border-left:3px solid var(--accent2);padding:4px 0 4px 18px}.detail-mode .deep{display:block}.deep h4{margin:16px 0 5px}.deep p{margin:5px 0 12px}.deep .pitfall{padding:10px 13px;background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:8px}.detail-badge{display:none}.detail-mode .detail-badge{display:inline-block;margin-left:8px;padding:4px 9px;border-radius:20px;background:var(--accent2);color:var(--paper);font:700 12px var(--sans)}
+    @media(max-width:850px){.layout{display:block}.sidebar{position:sticky;z-index:20;top:0;width:100%;height:auto;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand,.subtitle{display:none}.tools{margin:0}.mobile-menu{display:inline}.toc{display:none;max-height:55vh;overflow:auto;margin-top:10px}.sidebar.open .toc{display:block}main{width:min(100% - 30px,720px);padding-top:42px}.route,.lab-grid{grid-template-columns:1fr 1fr}.chapter-head{grid-template-columns:52px 1fr}.num{font-size:36px}h2{font-size:29px}.terms{grid-template-columns:1fr}}@media(max-width:560px){.route,.lab-grid{grid-template-columns:1fr}}
+    @media print{.sidebar,.progress,.quiz{display:none!important}.layout{display:block}main{width:100%;padding:0}.chapter{break-before:page}.hero{min-height:95vh}body{background:#fff;color:#111;font-size:12pt}.term,.route div{box-shadow:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress{transition:none}}
+
+main{width:min(920px,calc(100% - 64px))}h1{font-size:clamp(36px,4.4vw,60px);line-height:1.18;letter-spacing:-.025em}.hero{padding-bottom:36px}.chapter{padding-top:48px}.chapter h3{margin-top:30px}.chapter h2{font-size:30px}.chapter-head{grid-template-columns:58px 1fr}.num{font-size:38px}.chapter p{margin:16px 0}.route{grid-template-columns:repeat(3,1fr)}a{color:var(--accent2);text-underline-offset:3px}pre code{background:transparent;padding:0;color:inherit}li{margin:7px 0}.meta{color:var(--muted);font:14px/1.7 var(--sans)}.table-wrap{overflow:auto}table{min-width:480px}th{white-space:nowrap}.source{font:14px/1.7 var(--sans);color:var(--muted)}.no-results{padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:8px}.tools{grid-template-columns:minmax(0,1fr) auto}.tools input{width:100%}.status{font:12px/1.6 var(--sans);color:var(--muted);margin:8px 0 14px}.simple .hero h1{font-size:clamp(34px,4vw,52px)}.simple main{max-width:860px}.simple .chapter{padding-top:34px}.simple h2{font-size:27px}.simple .num{font-size:30px}.note-links{font:14px/1.8 var(--sans)}.note-links a{display:block;margin:6px 0}summary{cursor:pointer}.lab h3{margin-top:0}.tools .mobile-menu{grid-column:1/-1}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}p,li,td{overflow-wrap:anywhere}.diagram{line-height:1.8}.toc a{line-height:1.6}.back{font:13px var(--sans)}
+@media(max-width:850px){main{width:calc(100% - 32px)}html{scroll-padding-top:110px}.sidebar{padding:10px 16px}.status{margin:3px 0 0}.tools{grid-template-columns:minmax(0,1fr) auto auto}.tools .mobile-menu{grid-column:auto}.route{grid-template-columns:1fr}.chapter-head{grid-template-columns:38px minmax(0,1fr)}.chapter h2{font-size:26px}.num{font-size:29px}pre,.diagram{font-size:12px}.sidebar.open .toc{max-height:48vh}}
+@media print{html{scroll-behavior:auto}body,[data-theme="dark"] body{background:white;color:black}main,.simple main{width:100%;max-width:none;padding:0}.hero{min-height:0;padding-bottom:16px}.chapter{break-before:auto;padding:20px 0 0}.chapter h2{font-size:19pt}.chapter h3{font-size:14pt}.chapter-head,pre,table,.takeaway,.notice{break-inside:avoid}pre{white-space:pre-wrap;background:#f2f2f2;color:#111;border:1px solid #aaa}a{color:#111}.filtered-out{display:block!important}.quiz{display:block!important}.quiz>*{display:block!important}.quiz summary{display:block!important}.no-results,.back,.note-links{display:none!important}.footer{padding-top:25px}.table-wrap{overflow:visible}table{min-width:0}.notice,.takeaway,.term{background:#f6f6f6;color:#111}.num{color:#666}.lead,.meta,.source,.question{color:#444}}
+:root:not([data-theme="dark"]){--bg:#faf6e8;--paper:#fffdf5;--line:#e7dfc6;--title-size:clamp(27px,2.6vw,38px)}.hero h1,.simple .hero h1{font-size:var(--title-size,clamp(27px,2.6vw,38px));line-height:1.35;letter-spacing:-.015em;max-width:none;margin:14px 0 20px}@media print{:root,[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#111;--muted:#444;--line:#aaa;--accent:#333;--accent2:#333;--code:#f3f3f3;--codeInk:#111}.hero h1,.simple .hero h1{font-size:24pt}}</style></head>
+<body class="simple">
+<div class="progress" id="progress" aria-hidden="true"></div><div class="layout">
+<aside class="sidebar" id="sidebar"><div class="brand">从材料到可交付文档</div><div class="subtitle">岗位知识进阶 · 04</div>
+<div class="tools"><input type="search" id="search" aria-label="搜索笔记正文" placeholder="搜索正文关键词…"><button class="iconbtn" id="theme" aria-label="切换深浅色" aria-pressed="false">◐</button><button class="iconbtn mobile-menu" id="menu" aria-controls="toc" aria-expanded="false">目录</button></div>
+<div id="search-status" class="status" role="status" aria-live="polite"></div><nav class="toc" id="toc" aria-label="笔记目录"><a href="#top">阅读起点</a><a href="#section-1">01 · 文档工作为什么适合引入 AI</a><a href="#section-2">02 · 先把输入材料整理成证据</a><a href="#section-3">03 · 把提示写成工作说明</a><a href="#section-4">04 · 按阶段推进文档协作</a><a href="#section-5">05 · 算法测试报告的核对重点</a><a href="#section-6">06 · 版式检查也是交付的一部分</a><a href="#section-7">07 · 从一次提示沉淀为 skill</a><a href="#section-8">08 · 学习收获与后续改进</a></nav></aside>
+<main><header class="hero" id="top"><div class="eyebrow">2026 · LEARNING NOTES</div><p class="meta">岗位知识进阶 · 04 · 整理日期 2026-11-23</p><h1>AI 辅助文档工作实践笔记</h1><p class="lead">用 AI 整理材料、组织结构和生成初稿，用证据、核验与版式检查把住交付质量。</p>
+<div class="notice"><p>以算法测试报告框架等实际工作背景为起点，整理可复用的文档协作流程，适用于测试报告、部署说明、复盘与汇报材料。</p></div><div class="route"><div><b>输入清楚</b>材料、事实与口径</div><div><b>协作有序</b>提纲、初稿与核验</div><div><b>交付可靠</b>渲染、归档与 skill</div></div><p class="meta">左侧目录可跳转；搜索按节筛选正文，清空或按 Esc 恢复；深浅色可切换。打印会展开自测答案并保留全文。</p></header>
+<p class="no-results" id="no-results" hidden>没有找到匹配章节。请更换关键词，或清空搜索查看全文。</p>
+<section class="chapter" id="section-1">
+<div class="chapter-head"><div class="num">01</div><div><h2>文档工作为什么适合引入 AI</h2><p class="question">AI 应该参与哪些环节，最终责任又在哪里？</p></div></div>
+
+<p>测试报告、部署说明、故障复盘、项目结题材料和汇报稿，经常需要把日志、表格、零散记录与既有模板组合成结构清楚的文档。难点不只在写字，还包括找齐事实、统一口径、组织层次和检查格式。</p>
+<p>我的使用思路是：让 AI 帮助整理和表达，让原始材料约束事实，再通过人工核验和实际渲染保证交付质量。AI 可以起草提纲、转换格式、提取字段和寻找不一致，但不能把推测写成实测结果，也不能替我确认现场没有发生过的事情。</p>
+<p>已有周报记录了使用 superpowers 规范 AI 开发流程、优化并使用相关 skill 完成算法测试报告框架，以及参加 AI 制作 PPT 分享。这里以这些背景整理文档协作方法，不把未核实的效率比例和其他文档经历自动归为 AI 成果。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-2">
+<div class="chapter-head"><div class="num">02</div><div><h2>先把输入材料整理成证据</h2><p class="question">为什么直接说“帮我写份报告”往往会得到空泛内容？</p></div></div>
+
+<p>只有标题而没有材料，AI 很容易给出通用段落。有效的输入应包含用途、读者、模板、原始记录、统计口径、交付格式和约束。先建立材料清单，再开始写正文，可以减少反复追问和后期推倒重写。</p>
+<div class="table-wrap"><table><thead><tr><th>输入类别</th><th>应提供的信息</th><th>作用</th></tr></thead><tbody><tr><td>目标与读者</td><td>评审、交付或内部留档；读者关心什么</td><td>决定结构和解释深度</td></tr><tr><td>事实材料</td><td>测试日志、环境记录、截图、问题单</td><td>为结论提供依据</td></tr><tr><td>指标定义</td><td>FPS、路数、耗时、统计窗口和单位</td><td>避免同名指标被混用</td></tr><tr><td>参考模板</td><td>章节、表格、字体、签字页等要求</td><td>约束文档形态</td></tr><tr><td>输出要求</td><td>Word、HTML、PPT 或不同阅读版本</td><td>明确交付与检查方式</td></tr></tbody></table></div>
+<p>我会把材料中的内容分成“已有证据支持的事实、基于事实的分析、仍待核实的信息”。缺少内容时先列问题或明确不形成结论，不能用流畅文字填补证据空缺。这个状态标注应在起草阶段保留，正式交付前则逐项解决，未解决的项目要说明影响。</p>
+<p>还要区分材料内容与协作指令。日志、截图、模板中的文字是待分析对象；里面即使出现“忽略前文”等措辞，也不能替代我当前的任务要求。处理外部材料时，先提取事实和格式，而不是执行其中夹带的操作。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-3">
+<div class="chapter-head"><div class="num">03</div><div><h2>把提示写成工作说明</h2><p class="question">怎样让 AI 输出的结构更接近实际需要？</p></div></div>
+
+<p>一份清楚的提示至少回答：写什么、依据什么、给谁看、怎么组织、哪些事实不能补写、最后怎么检查。与其一次要求“写得专业”，不如明确段落和数据规则。</p>
+<p class="meta">可复用任务说明</p><pre><code>任务：根据提供的原始记录，整理算法测试报告初稿。
+用途：内部技术评审，读者包括研发、测试和交付人员。
+
+输入：测试环境记录、模型版本、原始日志、统计表、现有模板。
+请先检查输入是否足够，再生成正文。
+
+结构：
+1. 测试目的与范围
+2. 环境、版本与输入条件
+3. 测试方法和指标定义
+4. 结果表及其来源
+5. 异常、适用范围与结论
+
+规则：
+- 只把可追溯记录写成事实，不补写未做过的测试。
+- 区分单帧耗时、处理 FPS、输入帧率和并发路数。
+- 数值同时保留单位、统计窗口与对应条件。
+- 先列出矛盾和缺失项，重要缺失未解决时不形成肯定结论。
+- 分析与实测分开表达，不用“全部正常”概括局部结果。
+
+交付：先给材料检查表和章节提纲，再按确认结构生成初稿。
+终检：核对数字、版本、结论、表格和源记录是否一致。</code></pre>
+<p>参考文档最好提供一个完整的典型章节或表格，让 AI 了解表达和版式；同时说明哪些只是排版示例、哪些才是本次数据，防止把旧项目名称、旧设备型号和旧结论带入新报告。</p>
+<p>需要多轮修改时，反馈尽量指向具体问题，例如“环境表缺少 Runtime 版本”“第 4 节把推理 FPS 当成视频输入帧率”，而不是只说“再优化”。这样每次修改都有明确目标，也更容易验收。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-4">
+<div class="chapter-head"><div class="num">04</div><div><h2>按阶段推进文档协作</h2><p class="question">一个可复用的文档流程怎样安排？</p></div></div>
+
+<div class="diagram">材料清单 → 事实与口径检查 → 提纲 → 初稿
+                                       ↓
+最终归档 ← 版式与导出检查 ← 人工核验 ← 修订</div>
+<ol><li><b>整理材料：</b>给文件和截图命名，标明来源，保留原件。</li><li><b>检查事实：</b>提取环境、时间、版本、指标和异常，先处理矛盾。</li><li><b>确认提纲：</b>先看章节是否回答评审问题，再扩写正文。</li><li><b>生成初稿：</b>按章节写，表格和结论都关联材料。</li><li><b>核对与修订：</b>检查数字、边界、因果关系和措辞，再统一风格。</li><li><b>渲染交付：</b>打开实际输出，检查分页、图片和表格。</li><li><b>沉淀模板：</b>将稳定流程和检查单写入 skill，保留后续改进记录。</li></ol>
+<p>阶段拆分的价值在于让错误尽早暴露。提纲阶段发现范围不对，比在几十页生成完后修改更省事；口径阶段发现统计窗口不同，也比排版完成后才重新计算更可靠。</p>
+<p>流程应随文档规模调整：一页部署说明可以合并几个步骤，但事实核对和最终打开检查仍然需要保留。AI 输出完成，不等于文档已经可以交付。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-5">
+<div class="chapter-head"><div class="num">05</div><div><h2>算法测试报告的核对重点</h2><p class="question">数字看起来齐全，报告是否就可信？</p></div></div>
+
+<p>算法测试文档容易出现“每个数字都来自记录，但组合起来得出错误结论”的情况。例如把不同设备、不同输入尺寸和不同测试窗口的数据放在同一行比较，或者用模型推理耗时直接承诺业务路数。</p>
+<div class="table-wrap"><table><thead><tr><th>核对项</th><th>典型问题</th><th>处理方式</th></tr></thead><tbody><tr><td>环境与版本</td><td>模型、Runtime 或硬件不一致</td><td>拆开条件，必要时分别形成结论</td></tr><tr><td>指标口径</td><td>输入 FPS、处理 FPS 和推理耗时混写</td><td>逐项定义分母、时间范围和计算方法</td></tr><tr><td>统计过程</td><td>有平均值却没有样本与窗口</td><td>关联原始记录，说明热身与有效样本</td></tr><tr><td>异常与结论</td><td>表里有失败，结论仍写全部通过</td><td>解释异常、影响和适用边界</td></tr><tr><td>表文一致</td><td>正文数字与最终表格不一致</td><td>以确认的数据源统一更新</td></tr></tbody></table></div>
+<p>AI 可协助抽取日志、整理计算步骤和列出不一致项；关键计算仍应对照可复现脚本、公式或人工抽样验证。图表标题和坐标轴要写明单位，截图应能找到对应测试时间与环境。</p>
+<p>如果需要内部详细版和面向共享的正式版，应基于同一份事实源生成。共享版可以减少敏感明细和过程噪声，但不能删除会影响结论的异常或条件限制。所谓“无数据版”也不能保留失去依据的性能承诺。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-6">
+<div class="chapter-head"><div class="num">06</div><div><h2>版式检查也是交付的一部分</h2><p class="question">Word、HTML、PPT 各要检查什么？</p></div></div>
+
+<p>文字正确只是第一步。实际交付还会遇到表格跨页、图片被裁切、字体替换、长路径溢出和页码错误。不能只看生成脚本是否报错，必须打开目标格式，必要时渲染为页面图逐页检查。</p>
+<ul><li><b>Word：</b>标题层级、页眉页脚、目录、表格跨页、图片清晰度与空白页。</li><li><b>HTML：</b>中文编码、目录跳转、窄屏阅读、代码横向滚动和打印效果。</li><li><b>PPT：</b>单页重点、文字大小、图表来源、对齐、遮挡和实际放映比例。</li><li><b>PDF：</b>导出后页数、符号、链接、裁切与最终共享版本一致。</li></ul>
+<p>对文档类任务，我会把检查分为两遍：第一遍核对事实、结构和结论；第二遍只看版式、可读性和文件完整性。这样不容易因为修好一个标题，就漏掉原本需要核对的数字。</p>
+<p>涉及现场截图和日志时，先确定最小必要内容，处理账号、地址、认证信息等不需要传播的信息。最终归档保留输入材料、生成文件、修订记录与最终版本，避免以后找不到结论来源。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-7">
+<div class="chapter-head"><div class="num">07</div><div><h2>从一次提示沉淀为 skill</h2><p class="question">怎样让下次做同类文档时少走重复步骤？</p></div></div>
+
+<p>提示更适合表达本次任务，skill 则适合固化多次任务共用的流程、模板和检查要求。已有算法测试报告框架的实践，适合继续沉淀为“输入清单—章节模板—口径规则—输出要求—验收清单”的组合。</p>
+<ul><li><b>输入契约：</b>哪些文件必需，缺少哪些材料就不能形成某类结论。</li><li><b>处理步骤：</b>先提取、再核验、再起草，明确每一步产物。</li><li><b>模板资产：</b>报告章节、表格、样例和版式规则单独维护。</li><li><b>质量检查：</b>单位、版本、数据来源、异常、措辞和渲染清单。</li><li><b>迭代记录：</b>把本次踩坑转成下次可检查的规则，用新材料验证。</li></ul>
+<p>skill 不宜塞满只适用于某一次项目的型号和数值。应区分稳定流程与本次参数，让同一套方法适用于不同设备和算法。规则修改后，要用实际案例检查有没有误套模板或遗漏边界。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-8">
+<div class="chapter-head"><div class="num">08</div><div><h2>学习收获与后续改进</h2><p class="question">怎样判断 AI 确实帮助了文档工作？</p></div></div>
+
+<p>我对 AI 文档协作的理解，从“帮我写一段文字”转向了“帮助我完成一条可核对的工作流程”。能力提升体现在材料组织、事实判断、结构设计和交付检查上，不能只用生成文字的速度评价。</p>
+<p>后续可记录初稿耗时、核验耗时、修改轮次和重复问题，区分纯排版节省与事实核验成本。只有在范围和任务难度相近时，前后对比才有意义；没有统一计时与统计条件，就不在正式材料里承诺具体效率提升比例。</p>
+<p>我会优先复用三件东西：一份完整输入清单、一组能约束数字与结论的规则、一份交付前检查表。把这三项稳定下来，再逐步完善模板和 skill，更容易让 AI 成为可控、可复用的文档助手。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><footer class="footer"><p class="source">工作背景参考：2025.11-2026.11周报 / 00 周报合辑.txt，周报 26；其中记录了使用 superpowers、优化并使用 skill 完成算法测试报告框架以及参加 AI 制作 PPT 分享。其余内容为方法整理与后续改进思路。</p><p>整理：2026-11-23 · 学习资料归档。教学示例与示例数字仅说明方法，实际项目参数与结论以原始记录和目标环境验证为准。</p><div class="note-links"><b>同组学习资料</b><a href="%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B.html">已有读书笔记｜《链接、装载与库》</a><a href="%E3%80%8AJavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%EF%BC%88%E7%AC%AC5%E7%89%88%EF%BC%89%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html">《JavaScript高级程序设计（第5版）》读书笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B601%E2%80%94%E7%91%9E%E8%8A%AF%E5%BE%AE%E7%9B%92%E5%AD%90%E4%B8%8E%E7%AE%97%E5%8A%9B%E6%A3%92%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0.html">瑞芯微盒子与算力棒使用笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B602%E2%80%94%E8%A1%A8%E9%9D%A2%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html">表面检测技术学习笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B603%E2%80%94%E8%A7%86%E8%A7%89%E4%B8%89%E7%BB%B4%E5%AE%9A%E4%BD%8D%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html">视觉三维定位技术学习笔记</a></div><p><a href="#top">回到顶部 ↑</a></p></footer></main></div>
+<script>
+(() => {
+  const chapters = [...document.querySelectorAll('.chapter')];
+  const search = document.getElementById('search');
+  const status = document.getElementById('search-status');
+  const empty = document.getElementById('no-results');
+  const links = [...document.querySelectorAll('.toc a')];
+  function updateSearch() {
+    const query = search.value.trim().toLocaleLowerCase();
+    let count = 0;
+    chapters.forEach(section => {
+      const match = !query || section.textContent.toLocaleLowerCase().includes(query);
+      section.classList.toggle('filtered-out', !match);
+      const link = links.find(item => item.hash === '#' + section.id);
+      if (link) link.hidden = !match;
+      if (match) count++;
+    });
+    status.textContent = query ? `匹配 ${count} / ${chapters.length} 节` : `共 ${chapters.length} 节 · 支持全文筛选`;
+    empty.hidden = count !== 0;
+    updateProgress();
+  }
+  search.addEventListener('input', updateSearch);
+  search.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { search.value = ''; updateSearch(); }
+  });
+  const theme = document.getElementById('theme');
+  function setTheme(value) {
+    document.documentElement.dataset.theme = value;
+    theme.setAttribute('aria-pressed', String(value === 'dark'));
+    theme.title = value === 'dark' ? '切换为浅色' : '切换为深色';
+  }
+  try { setTheme(localStorage.getItem('learning-notes-theme') === 'dark' ? 'dark' : 'light'); }
+  catch { setTheme('light'); }
+  theme.addEventListener('click', () => {
+    const value = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    setTheme(value);
+    try { localStorage.setItem('learning-notes-theme', value); } catch {}
+  });
+  const sidebar = document.getElementById('sidebar');
+  const menu = document.getElementById('menu');
+  menu.addEventListener('click', () => {
+    const open = sidebar.classList.toggle('open');
+    menu.setAttribute('aria-expanded', String(open));
+  });
+  links.forEach(link => link.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    menu.setAttribute('aria-expanded', 'false');
+  }));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting);
+      if (!visible.length) return;
+      const id = visible[visible.length - 1].target.id;
+      links.forEach(link => {
+        const active = link.hash === '#' + id;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-12% 0px -66% 0px' });
+    chapters.forEach(section => observer.observe(section));
+  }
+  function updateProgress() {
+    const root = document.documentElement;
+    const maximum = root.scrollHeight - root.clientHeight;
+    document.getElementById('progress').style.width = (maximum > 0 ? root.scrollTop / maximum * 100 : 0) + '%';
+  }
+  addEventListener('scroll', updateProgress, { passive: true });
+  addEventListener('resize', updateProgress);
+  let printState = [];
+  addEventListener('beforeprint', () => {
+    printState = [...document.querySelectorAll('details')].map(element => [element, element.open]);
+    printState.forEach(([element]) => { element.open = true; });
+  });
+  addEventListener('afterprint', () => {
+    printState.forEach(([element, wasOpen]) => { element.open = wasOpen; });
+    printState = [];
+  });
+  updateSearch();
+})();
+</script></body></html>

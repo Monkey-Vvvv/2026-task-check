@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="《程序员的自我修养——链接、装载与库》小白友好全书笔记">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><text y=%2252%22 font-size=%2252%22>⚙</text></svg>">
+  <title>程序是怎样跑起来的｜《链接、装载与库》读书笔记</title>
+  <style>
+    :root{--bg:#f6f2e9;--paper:#fffdf7;--ink:#25251f;--muted:#6b6a61;--line:#ddd6c7;--accent:#b44b2a;--accent2:#1f6a61;--code:#202722;--codeInk:#e9f1e8;--shadow:0 14px 40px #40372714;--sans:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--serif:"Noto Serif SC","Songti SC",SimSun,serif}
+    [data-theme="dark"]{--bg:#161a18;--paper:#202521;--ink:#eef0e9;--muted:#aeb5ab;--line:#394139;--accent:#f08a63;--accent2:#79c7b6;--code:#101411;--codeInk:#dce9dc;--shadow:none}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.82 var(--serif)}button,input{font:inherit}button{cursor:pointer}.progress{position:fixed;z-index:30;left:0;top:0;width:0;height:4px;background:linear-gradient(90deg,var(--accent),#e3a93f);transition:width .15s}
+    .layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:30px 22px;background:var(--paper);border-right:1px solid var(--line);overflow:auto}.brand{font:800 21px/1.3 var(--sans);color:var(--accent);margin-bottom:6px}.subtitle{font:13px/1.5 var(--sans);color:var(--muted);margin-bottom:20px}.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:18px}.tools input{min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}.iconbtn{border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:7px 10px}.toc a{display:block;padding:6px 9px;margin:1px 0;border-left:3px solid transparent;color:var(--muted);text-decoration:none;font:14px/1.35 var(--sans);border-radius:0 6px 6px 0}.toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+    main{width:min(900px,calc(100% - 48px));margin:0 auto;padding:74px 0 120px}.hero{padding-bottom:60px;border-bottom:1px solid var(--line)}.eyebrow{font:700 13px var(--sans);letter-spacing:.16em;color:var(--accent);text-transform:uppercase}h1{max-width:780px;font:900 clamp(38px,6vw,72px)/1.05 var(--sans);letter-spacing:-.04em;margin:15px 0 22px}.lead{font-size:21px;color:var(--muted);max-width:720px}.notice{border-left:4px solid var(--accent2);padding:14px 18px;background:color-mix(in srgb,var(--accent2) 8%,var(--paper));border-radius:0 10px 10px 0;margin:30px 0}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:32px 0}.route div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:15px;font:14px/1.5 var(--sans);box-shadow:var(--shadow)}.route b{display:block;color:var(--accent);margin-bottom:4px}.chapter{padding:70px 0 20px;border-bottom:1px solid var(--line)}.chapter-head{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:start}.num{font:900 50px/1 var(--sans);color:color-mix(in srgb,var(--accent) 35%,var(--line))}h2{font:850 35px/1.25 var(--sans);margin:0 0 10px}h3{font:800 23px/1.35 var(--sans);margin:48px 0 12px}h4{font:800 18px/1.4 var(--sans);margin:30px 0 8px}.question{font:15px var(--sans);color:var(--accent2);margin:0}.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:28px 0}.term{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 15px}.term b{font-family:var(--sans);color:var(--accent)}.term span{display:block;color:var(--muted);font-size:15px;line-height:1.65}.section{position:relative}.takeaway{padding:12px 15px;margin:14px 0;border-radius:8px;background:color-mix(in srgb,var(--accent) 8%,var(--paper));font-size:15px}.takeaway b{font-family:var(--sans);color:var(--accent)}code{font-family:Consolas,monospace;background:color-mix(in srgb,var(--accent2) 10%,var(--paper));padding:.12em .35em;border-radius:4px}pre{overflow:auto;background:var(--code);color:var(--codeInk);padding:18px;border-radius:10px;font:14px/1.65 Consolas,monospace}.diagram{white-space:pre;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;font:14px/1.6 Consolas,monospace;color:var(--accent2)}table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px}th,td{padding:10px 12px;border:1px solid var(--line);text-align:left}th{background:color-mix(in srgb,var(--accent2) 9%,var(--paper));font-family:var(--sans)}details.quiz{margin:24px 0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 17px}details summary{font:700 16px var(--sans);color:var(--accent2)}.chapter-summary{margin:36px 0 12px;padding:20px;border-top:2px solid var(--accent);border-bottom:1px solid var(--line)}.chapter-summary b{font-family:var(--sans)}.filtered-out{display:none}.footer{padding-top:70px;color:var(--muted);font:14px/1.7 var(--sans)}.mobile-menu{display:none}
+    .term-en{display:inline!important;margin-left:.45em;color:var(--accent2)!important;font:600 12px/1.4 var(--sans)!important;letter-spacing:.04em}.story,.lab{margin:30px 0;padding:20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.story{border-top:4px solid var(--accent2)}.lab{border-top:4px solid var(--accent)}.lab h3,.story h3{margin-top:0}.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.lab-grid>*{min-width:0}.lab-grid h4{margin-top:8px}.story pre,.lab pre{max-width:100%}.explain{padding:12px 15px;border-left:3px solid var(--accent2);background:color-mix(in srgb,var(--accent2) 7%,transparent);font-size:15px}.platform{display:inline-block;padding:3px 8px;border-radius:20px;background:color-mix(in srgb,var(--accent) 12%,transparent);font:700 12px var(--sans);color:var(--accent)}.deep{display:none;margin:18px 0 26px;border-left:3px solid var(--accent2);padding:4px 0 4px 18px}.detail-mode .deep{display:block}.deep h4{margin:16px 0 5px}.deep p{margin:5px 0 12px}.deep .pitfall{padding:10px 13px;background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:8px}.detail-badge{display:none}.detail-mode .detail-badge{display:inline-block;margin-left:8px;padding:4px 9px;border-radius:20px;background:var(--accent2);color:var(--paper);font:700 12px var(--sans)}
+    @media(max-width:850px){.layout{display:block}.sidebar{position:sticky;z-index:20;top:0;width:100%;height:auto;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand,.subtitle{display:none}.tools{margin:0}.mobile-menu{display:inline}.toc{display:none;max-height:55vh;overflow:auto;margin-top:10px}.sidebar.open .toc{display:block}main{width:min(100% - 30px,720px);padding-top:42px}.route,.lab-grid{grid-template-columns:1fr 1fr}.chapter-head{grid-template-columns:52px 1fr}.num{font-size:36px}h2{font-size:29px}.terms{grid-template-columns:1fr}}@media(max-width:560px){.route,.lab-grid{grid-template-columns:1fr}}
+    @media print{.sidebar,.progress,.quiz{display:none!important}.layout{display:block}main{width:100%;padding:0}.chapter{break-before:page}.hero{min-height:95vh}body{background:#fff;color:#111;font-size:12pt}.term,.route div{box-shadow:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress{transition:none}}
+  </style>
+<style id="compact-note-title">
+.hero h1{font-size:clamp(27px,2.6vw,38px);line-height:1.35;letter-spacing:-.015em;max-width:none;margin:14px 0 20px}
+@media print{.hero h1{font-size:24pt}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">程序的前世今生</div><div class="subtitle">链接 · 装载 · 库｜小白友好全书笔记</div>
+    <div class="tools"><input id="search" type="search" placeholder="搜索：重定位、GOT、堆……" aria-label="搜索笔记"><button class="iconbtn" id="theme" title="切换深浅色" aria-label="切换深浅色">◐</button><button class="iconbtn mobile-menu" id="menu" aria-label="展开目录">目录</button></div>
+    <nav class="toc" id="toc" aria-label="章节目录"></nav>
+  </aside>
+  <main id="content">
+    <header class="hero" id="top">
+      <div class="eyebrow">A beginner's field guide</div>
+      <h1>一段代码，怎样变成正在运行的程序？</h1>
+      <p class="lead">这是《程序员的自我修养——链接、装载与库》的逐章学习笔记。它不要求你预先学过操作系统或编译原理，会先解释术语，再讲机制，最后把知识串回一条主线。</p>
+      <div class="notice"><b>阅读定位：</b>这是原创学习导读，不是原书的替代品。建议用它建立地图，再带着问题读原书。示例以 C/C++、Linux/ELF 为主，并在必要处对照 Windows/PE。</div>
+      <h3>先记住全书的唯一主线</h3>
+      <div class="diagram">源代码 .c/.cpp
+   │ 预处理 → 编译 → 汇编
+   ▼
+目标文件 .o/.obj ── 静态链接 ──▶ 可执行文件
+                                │ 装载 + 动态链接
+                                ▼
+                         内存中的进程
+                                │ 运行库封装
+                                ▼
+                           操作系统内核</div>
+      <div class="route"><div><b>第 1 部分</b>补齐硬件与操作系统背景</div><div><b>第 2 部分</b>理解目标文件和静态链接</div><div><b>第 3 部分</b>理解装载与动态链接</div><div><b>第 4 部分</b>理解内存、运行库与系统调用</div></div>
+      <h3>怎么读最省力</h3><p>第一遍只看每章的“本章问题、术语、记住这点和总结”；第二遍细读第 2、3、4、6、7、10 章；第三遍在终端用 <code>gcc</code>、<code>readelf</code>、<code>objdump</code>、<code>ldd</code> 验证。看不懂地址数字很正常，先追踪“谁在什么时候决定这个地址”。</p>
+      <section class="story"><h3>贯穿全书的例子：一台迷你计算器</h3><p>后面的实验都围绕同一组文件展开。<code>main.c</code> 调用另一个模块里的 <code>add</code>，我们一路观察声明、目标文件、未定义符号、静态链接、共享库、装载和运行库。</p><div class="lab-grid"><div><h4>calc.h</h4><pre>#ifndef CALC_H
+#define CALC_H
+int add(int a, int b);
+#endif</pre><h4>calc.c</h4><pre>#include "calc.h"
+int add(int a, int b) {
+    return a + b;
+}</pre></div><div><h4>main.c</h4><pre>#include &lt;stdio.h&gt;
+#include "calc.h"
+
+int main(void) {
+    printf("20 + 22 = %d\n", add(20, 22));
+    return 0;
+}</pre><p class="explain"><b>贯穿问题：</b><code>main.c</code> 里只有 <code>add</code> 的声明，真正的机器码在哪个阶段与它接上？后面每章都会从新角度回答。</p></div></div></section>
+    </header>
+    <div id="chapters"></div>
+    <section class="chapter" id="appendix"><div class="chapter-head"><div class="num">A</div><div><h2>附录：随手查</h2><p class="question">忘了术语或工具时，从这里快速找回上下文。</p></div></div>
+      <h3>字节序</h3><p>多字节整数在内存中需要约定排列顺序。小端把最低有效字节放在低地址，大端相反。字节序影响二进制文件、网络协议和跨平台数据交换，但不改变数值本身。</p>
+      <table><tr><th>目标</th><th>常用命令</th><th>你在看什么</th></tr><tr><td>编译到目标文件</td><td><code>gcc -c a.c -o a.o</code></td><td>先不链接</td></tr><tr><td>查看 ELF 头/段/符号</td><td><code>readelf -h/-S/-s a.o</code></td><td>文件结构与符号</td></tr><tr><td>反汇编</td><td><code>objdump -d a.o</code></td><td>机器指令与地址</td></tr><tr><td>查看动态依赖</td><td><code>ldd app</code></td><td>程序需要哪些共享库</td></tr><tr><td>查看符号</td><td><code>nm a.o</code></td><td>定义、未定义、局部/全局</td></tr><tr><td>追踪系统调用</td><td><code>strace ./app</code></td><td>用户程序如何请求内核</td></tr></table>
+      <h3>高频概念一口气区分</h3><p><b>段（section）</b>偏向链接器看文件内容如何分类；<b>段/区段（segment）</b>偏向装载器看哪些内容按同一权限映射。<b>静态库</b>在链接时抽取成员复制进程序；<b>共享库</b>在装载或运行时映射并解析。<b>API</b>是程序员调用的接口；<b>系统调用</b>是穿过用户态/内核态边界的机制；<b>运行库</b>往往在两者之间提供更友好的封装。</p>
+    </section>
+    <footer class="footer"><p>整理依据：原书公开目录与可公开检索的图书介绍；内容为学习性转述。最后更新：2026-09-08。</p><p><a href="#top">回到顶部 ↑</a></p></footer>
+  </main>
+</div>
+<script>
+const detailMode=true;
+if(detailMode){document.body.classList.add('detail-mode');document.title='详细版｜'+document.title;}
+const deepDives={
+'1.1':{m:'键入命令后，shell 创建进程；内核读取可执行文件头；装载器建立地址映射；动态链接器接通 libc；启动代码初始化运行库，最后才进入 main。printf 还会经过缓冲、系统调用、终端驱动。',e:'把 Hello World 想成寄快递：源代码是物品，编译器打包，链接器贴地址，装载器送入仓库，运行库办理手续，内核负责真正运输。',x:'误区：编译成功就代表程序完整。事实上缺少函数定义往往到链接时才暴露，缺少共享库则可能到启动时才暴露。'},
+'1.2':{m:'CPU 只认识指令编码。程序计数器指向下一条指令，寄存器保存高速临时数据，内存保存更大的代码与数据，控制器不断执行“取指—译码—执行”。',e:'表达式 c=a+b 最终会变成加载 a、加载 b、执行加法、写回 c 的若干机器指令，而不是 CPU 直接理解变量名。',x:'误区：内存和磁盘只是容量不同。内存按地址随机访问且易失；磁盘持久化并由文件系统组织，访问路径和代价完全不同。'},
+'1.3':{m:'每层只依赖下一层公开契约：应用依赖 C API，运行库适配系统调用，内核通过驱动操作设备。接口稳定时，下层实现可以替换而不要求上层重写。',e:'同一份 fopen 源码在 Linux 最终接近 openat，在 Windows 可能落到 CreateFile/NT 服务；上层代码仍使用相似的标准 C 接口。',x:'误区：API 等于系统调用。很多 API 完全在用户态完成，另一些 API 会组合多次系统调用。'},
+'1.4':{m:'操作系统同时提供抽象与仲裁：进程抽象 CPU，虚拟内存抽象物理内存，文件抽象存储设备；调度器、内存管理器和文件系统决定资源给谁以及何时回收。',e:'两个程序都认为自己拥有地址 0x400000，是因为各自页表把同一虚拟地址映射到不同物理页，彼此不能直接越界访问。',x:'误区：操作系统只是图形界面。桌面只是应用，真正核心是内核及其进程、内存、文件、网络和驱动管理。'},
+'1.5':{m:'CPU 访问虚拟地址时，MMU 查询页表得到物理页；映射不存在会触发缺页异常。内核可分配零页、从可执行文件读取一页，或从交换区调回。',e:'一个 500MB 程序刚启动时常不会立即占用 500MB 物理内存，只访问到的代码页和数据页才逐步驻留。',x:'误区：发生缺页就是错误。按需分页的首次缺页是正常机制；只有无法满足访问或权限不符才会演变成崩溃。'},
+'1.6':{m:'进程拥有资源容器，线程拥有执行现场。线程共享代码、堆和打开文件，但各有寄存器、程序计数器和栈；调度器可在任意指令边界切换。',e:'两个线程同时执行 counter++，它可能被拆成读、加、写，交错后丢失一次更新；互斥锁把这段读改写变成临界区。',x:'误区：多线程一定更快。锁竞争、缓存失效和上下文切换可能让它更慢，并且增加竞态和死锁风险。'},
+'2.1':{m:'预处理器处理 #include/#define；编译器完成语言分析并生成汇编；汇编器编码机器指令；链接器合并模块。GCC 只是驱动这些工具的统一入口。',e:'main.c 能看到 calc.h 的声明，所以可独立生成 main.o；add 的实现位于 calc.o，只有最终链接时两者才接上。',x:'误区：.h 会单独编译。头文件通常是文本展开进每个翻译单元，重复定义和宏污染也由此产生。'},
+'2.2':{m:'字符先组成 token，再按语法形成抽象语法树；类型检查后生成中间表示；优化器在 IR 上做常量传播、死代码删除等，后端才按目标架构选择指令与寄存器。',e:'20+22 可能在编译期直接折叠成 42；若 add 未内联，main.o 只生成一条指向外部符号的调用及重定位记录。',x:'误区：优化只是让代码更短。优化会改变布局、调用和变量可见性，因此调试优化程序时源码行与机器步骤可能不一一对应。'},
+'2.3':{m:'模块化让地址在编译时未知。汇编器以符号和占位数值表达引用，链接器在所有模块布局确定后统一计算，避免程序员手工维护绝对地址。',e:'若 calc.o 的代码长度变化，后续函数地址都会移动；有符号和重定位后，重新链接即可自动修正所有引用。',x:'误区：函数名会原样留在 CPU 指令中。机器调用使用地址或偏移，名字主要存在于符号表并在链接阶段转成数值关系。'},
+'2.4':{m:'链接依次解决三件事：将同类输入节合并并分配地址；为未定义符号选择定义；按重定位类型修补调用指令或指针数据。',e:'main.o 的 add 是 U，calc.o 的 add 是 T；链接器匹配后计算 call 到 add 的相对位移并写入最终 .text。',x:'误区：链接就是文件拼接。简单拼接不会修正跨模块地址，也无法处理同名冲突、库抽取和对齐。'},
+'3.1':{m:'目标格式是工具链之间的协议。头部说明架构和表位置，节保存内容，符号与重定位描述尚未解决的关系；不同格式解决的问题高度相似。',e:'同一份 calc.c 在 Linux 生成 ELF .o，在 MSVC 生成 COFF .obj；都含 add 机器码和可供链接的符号。',x:'误区：目标文件已经可以执行。可重定位目标通常没有完整入口与最终地址，操作系统不会把它当普通程序装载。'},
+'3.2':{m:'.text 常为只读可执行，.rodata 只读不可执行，.data 可读写，.bss 只记录大小。分节允许装载后使用最小权限，并让相同代码页共享。',e:'int g=7 通常进入 .data；int z; 通常进入 .bss；字符串字面量可能进入 .rodata；add 的指令进入 .text。',x:'误区：所有局部变量都存目标文件。普通局部变量多在运行时栈或寄存器中，文件只保存生成它们的指令和必要常量。'},
+'3.3':{m:'readelf 看结构，objdump 看字节和反汇编，nm 看符号。把三个输出按“节—指令—名字”对齐，才能从源代码追到二进制，而不是孤立地背命令。',e:'先用 nm 找到 add，再用 objdump -d 定位其指令，最后用 readelf -S 确认该地址属于 .text。',x:'误区：工具显示的地址都是运行时地址。可重定位文件中的值通常是节内偏移，最终链接地址和实际装载地址可能不同。'},
+'3.4':{m:'ELF Header 是总索引；Section Header Table 面向链接；Program Header Table 面向装载。字符串表把重复名称集中保存，其他表使用偏移引用它。',e:'链接器关心 .text/.data 等输入节；内核主要按 PT_LOAD 程序段映射若干节，并按 p_flags 设置读写执行权限。',x:'误区：section 与 segment 是同义词。一个装载 segment 可包含多个属性相近的 section，且被剥离节表的程序仍可能正常装载。'},
+'3.5':{m:'符号项记录名称、绑定、类型、所在节和值。GLOBAL 可跨文件可见，LOCAL 仅模块内部使用，WEAK 可被强定义覆盖；未定义符号等待链接器解析。',e:'把 add 声明为 static 后，它变成局部符号，main.o 无法引用 calc.o 中这个名字，最终出现未定义引用。',x:'误区：同名就一定能链接。C++ 名字修饰、调用约定、可见性和 ABI 不匹配都可能让“看起来同名”的接口无法配对。'},
+'3.6':{m:'DWARF/PDB 等调试信息保存地址范围到源码行、变量位置、类型和调用帧的映射。调试器据此设置源码断点并解释内存，而不是从机器码完美反推源码。',e:'gcc -g 后 readelf --debug-dump=info 可看到编译单元与类型；strip 可移除调试节，但另存的符号文件仍可分析崩溃。',x:'误区：发布版去掉调试信息就无法诊断。保留与二进制精确匹配的独立符号文件即可，不必把它发给最终用户。'},
+'4.1':{m:'第一遍统计各输入节大小、对齐和符号，得到输出节布局；第二遍复制内容并重定位。地址分配不是逐文件连续摆放，而是通常先把所有 .text 合并，再合并数据。',e:'main.o.text 为 80 字节、calc.o.text 为 20 字节时，calc 的代码可能接在输出 .text 中 main 相关代码之后，再按对齐补空洞。',x:'误区：源文件顺序必然等于函数地址顺序。链接脚本、函数节、垃圾回收和链接时优化都能改变排列。'},
+'4.2':{m:'每种重定位项包含“修改哪里、使用哪个符号、采用什么公式”。PC 相对重定位常计算 S+A-P，绝对重定位常计算 S+A；S 是符号地址，P 是被修位置。',e:'x86 的 call rel32 存的是目标与下一条指令之间的位移，因此程序整体移动时该差值可不变。',x:'误区：重定位总是写完整绝对地址。指令集大量使用相对寻址，不同位宽和类型还要检查溢出。'},
+'4.3':{m:'COMMON 是传统 C 的暂定定义折中：编译阶段尚不决定放哪，链接时根据候选大小选择。现代 GCC 默认 -fno-common，更早暴露重复全局定义。',e:'两个文件都写 int count; 在旧模式可能合成一个，在严格模式会 multiple definition；正确做法是一处定义，头文件写 extern。',x:'误区：未初始化全局变量天然可以重复定义。那是历史规则，不应当成为模块接口设计。'},
+'4.4':{m:'C++ 模板和内联函数可能在多个翻译单元实例化。COMDAT/弱定义让链接器保留一份；名字修饰把参数类型编码进符号，支持重载但绑定到特定 ABI。',e:'void f(int) 与 void f(double) 产生不同修饰名；extern "C" 关闭 C++ 名字修饰，常用于插件或跨语言边界。',x:'误区：头文件中定义模板会必然重复定义。模板依赖多处实例化，工具链有专门合并规则；普通非 inline 函数则不同。'},
+'4.5':{m:'归档库维护符号索引。链接器扫描到未解析符号时，从库中抽取提供定义的成员；未被需要的成员不进入输出，这解释了体积和顺序行为。',e:'libcalc.a 里有 add.o、sub.o；程序只调用 add，通常只抽取 add.o。用 -Wl,--trace 可观察抽取过程。',x:'误区：链接静态库会把整个 .a 复制进程序。默认按成员需求抽取，除非使用 --whole-archive 等选项。'},
+'4.6':{m:'链接脚本描述输出节、地址、入口和内存区域。桌面程序多用默认脚本，内核、引导程序和 MCU 固件则必须精确把代码放入 Flash、数据放入 RAM。',e:'ld --verbose 可查看默认脚本；-Wl,-Map=app.map 生成布局地图，是分析体积和符号来源最直接的材料。',x:'误区：自定义脚本只是改地址。遗漏初始化数组、异常展开表等节可能让程序链接成功却在启动或异常时出错。'},
+'4.7':{m:'BFD 把 ELF、COFF 等格式统一成节、符号、重定位等抽象，objdump、ld 等程序复用同一套读写逻辑。它属于构建工具内部架构。',e:'objdump -i 可列出当前构建支持的目标格式；同一 objdump 命令能分析不同架构文件，背后正是格式抽象。',x:'误区：应用运行时需要加载 BFD。除非应用主动链接它处理二进制，普通可执行文件并不依赖 BFD。'},
+'5.1':{m:'COFF 主要描述 .obj，PE 在其外加入适合装载的可选头、数据目录等。EXE 与 DLL 都是 PE Image，区别在标志、入口语义和导出使用方式。',e:'dumpbin /headers main.obj 与 calculator.exe：后者会出现 ImageBase、AddressOfEntryPoint、Subsystem 等装载字段。',x:'误区：.obj 与 .exe 只是后缀不同。前者是可重定位输入，后者是已链接映像。'},
+'5.2':{m:'COFF 文件头说明机器和节数，节表说明偏移与属性，节后有重定位和符号。长名称放字符串表，表项用偏移引用，减少重复。',e:'main.obj 中对 add 的 call 附带 IMAGE_REL_AMD64_REL32 一类重定位，link.exe 解析后写入相对位移。',x:'误区：COFF 的 Section 和 PE 装载内存区域完全一一对应。链接器还会合并同名前缀和调整对齐。'},
+'5.3':{m:'.drectve 节可携带 /DEFAULTLIB、/EXPORT 等文本指令，编译器借此把源码 pragma 和语言需求传给链接器。它是“目标文件给链接阶段的备注”。',e:'#pragma comment(lib,"user32.lib") 会让编译器写入默认库指示，所以命令行没写该库也可能链接成功。',x:'误区：依赖只存在构建脚本。它也可能藏在对象指令中，排查隐式库时要查看 dumpbin /directives。'},
+'5.4':{m:'PDB 通过标识与具体二进制匹配，保存函数、行号和类型。链接优化后地址变化，所以“同名 PDB”不够，必须是同一次构建对应的文件。',e:'WinDbg 加载匹配 PDB 后，崩溃地址 0x... 可还原为 module!function+offset 和源码行。',x:'误区：重新编译相同源码可生成可替代 PDB。时间戳、优化和布局变化都可能导致符号不匹配。'},
+'5.5':{m:'链接符号表服务构建，导入导出表服务运行时绑定，PDB 服务调试。它们都联系名字和地址，但生命周期、完整度和消费者不同。',e:'release EXE 可能没有 COFF 调试符号，却必须保留调用 DLL 所需的导入描述。',x:'误区：strip 后“所有符号都没了”。运行所需的动态元数据不能随意删除。'},
+'5.6':{m:'DOS 头的 e_lfanew 指向 PE 签名；随后是 COFF 头、Optional Header、Section Table。数据目录给出 Import、Export、Resource、Relocation 等表的 RVA 与大小。',e:'运行时虚拟地址 VA = ImageBase + RVA；文件位置还要结合所在节的 VirtualAddress 与 PointerToRawData 换算。',x:'误区：RVA 等于文件偏移。一个描述内存位置，一个描述磁盘位置，节对齐与文件对齐通常不同。'},
+'6.1':{m:'地址空间大小由架构、页表设计和系统策略共同决定。每个进程拥有独立页表；同一物理页也可映射进多个进程，用于共享库或共享内存。',e:'两个进程都把 libc 映射到不同虚拟地址，却可能共享只读代码的物理页；各自可写数据页则私有。',x:'误区：64 位进程可使用完整 2^64 字节。实际 CPU 与操作系统只实现部分地址位，并限制用户空间范围。'},
+'6.2':{m:'按需分页先建立文件区间到虚拟区间的关系，页表项起初可标为不存在。首次访问触发缺页，内核读取对应页并恢复原指令执行。',e:'只调用程序的一小部分功能时，从未走到的函数页面可能始终不进物理内存。',x:'误区：装载耗时完全取决于文件大小。实际还受依赖解析、重定位、页缓存和实际访问工作集影响。'},
+'6.3':{m:'内核按 PT_LOAD 建 VMA，并记录地址、长度、权限、文件和偏移。文件大小小于内存大小的尾部补零，常用于把 .bss 与数据段一起描述。',e:'readelf -l 的 LOAD 行可与 /proc/pid/maps 对照；Offset、VirtAddr 和 Flags 会呈现清晰对应。',x:'误区：每个 section 创建一个 VMA。装载主要按 segment，同权限的多个 section 常共用映射。'},
+'6.4':{m:'代码与只读数据位于低权限映射，可写数据和堆另设区域，mmap 区常容纳共享库，栈从高地址方向增长。ASLR 让基址每次变化。',e:'对比两次 cat /proc/pid/maps，栈、libc 和 PIE 主程序地址常不同，但区域相对结构相似。',x:'误区：教材内存图给出的顺序和地址永远固定。架构、内核、链接方式、PIE 与随机化都会改变布局。'},
+'6.5':{m:'execve 验证 ELF，替换当前进程的用户地址空间，映射程序与解释器，构造含 argc/argv/envp/auxv 的初始栈，再把指令指针设到入口。',e:'strace -f ./calculator 第一行常是 execve；readelf -l 可看到 INTERP 指定的 ld-linux 路径。',x:'误区：execve 会返回到旧程序。成功时旧映像已被替换，不会返回；只有失败才返回错误。'},
+'6.6':{m:'Windows 映射 PE 节、处理基址重定位、递归装载导入 DLL、填写 IAT、调用 TLS 回调和 DllMain，再进入 EXE 启动代码。',e:'Process Explorer 的 Memory/Modules 视图可看到 EXE 与各 DLL 基址；dumpbin /imports 对应其中依赖。',x:'误区：DllMain 适合执行任意初始化。它运行于装载器锁等限制环境，复杂阻塞操作容易死锁。'},
+'7.1':{m:'共享库让代码页在进程间复用，程序只保留依赖记录。升级可以集中修复，但前提是新库保持 ABI；否则同一机制会把不兼容变化传播给所有程序。',e:'十个程序静态带一份 libc 会重复磁盘与内存；动态方式可共享只读代码页，各进程保留独立数据。',x:'误区：动态链接必然更省内存。重定位、私有数据和只用少量函数时的映射开销会影响实际结果。'},
+'7.2':{m:'链接阶段把外部引用保留为动态重定位，并在 DT_NEEDED 写依赖名。启动时解释器沿搜索路径装入库，建立全局符号查找范围。',e:'readelf -d calculator 显示 libcalc.so.1；nm -D libcalc.so.1 显示 add；ldd 显示最终解析到哪个文件。',x:'误区：-L 路径会自动写入程序供运行时使用。-L 主要供链接器查找，运行时路径需另行配置。'},
+'7.3':{m:'PIC 对本模块代码常用 PC 相对寻址，对可被抢占的全局数据经 GOT。装载器只改写数据表，避免修改共享的只读代码页和产生 text relocation。',e:'objdump -dr calc.pic.o 可观察 RIP-relative 或 GOTPCREL 一类寻址；readelf -r 查看对应动态重定位。',x:'误区：PIC 完全没有重定位。它仍可能需要重定位 GOT 等可写位置，只是尽量避免改代码。'},
+'7.4':{m:'PLT 表项第一次通过 GOT 跳到解析器，解析器根据重定位索引查符号并回填 GOT；后续调用直接到真实函数。-z now 可在启动时全部解析。',e:'LD_DEBUG=bindings 可观察首次调用绑定；反复调用 add 时通常不会每次重新查找。',x:'误区：延迟绑定只影响性能。可写 GOT 与劫持风险推动了 RELRO、立即绑定等安全策略。'},
+'7.5':{m:'.dynamic 是运行时目录，指向动态字符串表、动态符号表、哈希表、重定位、初始化数组和 GOT/PLT。地址和大小均由标签描述。',e:'readelf -d、readelf --dyn-syms、readelf -r 分别从目录、符号、修补清单三个角度查看。',x:'误区：动态符号表等同于完整 .symtab。它只保留运行绑定需要的子集，剥离后 .dynsym 通常仍在。'},
+'7.6':{m:'动态链接器先重定位自己，再广度或按实现规则装入依赖，建立作用域，执行重定位与初始化。符号抢占意味着某引用可能绑定到更早出现的同名定义。',e:'LD_PRELOAD 放入自定义 malloc 库可让全局查找先命中它，从而记录分配；这正是符号插桩的基础。',x:'误区：每个库只在自己的文件里找符号。ELF 默认可见性和全局作用域允许跨对象解析，也会造成意外覆盖。'},
+'7.7':{m:'dlopen 返回模块句柄，dlsym 按字符串找地址，dlerror 提供错误，dlclose 减少引用计数。接口必须约定函数类型、所有权和版本。',e:'typedef int (*add_fn)(int,int); 再把 dlsym 结果转换为 add_fn，插件主程序无需在启动时固定依赖 calc。',x:'误区：dlclose 后函数指针仍可调用。模块可能已卸载；线程、回调和模块内对象都必须先结束。'},
+'8.1':{m:'真实文件含完整版本，SONAME 表示 ABI 兼容系列，开发链接名供 -l 使用。链接器记录 SONAME，装载器再通过软链接或缓存找到实际文件。',e:'libcalc.so -> libcalc.so.1 -> libcalc.so.1.2.0；程序通常依赖 libcalc.so.1，补丁升级只移动后一个链接。',x:'误区：文件名版本越详细越安全。程序硬绑补丁名会失去兼容升级能力。'},
+'8.2':{m:'版本脚本既能控制导出集合，也能给符号附加版本节点。解析时“名字 + 版本”共同确定实现，库可同时承载旧新 ABI。',e:'readelf --version-info libc.so.6 可看到 GLIBC_2.x 需求；旧程序继续请求旧版本符号。',x:'误区：符号版本等于包版本。它表达 ABI 演进节点，不必与发行版软件包版本一致。'},
+'8.3':{m:'装载器搜索架构对应目录和 ld.so.cache；ldconfig 扫描配置目录、更新 SONAME 链接与缓存。多架构系统会分离 32/64 位库。',e:'ldconfig -p | grep libc 查看缓存条目；file 某个 .so 可确认其位数与架构。',x:'误区：把库复制到 /usr/lib 就结束。权限、SONAME 链接、缓存与架构不匹配都可能让它不可用。'},
+'8.4':{m:'实际优先级受 DT_RPATH、DT_RUNPATH、LD_LIBRARY_PATH、安全模式与默认目录影响。RUNPATH 对间接依赖的传播语义也与旧 RPATH 不同。',e:'用 LD_DEBUG=libs 逐行看“trying file”，比凭记忆猜优先级可靠；readelf -d 先确认程序携带哪种路径标签。',x:'误区：ldd 结果在任何环境都相同。环境变量、当前架构、缓存乃至安全执行模式都会改变解析。'},
+'8.5':{m:'LD_LIBRARY_PATH 临时追加候选目录；LD_PRELOAD 把对象提前加入作用域；LD_DEBUG 输出装载器诊断。特权程序会忽略危险变量。',e:'LD_PRELOAD=./trace.so ./app 可拦截普通动态符号；调试结束后只影响该次命令，不污染系统。',x:'误区：把 LD_LIBRARY_PATH 写入全局配置是通用修复。它可能让无关程序加载错误版本并制造难排查问题。'},
+'8.6':{m:'生产库需要 PIC、受控导出、SONAME、版本链接、头文件和 pkg-config/CMake 元数据。安装还要考虑权限、目标目录与缓存刷新。',e:'gcc -fvisibility=hidden 配合显式 API 导出，可避免内部符号意外成为 ABI；pkg-config --libs --cflags 提供一致参数。',x:'误区：能生成 .so 就算发布完成。没有兼容政策和开发元数据，调用者无法稳定构建与升级。'},
+'9.1':{m:'DLL 映射到每个进程地址空间，代码页可共享，数据默认每进程一份。系统按引用计数和装载规则管理模块及初始化通知。',e:'同一个 calc.dll 被两个 EXE 使用时，全局变量通常各有副本，不会天然成为进程间共享变量。',x:'误区：DLL 中的全局变量自动跨进程共享。需要共享节或显式 IPC，且同步问题随之而来。'},
+'9.2':{m:'导入描述符列出 DLL 和函数，IAT 是装载后可直接间接调用的槽位；导出表把名称/序号映射为 RVA。导入库在链接时生成这些记录。',e:'dumpbin /imports app.exe 找到 add，调试器查看 IAT 槽可看到它被写成 calc.dll!add 的实际地址。',x:'误区：.lib 一定是静态库。Windows 的 .lib 也可能只是导入库，真正代码仍在 DLL。'},
+'9.3':{m:'首选基址曾用于减少重定位，但 ASLR 主动随机化映像。现代优化更关注可重定位、IAT/延迟导入、安全保护及减少装载工作集。',e:'dumpbin /headers 查看 Dynamic base 与 relocation；缺少重定位的映像无法自由随机化。',x:'误区：固定基址总能提升性能。它削弱随机化，而且大型依赖图仍可能冲突。'},
+'9.4':{m:'C++ ABI 包含修饰名、类布局、虚表、异常、分配器和 CRT 所有权。任一编译选项或版本变化都可能打破 DLL 边界。',e:'DLL 内 new、EXE 内 delete 若使用不同 CRT 堆，可能崩溃；更稳妥是由创建模块同时提供 destroy 函数。',x:'误区：头文件能编译就代表二进制兼容。编译兼容与 ABI 兼容是两回事。'},
+'9.5':{m:'装载器按规则搜索同名 DLL，找到“名字对但 ABI 错”的文件就会失败或产生隐蔽行为。应用本地部署、清单和明确版本可收缩搜索范围。',e:'用 Process Monitor 过滤 Load Image，可看程序从哪些路径尝试 DLL；这比反复复制文件更能定位根因。',x:'误区：从网上下载同名 DLL 放进系统目录即可。来源、安全性、架构和版本都可能错误，并影响其他程序。'},
+'10.1':{m:'静态存储期对象随映像存在，自动对象随调用存在，动态对象由分配器管理。编译器可把局部值放寄存器，所以“存储期”比“固定住在栈”更准确。',e:'打印 &global、&local、malloc 返回值，并与 maps 对照，可分别落在数据段、线程栈和堆/匿名映射。',x:'误区：const 一定在只读段。局部 const 可能在栈或被优化，只有实际节属性决定页面权限。'},
+'10.2':{m:'调用者设置参数并执行 call，被调用者保存必要寄存器、分配栈帧，返回值放约定位置。栈需满足对齐，变参和结构体返回还有额外 ABI 规则。',e:'x86-64 System V 前几个整数参数走寄存器而非栈；objdump -d 可看到 main 调 add 前如何准备 edi、esi。',x:'误区：所有参数都从右向左压栈。这只适用于部分旧式调用约定，架构与 ABI 决定真实规则。'},
+'10.3':{m:'分配器向内核申请大块 arena，再按尺寸类别切分并记录空闲块；大块可能单独 mmap。free 主要归还给分配器，满足条件才回收给内核。',e:'连续申请小对象时 strace 不会看到同样次数的 brk/mmap；说明 malloc 在用户态复用已有空间。',x:'误区：内存泄漏等于 free 后进程占用不下降。后者可能只是分配器保留缓存；泄漏是对象已不可达且未释放。'},
+'11.1':{m:'_start 从初始栈取参数，运行库初始化 TLS、堆、I/O 与构造器，调用 main，再把返回值交给 exit；exit 刷新流、运行 atexit 与析构后请求内核退出。',e:'在全局 C++ 对象构造、main、atexit 回调和析构中分别打印，可观察 main 前后顺序。',x:'误区：从 main return 与直接 _exit 完全相同。_exit 跳过用户态缓冲刷新和退出处理。'},
+'11.2':{m:'运行库一部分是纯算法，如 strlen；一部分维护用户态状态，如 stdio 缓冲；一部分包装系统服务，如文件与线程。静态/动态 CRT 还影响状态是否共享。',e:'objdump 反汇编 strlen 可能只见内存循环；strace printf 则可最终见到 write，体现两类实现差异。',x:'误区：标准库函数都产生系统调用。很多函数完全不进入内核。'},
+'11.3':{m:'TLS 为每线程提供独立 errno 等状态；内部互斥保护共享 FILE 和分配器结构；一次初始化保证全局设施只构造一次。',e:'两个线程系统调用失败后各自读 errno，不应互相覆盖；errno 常实现为返回当前线程槽位的函数或宏。',x:'误区：printf 线程安全就代表两次 printf 组成的消息不可穿插。单次内部一致不保证跨调用事务原子性。'},
+'11.4':{m:'编译器把初始化函数放入 .init_array/CRT 表，启动代码遍历；析构通过相反机制登记。跨翻译单元顺序通常只部分规定。',e:'A 的构造读取另一个文件中 B，若 B 尚未构造就出错；改成函数内静态 B，可在首次使用时安全初始化。',x:'误区：源文件在项目列表中的顺序可靠地决定全局构造顺序。不要依赖这种脆弱偶然。'},
+'11.5':{m:'fread 先消费 FILE 缓冲，缺数据才调用底层 read；还需处理短读、EOF、错误、文本转换和线程锁。返回值是成功读取的元素数，不是必然字节数。',e:'fread(buf,4,10,f) 返回 7 表示完整读到 7 个四字节元素；应结合 feof/ferror 区分结束与错误。',x:'误区：返回值小于请求就一定出错。文件正常结束、管道短读或信号等情况需要分别判断。'},
+'12.1':{m:'系统调用是受控入口：内核验证指针、权限和对象状态，执行调度、文件、网络、内存等特权操作，再返回结果或错误码。',e:'fopen 是 C API，内部可能调用 openat；FILE* 是用户态结构，文件描述符才是内核对象的进程内索引。',x:'误区：函数名相似就属于同一层。printf/write、malloc/mmap、pthread_create/clone 都是高低层关系而非同义词。'},
+'12.2':{m:'用户态把编号和参数放入 ABI 规定寄存器，执行 syscall/sysenter 等指令；CPU 切到内核入口，内核保存现场、分发服务并返回。',e:'strace 看到的是系统调用边界；perf 可进一步观察切换与缺页成本。缓冲把许多小 write 合成较少的大 write。',x:'误区：进入内核等于启动另一个进程。仍是同一线程，只是权限级别和执行代码切换。'},
+'12.3':{m:'Win32 API 多由 kernel32/user32 等 DLL 暴露，可能在用户态处理后调用 ntdll，再进入内核。微软承诺公开 API 兼容，不承诺底层系统调用编号稳定。',e:'CreateFile 是公开 API，名字虽像只建文件，实际也用于打开设备和既有文件；其参数最终被转成 NT 对象语义。',x:'误区：直接调用未文档化 NT 系统调用更高效且可靠。编号和细节可随 Windows 版本变化。'},
+'13.1':{m:'最小 CRT 从 _start 开始，解析参数，建立堆，提供字符串与 I/O，调用 main，最后执行退出处理。每项能力都必须落到少数系统调用或已有内核接口。',e:'先实现 write 包装即可输出固定字符串，再实现简单 printf；先用线性/空闲链表分配器支持 malloc，逐步增加 free。',x:'误区：Mini CRT 代码少就容易正确。对齐、整数溢出、并发、错误处理和安全检查都是生产运行库的巨大工作量。'},
+'13.2':{m:'-nostdlib 移除默认启动文件与库后，链接器会直接暴露缺失契约。需要提供入口符号、链接自有对象，并按目标系统 ABI 发起系统调用。',e:'先让 _start 调 main，再把返回值传给 exit 系统调用；用 readelf -h 检查 Entry，strace 检查是否正确退出。',x:'误区：只定义 main 就足够。没有默认 CRT 时无人负责从入口调用 main。'},
+'13.3':{m:'C++ 还要求 new/delete、静态构造、纯虚调用处理等。完整异常和 RTTI 依赖展开表、类型信息和 personality routine，远超最小示例范围。',e:'operator new 可先调用 Mini CRT malloc，失败按约定处理；链接器提供构造数组边界，启动代码遍历函数指针。',x:'误区：不用 STL 就不需要 C++ 运行时。对象构造、new、虚函数错误路径都可能生成隐式依赖。'},
+'13.4':{m:'构建时禁用默认库，并严格限制语言特性；用 nm 检查仍未解析的编译器辅助符号，用 map 文件确认构造数组没有被垃圾回收。',e:'测试应覆盖全局对象是否在 main 前构造、main 后析构，new/delete 是否配对，以及退出码是否传给操作系统。',x:'误区：示例能运行一次就表示运行库完成。不同优化级别、架构、线程和错误路径会暴露大量未实现契约。'}
+};
+const english={硬件:'Hardware',操作系统:'Operating System (OS)',虚拟地址:'Virtual Address',线程:'Thread',预处理:'Preprocessing',编译:'Compilation',汇编:'Assembly',链接:'Linking',目标文件:'Object File',ELF:'Executable and Linkable Format','节（Section）':'Section',符号:'Symbol',符号解析:'Symbol Resolution',重定位:'Relocation',COMMON:'COMMON Block',静态库:'Static Library / Archive',COFF:'Common Object File Format',PE:'Portable Executable',RVA:'Relative Virtual Address','导入/导出':'Import / Export',装载:'Loading',页:'Page',VMA:'Virtual Memory Area',入口点:'Entry Point',共享库:'Shared Library',PIC:'Position-Independent Code',GOT:'Global Offset Table',PLT:'Procedure Linkage Table',SONAME:'Shared Object Name',符号版本:'Symbol Versioning',ldconfig:'Linker Cache Configurator','RPATH/RUNPATH':'Runtime Search Path',DLL:'Dynamic-Link Library',导出表:'Export Table',导入表:'Import Table',IAT:'Import Address Table',栈:'Stack',堆:'Heap',调用惯例:'Calling Convention',栈帧:'Stack Frame',CRT:'C Runtime',入口函数:'Entry Routine',TLS:'Thread-Local Storage',全局构造:'Global Construction',用户态:'User Mode',内核态:'Kernel Mode',系统调用:'System Call',API:'Application Programming Interface','Mini CRT':'Minimal C Runtime',启动代码:'Startup Code',atexit:'Exit Handler Registration','new/delete':'Allocation Operators'};
+const chapterLabs=[
+{lab:{title:'看见进程与虚拟地址',platform:'Linux / WSL',cmd:'ps -o pid,ppid,nlwp,stat,cmd -p $$\ncat /proc/$$/maps | head',out:'NLWP 是线程数量；maps 每行是一段虚拟地址区域，并标出 r/w/x 权限。',why:'先把“进程地址空间”从概念变成真实输出。Windows 可用任务管理器和 Process Explorer 对照。'}},
+{lab:{title:'拆开编译流水线',platform:'GCC / Clang',cmd:'gcc -E main.c -o main.i\ngcc -S main.i -o main.s\ngcc -c main.s -o main.o\ngcc -c calc.c -o calc.o\ngcc main.o calc.o -o calculator',out:'依次得到预处理文本、汇编、两个目标文件，最后才有可执行文件。',why:'若最后不写 calc.o，会报 add 的 undefined reference：声明让编译通过，定义让链接通过。'}},
+{lab:{title:'打开目标文件',platform:'Linux / WSL',cmd:'readelf -h main.o\nreadelf -S main.o\nnm -C main.o\nobjdump -dr main.o',out:'nm 中 add 前常见 U（Undefined），main 前的 T 表示它定义在代码节。',why:'objdump -r 显示待重定位位置：main.o 没有 add 实现，却留下名字和“以后修这里”的记录。'}},
+{lab:{title:'观察静态库链接',platform:'GNU binutils',cmd:'ar rcs libcalc.a calc.o\nnm libcalc.a\ngcc main.o -L. -lcalc -Wl,-Map=calculator.map -o calculator\ngrep add calculator.map',out:'ar 把 calc.o 收进归档，-lcalc 寻找 libcalc.a，map 文件指出 add 来自何处。',why:'传统链接器从左到右按需抽取库成员；库顺序错误可能产生未定义符号。Windows 搜索可把 grep 换成 findstr。'}},
+{lab:{title:'在 Windows 查看 PE',platform:'VS Developer Prompt',cmd:'cl /c main.c calc.c\ndumpbin /headers main.obj\ndumpbin /symbols main.obj\nlink main.obj calc.obj /out:calculator.exe\ndumpbin /headers calculator.exe',out:'obj 显示 COFF 节与符号；exe 还会出现映像基址、入口和数据目录。',why:'和 readelf 并排看：术语不同，但都要描述节、符号、入口与装载信息。'}},
+{lab:{title:'观察装载后的地址空间',platform:'Linux / WSL',cmd:'gcc main.c calc.c -o calculator\n./calculator &\npid=$!\ncat /proc/$pid/maps\nwait $pid',out:'程序若结束太快，可在 main 中临时加入 getchar()。maps 会列出程序、libc、动态链接器、堆和栈。',why:'ELF 的内容被映射到多段虚拟地址，各自拥有 r-x、rw- 等不同权限。'}},
+{lab:{title:'把 calc 做成共享库',platform:'GCC / Linux',cmd:'gcc -fPIC -c calc.c -o calc.pic.o\ngcc -shared calc.pic.o -Wl,-soname,libcalc.so.1 -o libcalc.so.1\nln -s libcalc.so.1 libcalc.so\ngcc main.c -L. -lcalc -o calculator\nLD_LIBRARY_PATH=. ./calculator',out:'程序输出 20 + 22 = 42；readelf -d calculator 可看到 NEEDED 依赖。',why:'calculator 不再复制 add 的实现，运行时动态链接器必须找到 libcalc.so.1。'}},
+{lab:{title:'诊断共享库查找',platform:'Linux / WSL',cmd:'ldd ./calculator\nreadelf -d ./calculator | grep -E "NEEDED|RPATH|RUNPATH"\nLD_DEBUG=libs LD_LIBRARY_PATH=. ./calculator',out:'LD_DEBUG 会列出尝试过的目录和最终装入的文件；输出很长是正常的。',why:'编译时找到 -lcalc 与运行时找到 SONAME 是两个阶段，搜索路径也不同。'}},
+{lab:{title:'制作并检查 DLL',platform:'VS Developer Prompt',cmd:'cl /LD calc.c /Fecalc.dll\ncl main.c calc.lib /Fecalculator.exe\ndumpbin /exports calc.dll\ndumpbin /imports calculator.exe',out:'exports 显示 DLL 提供的符号，imports 显示 EXE 依赖的 DLL 与导入函数。',why:'需用 __declspec(dllexport) 或 .def 文件导出 add；calc.lib 是导入库，不等于运行时需要的 DLL。'}},
+{lab:{title:'观察栈、堆和全局区',platform:'C / GCC',cmd:'gcc addr.c -o addr\n./addr\ncat /proc/$(pgrep -n addr)/maps',out:'让 addr.c 打印全局变量、局部变量和 malloc 返回值的地址；它们通常落在不同映射。',why:'每次地址可能因 ASLR 改变。重要的不是数字，而是它落在哪个区域、拥有什么权限。'}},
+{lab:{title:'看见 main 之外的依赖',platform:'Linux / WSL',cmd:'gcc main.c calc.c -o calculator\nnm -u calculator\nreadelf -h calculator | grep Entry\nobjdump -d calculator | grep -A12 "&lt;_start&gt;"',out:'入口通常是 _start 而非 main；动态符号中可能有 printf、__libc_start_main。',why:'内核先跳到启动代码，运行库准备环境后才调用 main，main 返回后还要清理。'}},
+{lab:{title:'追踪系统调用',platform:'Linux / WSL',cmd:'strace -o trace.txt ./calculator\ngrep -E "execve|openat|mmap|write|exit_group" trace.txt',out:'共享库经 openat/mmap 装载，输出最终常落到 write，退出使用 exit_group。',why:'printf 是 API，可能先写用户态缓冲，最终才触发 write 系统调用。'}},
+{lab:{title:'故意移除默认运行库',platform:'GCC / 进阶',cmd:'gcc main.c calc.c -nostdlib -o bare-calculator',out:'预期链接失败，提示 _start、printf 或退出相关符号缺失。这个失败就是实验结果。',why:'错误列表展示工具链平时自动补给的运行时依赖；Mini CRT 的任务就是逐项提供它们。'}}
+];
+const chapters=[
+{n:1,t:'温故而知新',q:'在讨论链接之前，计算机和操作系统究竟替程序做了什么？',terms:[['硬件','CPU、内存、I/O 设备等实体部件。'],['操作系统','管理硬件并向程序提供统一抽象的系统软件。'],['虚拟地址','进程以为自己使用的地址，最终由系统映射到物理内存。'],['线程','进程内部的一条执行流，共享进程的大部分资源。']],secs:[
+['1.1 从 Hello World 说起','一行输出语句背后并不简单：源代码先被编译和链接成可执行文件，运行时由装载器放入内存，运行库完成初始化，最后通过系统调用让内核驱动终端显示文字。全书就是把这条被工具隐藏的流水线逐层拆开。','程序不是“源代码直接交给 CPU”，中间有一整套翻译、拼装和运行支持。'],
+['1.2 万变不离其宗','现代计算机大体遵循“存储程序”思想：指令和数据存入存储器，CPU 取指、译码、执行。硬件越来越复杂，但处理器、内存和输入输出之间的数据流仍是理解程序运行的骨架。','先建立 CPU—内存—I/O 的地图，后面的文件段、装载和系统调用才有落点。'],
+['1.3 站得高，望得远','软件通过分层抵抗复杂度：应用调用运行库，运行库使用系统调用，内核驱动硬件。每层暴露接口、隐藏实现，因此同一个 <code>printf</code> 可以运行在不同机器上。','接口把“怎么实现”与“怎么使用”分开。'],
+['1.4 操作系统做什么','操作系统最重要的工作是管理稀缺资源并提供抽象。它把 CPU 时间切成调度片，把物理内存包装成进程地址空间，把磁盘字节包装成文件，把设备差异藏在驱动之后。','操作系统既是资源管理员，也是应用和硬件之间的服务台。'],
+['1.5 内存不够怎么办','虚拟内存允许进程看到连续而独立的地址空间，实际页面可分散在物理内存，暂时不用的页还可换到磁盘。分页机制同时带来隔离、共享和按需装载。','虚拟内存不是“凭空增加内存”，而是一套地址映射和调度策略。'],
+['1.6 众人拾柴火焰高','多线程能让任务并发，但共享数据会产生竞争。原子操作、锁、信号量等同步手段用来规定访问顺序；过度加锁又可能造成死锁或性能下降。','并发的难点不是同时做事，而是正确地共享状态。']],sum:'第 1 章搭好了舞台：硬件执行指令，操作系统管理资源，接口连接软件层次，虚拟内存和线程塑造程序看到的运行环境。',quiz:['为什么 printf 不是 CPU 指令？','虚拟地址与物理地址有什么区别？','线程共享什么，又各自保留什么？']},
+{n:2,t:'编译和链接',q:'一份 C/C++ 源代码变成可执行文件，要经过哪些隐藏步骤？',terms:[['预处理','展开宏、头文件和条件编译，得到翻译单元。'],['编译','把高级语言转换成汇编或中间形式并优化。'],['汇编','把汇编指令编码为机器码，形成目标文件。'],['链接','合并目标文件，解析符号并修正地址。']],secs:[
+['2.1 被隐藏了的过程','以 <code>gcc hello.c -o hello</code> 为例，驱动程序依次调用预处理器、编译器、汇编器和链接器。<code>-E</code>、<code>-S</code>、<code>-c</code> 可以让流程停在不同阶段，便于观察中间产物。','遇到错误时，先判断它属于预处理、编译、汇编还是链接阶段。'],
+['2.2 编译器做了什么','编译器通常经历词法分析、语法分析、语义分析、中间代码生成、优化和目标代码生成。词法把字符组成 token，语法构建结构，语义检查类型与声明，优化在保持含义的前提下改进代码。','编译错误多与单个翻译单元有关；它还不知道其他 .o 文件最终放在哪里。'],
+['2.3 链接器年龄比编译器长','早期程序需要手工记录每个子程序的地址，修改一处就可能牵动所有地址。链接器把跨模块引用写成符号，让程序员用名字协作，再在布局确定后统一计算地址。','链接器的诞生首先解决的是“地址维护”问题。'],
+['2.4 模块拼装——静态链接','每个源文件独立编译成目标文件。链接器收集各文件的代码和数据，匹配“定义”与“引用”，分配最终地址，并把指令或数据里暂时未知的位置重写为正确值。','静态链接的三个关键词：合并、符号解析、重定位。']],sum:'编译负责理解单个源文件并生成机器码，链接负责处理模块之间的关系。把两者分清，是读懂后续所有章节的钥匙。',quiz:['gcc -c 为什么还不能生成可运行程序？','undefined reference 更可能出现在哪个阶段？','重定位为什么必须等布局确定？']},
+{n:3,t:'目标文件里有什么',q:'尚未链接的机器码如何有组织地存进文件？',terms:[['目标文件','编译后的模块，含机器码、数据、符号和重定位信息。'],['ELF','Linux 等系统常用的目标/可执行/共享库文件格式。'],['节（Section）','按用途组织的文件内容单位，如 .text、.data。'],['符号','函数或变量的名字及其属性，是模块之间的链接接口。']],secs:[
+['3.1 目标文件的格式','目标文件格式不只装机器码，还要让链接器、装载器和调试器找到各种元数据。Unix-like 系统常见 ELF，Windows 使用 PE/COFF；可执行文件、目标文件、共享库常属于同一家族格式。','二进制文件也有“目录和表格”，并不是一团不可解释的字节。'],
+['3.2 目标文件是什么样的','编译器按用途把内容分节：<code>.text</code> 放代码，<code>.data</code> 放已初始化的可写全局数据，<code>.bss</code> 描述未初始化或零初始化数据，<code>.rodata</code> 放只读常量。分类有利于权限保护、共享和节省空间。','代码和数据分开放，是为了管理，不只是整齐。'],
+['3.3 挖掘 SimpleSection.o','用 <code>objdump -h/-s/-d</code>、<code>readelf</code> 和 <code>nm</code> 可以从段表、原始字节、反汇编和符号四个角度观察同一目标文件。源代码中的一个变量是否出现于文件，要看其存储期、初始化和值是否被优化。','工具输出不是新知识，而是从不同视角验证同一结构。'],
+['3.4 ELF 文件结构描述','ELF 头说明文件类型、架构和各表位置；节头表描述每个节；字符串表保存名称；符号表和重定位表服务链接。装载时还会从程序头表按 segment 视角映射内容。','Section 主要服务链接，segment 主要服务装载；两者不要混为一谈。'],
+['3.5 链接的接口——符号','符号可分为本模块定义、外部引用和局部符号，并带有绑定强弱、类型、所在节和值。C++ 为支持重载会进行名字修饰，所以跨语言接口常用 <code>extern "C"</code> 约定名称。','链接器匹配的是符号名和规则，不理解你的业务意图。'],
+['3.6 调试信息','开启 <code>-g</code> 后，目标文件会保存机器地址与源文件、行号、变量类型等映射。调试信息可很大，但通常不参与程序语义，发布时可分离或剥离。','调试器能回到源码，是因为文件里额外保存了“机器码—源码”的地图。']],sum:'目标文件是一只结构化容器：节保存内容，表保存描述，符号构成模块接口，重定位记录等待链接器填写的位置。',quiz:['.bss 为什么通常不必在文件里存一大串 0？','符号表解决什么问题？','section 和 segment 分别主要给谁使用？']},
+{n:4,t:'静态链接',q:'链接器怎样把多个半成品拼成地址确定的程序？',terms:[['符号解析','为每个未定义引用找到唯一合适的定义。'],['重定位','根据最终地址修正机器指令或数据中的引用。'],['COMMON','老式工具链对未初始化全局变量的一种暂定定义机制。'],['静态库','许多目标文件的归档，按需抽取成员参与链接。']],secs:[
+['4.1 空间与地址分配','链接器通常采用“两步链接”：先扫描所有输入，合并同类节、收集符号并计算布局；再写出内容并执行重定位。相似节合并能减少碎片并统一权限。','先决定各块住哪，再填写门牌号。'],
+['4.2 符号解析与重定位','编译器遇到外部函数时会留下占位值和重定位项。链接器找到定义后，根据重定位类型计算绝对地址或相对偏移，再改写指定位置；找不到或出现冲突就报告错误。','重定位表就是“待填写地址清单”，类型决定计算公式。'],
+['4.3 COMMON 块','传统 C 允许多个未初始化全局变量暂时并存，链接时再选择大小并分配空间；已初始化的强定义通常压过弱定义。现代工具链更严格，依赖 COMMON 规则容易隐藏重复定义问题。','全局变量尽量一处定义、其他地方 extern 声明。'],
+['4.4 C++ 相关问题','C++ 的重载、模板、内联函数和虚表可能在多个翻译单元生成相似实体。工具链通过名字修饰、弱符号、COMDAT/链接一次语义等机制去重；ABI 则约定名称、布局和调用规则。','C++ 能跨模块工作，依赖的不只是语法，还依赖编译器 ABI 契约。'],
+['4.5 静态库链接','静态库（<code>.a</code>/<code>.lib</code>）是目标文件集合。链接器通常只抽取当前未解析符号需要的成员，所以命令行顺序在传统 Unix 链接中可能影响结果；循环依赖可用分组或调整结构解决。','静态库不是整包复制，通常是按需抽取目标文件。'],
+['4.6 链接过程控制','链接脚本可指定入口、地址、节顺序和内存区域，嵌入式固件和内核尤其依赖它。普通应用也可用参数生成 map 文件、保留符号或自定义段。','链接器不仅“拼文件”，还能精确控制最终二进制布局。'],
+['4.7 BFD 库','BFD 是 GNU 工具链的一层统一二进制文件接口，让链接器等工具用相似方式处理多种目标格式和体系结构。它说明工具可以把“算法”与“具体文件格式”解耦。','BFD 的价值在抽象格式差异，不是程序运行时必需库。']],sum:'静态链接先布局空间，再解析符号，最后按重定位记录修正引用。静态库只是便于组织的目标文件仓库，链接脚本则让布局可控。',quiz:['两步链接为什么比边读边写更稳妥？','为什么库的命令行顺序有时重要？','绝对地址与相对偏移重定位有什么直观区别？']},
+{n:5,t:'Windows PE/COFF',q:'Windows 如何保存目标文件和可执行文件？',terms:[['COFF','通用目标文件格式家族，Windows 目标文件以其为基础。'],['PE','Windows 可执行文件、DLL 常用的封装格式。'],['RVA','相对映像基址的地址。'],['导入/导出','DLL 对外提供符号以及程序引用这些符号的机制。']],secs:[
+['5.1 Windows 的二进制文件格式 PE/COFF','Windows 的 <code>.obj</code> 多用 COFF，可执行文件和 DLL 使用 PE。概念上它与 ELF 都要表达代码、数据、符号、重定位和装载信息，只是表结构与术语不同。','先抓共同问题，再记格式差异；不要把 PE 当成完全陌生的世界。'],
+['5.2 PE 的前身——COFF','COFF 由文件头、节表、节数据、重定位、符号表和字符串表等组成。节名、属性和对齐帮助链接器决定如何合并，符号辅助模块拼装与调试。','COFF 目标文件仍是“内容节 + 描述表”的套路。'],
+['5.3 链接指示信息','某些节可携带传给链接器的指令，例如默认链接哪个库、导出什么符号。编译器因而能把语言特性或 pragma 转化为后续链接行为。','目标文件不仅有代码，也可能给链接器留言。'],
+['5.4 调试信息','Windows 工具链可把调试数据放在目标文件或独立 PDB 中。独立符号文件让发布二进制保持精简，同时开发者仍能把崩溃地址还原为函数和行号。','保留匹配版本的 PDB，线上崩溃才可定位。'],
+['5.5 大家都有符号表','COFF 同样需要符号表表达定义与引用。即使最终发布版剥离了普通符号，导入导出、重定位或调试数据仍以其他表维持必要信息。','“看不到完整符号表”不等于二进制不需要名字和地址关系。'],
+['5.6 Windows 下的 ELF——PE','PE 在 DOS 头之后放 PE 签名、COFF 头、可选头和节表。所谓“可选头”对映像文件其实很关键，其中保存入口、映像基址、对齐及数据目录；数据目录再指向导入表等结构。','RVA + 映像基址得到进程中的虚拟地址。']],sum:'PE/COFF 与 ELF 结构不同，任务相同：让编译器、链接器、装载器和调试器围绕同一份二进制元数据协作。',quiz:['RVA 为什么比写死绝对地址更方便？','PDB 与可执行文件为什么必须版本匹配？','PE 的数据目录起什么作用？']},
+{n:6,t:'可执行文件的装载与进程',q:'磁盘上的可执行文件怎样变成内存里的进程？',terms:[['装载','把可执行映像映射到进程地址空间并准备执行。'],['页','虚拟内存映射与保护的基本单位。'],['VMA','Linux 描述一段连续虚拟地址区域及权限的数据结构。'],['入口点','完成装载后开始执行的地址，通常还不是 main。']],secs:[
+['6.1 进程虚拟地址空间','每个进程看到自己的虚拟地址空间，32 位或 64 位决定理论地址宽度，实际可用范围还受系统约束。用户空间与内核空间分隔，使普通代码不能随意访问内核数据。','指针里装的是进程视角的虚拟地址。'],
+['6.2 装载的方式','早期有覆盖装入、页式装载等方案；现代系统主要依赖分页和按需调页。启动时不必把整个文件读入内存，访问某页触发缺页后，内核再从文件或交换区补上。','“装载程序”更多是建立映射，未必立刻复制所有字节。'],
+['6.3 从操作系统角度看可执行文件的装载','装载器根据程序头创建代码、数据等虚拟内存区域，设置读写执行权限，把它们关联到文件偏移，然后建立栈、参数和环境。CPU 第一次访问尚未驻留的页面时由缺页机制完成实际读取。','文件的 segment 映射成进程的 VMA，页表在访问时落实到物理页。'],
+['6.4 进程虚存空间分布','典型进程包含代码、只读数据、可写数据、堆、共享库映射、栈和内核保留区。ASLR 会随机化多处基址，提高利用固定地址攻击的难度。','布局是惯例和策略的结果，不要把教材示意地址当成永恒常量。'],
+['6.5 Linux 内核装载 ELF 过程简介','执行 <code>execve</code> 后，内核检查 ELF，创建新地址空间，按程序头映射段；动态程序还会映射解释器（动态链接器），准备初始栈并把控制权交给规定入口。之后运行库初始化，才调用 <code>main</code>。','exec 不是创建新进程，而是用新程序替换当前进程映像。'],
+['6.6 Windows PE 的装载','Windows 装载器读取 PE 头和节信息，映射映像、处理基址重定位、解析 DLL 导入、设置节权限并执行 TLS/初始化例程，最后转到入口。核心任务与 ELF 相似，结构和 API 不同。','对照 Linux 看：格式不同，映射、修正依赖、初始化、转入口四步相通。']],sum:'装载的核心是“建立文件到虚拟地址空间的映射”。分页让内容按需进入物理内存，入口代码完成运行库准备后才走到 main。',quiz:['装载为什么不等于把整个文件 memcpy 到内存？','程序头与节头在装载时谁更关键？','main 为什么通常不是 ELF 入口点？']},
+{n:7,t:'动态链接',q:'多个程序怎样共享库，又如何在运行时找到函数地址？',terms:[['共享库','可被多个程序映射和复用的动态链接模块。'],['PIC','运行在不同装载地址也无需修改代码页的地址无关代码。'],['GOT','保存运行时地址的全局偏移表。'],['PLT','经由 GOT 调用外部函数并支持延迟绑定的跳板。']],secs:[
+['7.1 为什么要动态链接','静态链接会让每个程序各带一份库代码，升级也要重新链接。动态链接把公共实现留在共享库，让磁盘和内存页面可共享，并能独立修复库；代价是启动解析、部署与兼容性更复杂。','动态链接用运行时复杂度换空间共享和独立升级。'],
+['7.2 简单的动态链接例子','生成共享库时使用 <code>-fPIC -shared</code>，应用链接时记录依赖而非复制全部实现。运行程序时，动态链接器找到库、映射它、处理必要重定位并把引用绑定到实际地址。','链接时“知道需要谁”，运行时“找到它住哪里”。'],
+['7.3 地址无关代码','共享库可能被装到不同地址。PIC 对模块内部引用使用相对寻址，对外部或全局对象通过 GOT 间接访问，让只读代码页保持不被修改，从而可在进程间共享。','把会变的地址放进可写表，代码本身保持稳定。'],
+['7.4 延迟绑定（PLT）','很多外部函数一次也不会被调用。延迟绑定让 PLT 首次调用时跳到解析器，解析结果写回 GOT；以后直接跳到目标函数。安全或启动策略也可以要求立即绑定。','第一次多走一段路，之后走缓存好的近路。'],
+['7.5 动态链接相关结构','ELF 的动态段记录依赖库、字符串/符号表、重定位表、GOT/PLT 等位置。动态符号表通常只保留运行时绑定需要的符号，比完整调试符号更精简。','动态链接器依靠结构化元数据，不会扫描猜测机器码。'],
+['7.6 动态链接的步骤和实现','大致流程是：动态链接器自举，装载依赖图，解析符号，执行重定位，调用初始化函数，再把控制权交回程序。符号查找顺序与可见性会影响实际绑定目标，也带来符号插桩能力。','动态链接不是单次查表，而是装载依赖图并按规则解析名称。'],
+['7.7 显式运行时链接','程序可用 <code>dlopen</code>、<code>dlsym</code>、<code>dlclose</code> 在运行中选择模块，适合插件。调用方必须约定稳定接口、检查错误，并管理对象生命期；卸载仍在使用的代码会崩溃。','显式链接把“是否加载、加载谁”交给应用决定。']],sum:'动态链接的关键技巧是间接层：PIC 让代码不依赖固定地址，GOT 保存易变地址，PLT 支持外部调用与延迟绑定，动态链接器负责把依赖图真正接通。',quiz:['PIC 为什么有利于共享代码页？','GOT 与 PLT 各自扮演什么角色？','dlopen 插件为什么需要稳定 ABI？']},
+{n:8,t:'Linux 共享库的组织',q:'系统里有很多版本的 .so，怎样找到正确且兼容的那个？',terms:[['SONAME','共享库声明的兼容系列名称。'],['符号版本','给导出符号附加版本，支持更细粒度的兼容。'],['ldconfig','维护共享库链接和装载器缓存的系统工具。'],['RPATH/RUNPATH','可执行文件内记录的库搜索路径信息。']],secs:[
+['8.1 共享库版本','库常用“主版本.次版本.发布版本”。主版本变化通常表示 ABI 不兼容；文件通过真实名称、SONAME 链接和开发用链接组织，使程序依赖兼容系列而不是某个补丁文件。','版本号真正要表达的是二进制兼容边界。'],
+['8.2 符号版本','一个库可能同时提供某 API 的旧新实现，并给符号标注版本。旧程序继续绑定旧语义，新程序使用新语义，库无需仅靠整体主版本分裂。','符号版本把兼容管理从“整座库”细化到“单个接口”。'],
+['8.3 共享库系统路径','系统把公共库放在约定目录，并通过配置文件与缓存加速查找。架构、发行版和多库环境会造成路径差异，所以不要只背某个固定目录。','系统路径是部署约定，装载器缓存是查找优化。'],
+['8.4 共享库查找过程','装载器综合依赖名、程序内路径、环境变量、缓存和默认目录查找库，精确优先级会受平台和标签类型影响。排障时可检查 <code>readelf -d</code>、<code>ldd</code> 与装载调试输出。','先确认程序记录的“名字”，再追踪每一级搜索路径。'],
+['8.5 环境变量','<code>LD_LIBRARY_PATH</code> 可临时添加搜索目录，<code>LD_PRELOAD</code> 可预先装入库以覆盖符号，便于调试和插桩；特权程序会限制这些变量以免被劫持。','环境变量适合测试和诊断，不宜成为脆弱的长期部署方案。'],
+['8.6 共享库的创建和安装','创建库要用 PIC、控制导出接口、设置 SONAME，安装时放置真实文件和正确软链接，并刷新缓存。还应提供头文件和包元数据，使编译期与运行期依赖一致。','可用的共享库是一套“二进制 + 名称链接 + 头文件 + 版本策略”。']],sum:'Linux 用 SONAME、文件名链接、搜索路径、缓存和符号版本共同管理共享库。多数“找不到 .so”问题都能沿名称与搜索顺序定位。',quiz:['SONAME 为什么不直接等于完整文件名？','LD_PRELOAD 能做什么，风险是什么？','编译时找到库为何不保证运行时也找到？']},
+{n:9,t:'Windows 下的动态链接',q:'DLL 如何导出函数，应用又怎样导入它们？',terms:[['DLL','Windows 动态链接库，可包含代码、数据和资源。'],['导出表','DLL 对外公布的名称/序号与地址信息。'],['导入表','映像声明依赖 DLL 与符号的结构。'],['IAT','装载后填入真实函数地址的导入地址表。']],secs:[
+['9.1 DLL 简介','DLL 让多个程序复用实现，可在进程中映射并参与初始化。它与 EXE 都是 PE 映像，但用途、入口事件和导出接口不同；系统 DLL 也是 Windows API 的重要载体。','DLL 是可装载模块，不是简单的数据压缩包。'],
+['9.2 符号导出导入表','DLL 通过导出表按名称或序号公布入口；调用方的导入表记录依赖，装载器把解析出的地址写进 IAT。可用 <code>__declspec(dllexport/dllimport)</code> 或 .def 文件控制接口。','IAT 在 Windows 中承担类似函数地址间接表的角色。'],
+['9.3 DLL 优化','若 DLL 能装到首选基址，可减少基址重定位；现代系统又会用 ASLR 随机化地址，因此可重定位信息仍重要。绑定和延迟加载等技术在不同年代权衡启动速度、共享和安全。','优化策略会随硬件与安全需求变化，理解目的比背结论重要。'],
+['9.4 C++ 与动态链接','直接导出 C++ 类会暴露名字修饰、对象布局、异常、运行库和编译器版本等 ABI 细节。跨编译器或长期接口更适合窄的 C ABI、句柄和工厂函数。','稳定 DLL 边界应减少 C++ 实现细节泄漏。'],
+['9.5 DLL Hell','程序可能因找到错误版本的同名 DLL 而失效，表现为缺符号、行为变化或崩溃。并行程序集、应用私有目录、清晰版本策略和现代打包机制都在缓解这个问题。','动态库问题本质常是“名字相同但契约不同”。']],sum:'Windows 的动态链接围绕导入表、导出表和 IAT 展开。真正难点不是“能否加载”，而是长期维持 ABI、版本和搜索路径的一致。',quiz:['导入表和 IAT 的区别是什么？','为什么导出 C++ 类比导出 C 函数脆弱？','DLL Hell 的本质是哪种不一致？']},
+{n:10,t:'内存',q:'程序运行时的代码、变量、函数调用和动态分配各住在哪里？',terms:[['栈','按调用层次自动增长/回收的线程私有区域。'],['堆','供程序显式申请和释放的动态内存区域。'],['调用惯例','参数、返回值、寄存器和栈清理由谁负责的 ABI 规则。'],['栈帧','一次函数调用在栈上的局部工作区。']],secs:[
+['10.1 程序的内存布局','进程通常包含可执行映像、共享库、堆、线程栈及各种映射。全局/静态对象按属性进入数据区，自动局部变量通常进入栈，但优化器可能把它们放寄存器甚至消除。','“变量一定在某处”只是抽象模型，优化后以实际机器码为准。'],
+['10.2 栈与调用惯例','调用者与被调用者必须约定参数位置、返回值位置、哪些寄存器要保存以及谁清理栈。函数序言建立栈帧，尾声恢复现场；栈回溯和调试都依赖这些规则或额外展开信息。','函数调用能跨文件、跨语言成立，是因为双方遵守同一 ABI。'],
+['10.3 堆与内存管理','<code>malloc</code> 通常先向操作系统取得较大内存区，再在用户态切分小块。分配器需要在速度、碎片、并发和元数据开销间平衡，常见策略包含空闲链表、分箱、伙伴思想或线程缓存。','malloc 不是每次都做系统调用；free 也不保证马上把内存还给系统。']],sum:'栈服务有严格嵌套关系的函数调用，堆服务生命期不规则的对象。二者最终都建立在虚拟内存之上，而调用惯例保证机器级函数协作。',quiz:['为什么返回局部变量地址通常危险？','malloc 和系统调用是什么关系？','调用惯例不一致会造成哪些现象？']},
+{n:11,t:'运行库',q:'在 main 前后，谁为语言提供它承诺的运行环境？',terms:[['CRT','C/C++ 运行库及启动代码的统称。'],['入口函数','操作系统转入用户程序的初始执行点。'],['TLS','每个线程各有一份的线程局部存储。'],['全局构造','main 前对 C++ 静态存储期对象进行的初始化。']],secs:[
+['11.1 入口函数和程序初始化','入口代码接收内核准备的参数与环境，建立运行库状态，初始化堆、I/O、线程相关设施，执行全局构造，再调用 <code>main</code>；返回后还要运行退出处理和析构。','main 是应用逻辑入口，不是进程最早执行的第一条代码。'],
+['11.2 C/C++ 运行库','运行库提供字符串、内存、文件 I/O、格式化、时间、数学、异常等语言/标准库能力。它既有纯用户态算法，也会把高层调用翻译为操作系统服务。','标准函数是可移植接口，底层实现会因系统而异。'],
+['11.3 运行库与多线程','多线程要求 errno、临时缓冲区等状态不能被所有线程无保护地共享。运行库使用 TLS、内部锁和一次性初始化维护线程安全，但“函数线程安全”不代表你的多步业务操作自动原子。','线程安全是对具体共享状态和操作边界的承诺。'],
+['11.4 C++ 全局构造与析构','编译器把构造/析构函数地址放进约定数组，启动代码按规则调用构造，退出时逆序或按平台规则析构。跨翻译单元的初始化顺序不完全可控，容易出现静态初始化顺序问题。','优先使用函数内静态对象或显式依赖，避免跨文件全局构造互相依赖。'],
+['11.5 fread 实现','<code>fread</code> 位于带缓冲的 stdio 层：它先从用户态缓冲区满足请求，不够时再读取底层文件描述符/句柄，并维护位置、EOF 和错误状态。缓冲减少系统调用次数，却也引入刷新和一致性规则。','FILE* 是带状态的高级流，不等于内核文件句柄。']],sum:'运行库把操作系统提供的低层能力包装成语言熟悉的环境，并负责 main 前后的生命周期。理解这一层能解释 I/O 缓冲、线程状态和全局对象初始化。',quiz:['main 之前至少发生了哪些事？','fread 为什么可能不触发系统调用？','跨文件全局对象为何有初始化顺序风险？']},
+{n:12,t:'系统调用与 API',q:'用户程序如何安全地请求操作系统内核服务？',terms:[['用户态','权限受限的应用执行状态。'],['内核态','可访问受保护硬件与内核资源的执行状态。'],['系统调用','从用户态进入内核服务的受控入口。'],['API','供程序员调用的接口，不一定直接对应一次系统调用。']],secs:[
+['12.1 系统调用介绍','进程不能直接随意操作磁盘、页表或设备，只能通过系统调用请求内核验证参数并执行。系统调用编号、参数约定和返回值属于系统 ABI，普通代码通常通过运行库包装调用。','API 是“你怎么调用”，系统调用是“怎样跨越权限边界”。'],
+['12.2 系统调用原理','用户代码把编号和参数放到约定寄存器或内存，执行专用指令陷入内核；CPU 切换权限和入口，内核分发处理，再带结果返回用户态。切换有成本，因此 I/O 缓冲与批处理很重要。','系统调用不是普通函数调用：它会跨权限级别，并由内核验证。'],
+['12.3 Windows API','Windows 程序通常调用 Win32 等 API，用户态 DLL 完成参数处理并在需要时进入 NT 内核服务。稳定的公开 API 与较低层系统调用并非一一对应，后者也不应被普通应用当作稳定契约。','不要把 Windows API、DLL 导出函数和内核系统调用当成同一层。']],sum:'系统调用是内核边界，API 是面向开发者的契约，运行库常居中适配。分层既带来可移植性，也让一次简单调用背后可能有多步处理。',quiz:['为什么应用不能直接修改页表？','系统调用为何比普通函数调用更贵？','一个 API 是否一定只对应一个系统调用？']},
+{n:13,t:'运行库实现：Mini CRT',q:'如果亲手做一个最小运行库，必须补齐哪些环节？',terms:[['Mini CRT','用于教学的最小 C/C++ 运行支持，不是生产级标准库。'],['启动代码','准备运行环境并调用 main 的代码。'],['atexit','登记程序正常退出时要执行的回调。'],['new/delete','C++ 对象内存申请与释放接口，通常建立在堆分配器上。']],secs:[
+['13.1 C 语言运行库','最小 CRT 需要入口、堆分配、基本字符串、文件 I/O、格式化输出和退出流程。它用少量系统调用搭桥，再在用户态实现 <code>malloc/free</code> 等接口，让 main 能在没有完整系统 CRT 的情况下运行。','亲手实现的价值是看清层次，不是重新造一个安全完整的 libc。'],
+['13.2 如何使用 Mini CRT','使用时要绕过默认启动文件和标准库，链接自定义入口、运行库对象与必要系统支持，并指定正确链接选项。平台、架构和工具链版本会影响命令，排错可从入口符号、未解析符号和系统调用约定开始。','能编译不代表启动约定正确；先确认入口和链接脚本/参数。'],
+['13.3 C++ 运行库实现','在 C 支持之上，还要提供 <code>new/delete</code>、全局构造析构登记、纯虚函数错误处理，以及为 iostream 或字符串准备的最小设施。异常、RTTI 和完整 STL 会显著扩大范围。','C++ 语法背后会隐式请求运行时服务，链接错误常暴露这些依赖。'],
+['13.4 如何使用 Mini CRT++','用自定义 C++ 运行库时同样需要禁用默认库，确保编译器生成的辅助符号都有实现，并检查构造数组是否被链接器保留和遍历。示例应限制在已支持的语言特性内。','最小实现的边界必须明确：没实现的语言特性不能假装可用。']],sum:'Mini CRT 把全书闭环：底层用系统调用取得能力，中间实现堆、I/O 和语言运行支持，上层启动 main 并管理退出。你由此看见“一个程序跑起来”所需的最小骨架。',quiz:['最小 CRT 为什么仍需要操作系统？','C++ 比 C 多了哪些典型运行时工作？','自制 CRT 为什么不适合作为生产 libc 替代？']}
+];
+function deepBlock(title){const key=title.split(' ')[0],d=deepDives[key];if(!d)return'';return `<div class="deep"><h4>机制拆开看</h4><p>${d.m}</p><h4>落到具体例子</h4><p>${d.e}</p><p class="pitfall"><b>常见误区：</b>${d.x.replace(/^误区：/,'')}</p></div>`}
+function render(){const root=document.querySelector('#chapters');root.innerHTML=chapters.map((c,i)=>`<article class="chapter" id="ch${c.n}" data-chapter="${c.n}"><div class="chapter-head"><div class="num">${String(c.n).padStart(2,'0')}</div><div><h2>第 ${c.n} 章　${c.t}<span class="detail-badge">详细版</span></h2><p class="question">${c.q}</p></div></div><h3>先认识这些术语</h3><div class="terms">${c.terms.map(x=>`<div class="term"><b>${x[0]}</b><span class="term-en">${english[x[0]]||''}</span><span>${x[1]}</span></div>`).join('')}</div>${c.n===4?'<div class="diagram">输入 .o ─▶ 收集节与符号 ─▶ 合并并分配地址 ─▶ 解析符号 ─▶ 执行重定位 ─▶ 输出可执行文件</div>':''}${c.n===6?'<div class="diagram">磁盘 ELF ──程序头──▶ 虚拟地址区域 ──页表──▶ 物理页\n                            ▲ 缺页时才读取文件</div>':''}${c.n===7?'<div class="diagram">call 外部函数 ─▶ PLT 跳板 ─▶ GOT 中的地址 ─▶ 共享库函数\n                         ▲ 首次调用由动态链接器填写</div>':''}${c.n===10?'<div class="diagram">高地址  ┌────────────┐\n        │ 线程栈 ↓  │ 自动变量/调用帧\n        │   空闲区   │\n        │   堆 ↑     │ 动态分配\n        │ 共享库映射 │\n        │ 数据/代码  │\n低地址  └────────────┘</div>':''}${c.secs.map(s=>`<section class="section"><h3>${s[0]}</h3><p>${s[1]}</p>${deepBlock(s[0])}<div class="takeaway"><b>记住这点：</b>${s[2]}</div></section>`).join('')}<section class="lab"><span class="platform">${chapterLabs[i].lab.platform}</span><h3>动手验证：${chapterLabs[i].lab.title}</h3><p>在贯穿案例所在目录执行：</p><pre><code>${chapterLabs[i].lab.cmd}</code></pre><div class="lab-grid"><div><h4>你会看到什么</h4><p>${chapterLabs[i].lab.out}</p></div><div><h4>如何理解</h4><p>${chapterLabs[i].lab.why}</p></div></div></section><div class="chapter-summary"><b>本章一句话：</b>${c.sum}</div><details class="quiz"><summary>自测：点开前先试着回答</summary><ol>${c.quiz.map(q=>`<li>${q}</li>`).join('')}</ol><p>如果能用自己的话各说两三句，就可以继续下一章；卡住时回看本章术语和“记住这点”。</p></details></article>`).join('')}
+function buildToc(){const toc=document.querySelector('#toc');toc.innerHTML='<a href="#top">开始阅读</a>'+chapters.map(c=>`<a href="#ch${c.n}">${c.n}. ${c.t}</a>`).join('')+'<a href="#appendix">附录与工具</a>';toc.addEventListener('click',event=>{if(event.target.closest('a'))document.querySelector('#sidebar').classList.remove('open')})}
+function enhanceReading(){
+  const style=document.createElement('style');
+  style.textContent=`.lesson{margin:24px 0;padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}.lesson h4{margin:22px 0 8px}.lesson h4:first-child{margin-top:0}.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px;margin:20px 0;font:15px/1.6 var(--sans)}.flow-step{flex:1 1 150px;min-width:0;padding:13px;border:1px solid var(--line);border-radius:9px;background:var(--paper)}.flow-step strong,.flow-step small{display:block}.flow-step small{font-size:12px;color:var(--accent2);overflow-wrap:anywhere}.flow-arrow{align-self:center;color:var(--accent);font-size:24px}.flow-step p{margin:8px 0 0;font:15px/1.7 var(--sans)}.word-notes{margin:12px 0;padding:12px 16px;border-radius:8px;background:color-mix(in srgb,var(--accent2) 7%,var(--paper));font:14px/1.8 var(--sans)}.word-notes summary{cursor:pointer}.section{scroll-margin-top:25px}.toc details summary{font:700 14px/1.6 var(--sans);cursor:pointer;margin-top:9px;color:var(--accent2)}.toc details a{font-size:12px;padding-left:17px}.lab pre code{background:transparent;color:inherit;padding:0}.chapter-head>div{min-width:0}.lesson pre{white-space:pre;max-width:100%}table{display:block;overflow-x:auto}.lesson p{overflow-wrap:anywhere}@media(max-width:560px){.flow{display:block}.flow-step{margin:0}.flow-arrow{text-align:center;transform:rotate(90deg);margin:3px}.section{scroll-margin-top:145px}}`;
+  document.head.append(style);
+  function escapeHtml(value){return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function flow(steps){return '<div class="flow" role="list">'+steps.map((s,i)=>(i?'<div class="flow-arrow" aria-hidden="true">→</div>':'')+'<div class="flow-step" role="listitem"><strong>'+s[0]+'</strong><small>（'+s[1]+'）</small><p>'+s[2]+'</p></div>').join('')+'</div>'}
+  const lessons=[
+    {problem:'你同时开着浏览器、音乐播放器和编辑器，为什么它们都能继续工作？',plain:'先想象只有一个 CPU 核：它同一时刻只能执行一个线程。操作系统让浏览器运行一小会儿，保存它执行到哪、寄存器里是什么，再恢复播放器的现场。切换足够快，你就觉得它们在同时工作。多个核则能真正同时执行多条执行流。内存和设备也需要类似的分配与保护。',steps:[['应用提出请求','Application','例如：读一个文件，或者等待键盘输入。'],['内核检查并安排','Kernel','检查权限，分配资源，必要时让线程等待。'],['硬件执行操作','Hardware','设备完成工作后发出通知。'],['应用继续执行','Resume','内核把结果交回来，程序接着往下走。']],example:'播放器等待磁盘读歌时，CPU 可以去执行编辑器。这里不是播放器自己把 CPU 借出去，而是操作系统决定谁能运行、谁需要等待。因此，“管理资源”具体包括：分配、保护、等待、唤醒和回收。'},
+    {problem:'main.c 里没有 add 的函数体，为什么仍能先编译成功？',plain:'因为“这句话是否合法”和“最后去哪里执行这个函数”可以分开解决。头文件先告诉编译器：add 接受两个整数、返回一个整数。编译器据此检查调用并生成机器指令；至于 add 的最终位置，可以先留一张待办单，等链接器拿到 calc.o 再填。',steps:[['展开源文件','Preprocessing','把头文件、宏和条件编译处理好。'],['理解并翻译','Compilation','检查代码含义，生成目标架构的汇编。'],['编码为机器指令','Assembly','把汇编写成 .o，保留尚未解决的引用。'],['连接多个模块','Linking','找到 add 的定义并补齐地址。']],example:'若把 add(20,22) 写成 add(20,22,3)，通常编译就报参数不匹配；若参数正确但忘了链接 calc.o，编译可成功，链接才报找不到 add。先辨认错误阶段，再决定该改源码还是改构建命令。'},
+    {problem:'既然机器码已经生成，为什么 .o 文件里还需要许多表？',plain:'可以把目标文件当作一份待组装的零件箱。代码节装指令，数据节装变量；符号表标记“我提供什么、我还缺什么”；重定位表指出“这里有个地址，等组装完成后再填”。机器码只是箱子里的货物，表格才让工具知道怎样处理它。',steps:[['源代码中的实体','Source Entities','函数、全局变量、字符串常量。'],['按用途分节','Sections','代码、可写数据、只读数据分别安放。'],['记录接口与待办','Symbols / Relocations','记下 add 的引用和待修改位置。'],['交给链接器','Linker','工具按表工作，不靠猜字节含义。']],example:'在 main.o 里，nm 显示 U add，意思是“我会用 add，但没提供它”。在 calc.o 里，T add 表示“我在代码节里提供了 add”。这两行输出正好构成一组需求与供给。'},
+    {problem:'编译时不知道函数地址，链接器如何把一次调用补完整？',plain:'先给各块代码安排位置，再计算跨块引用。假设 add 最终放在地址 0x1050，而某条调用之后的下一条指令在 0x1010，那么相对调用要跨过 0x40 字节。链接器按该机器指令的规则写入这个差值。真实文件还有对齐、加数等细节，但核心是“先知道双方位置，才能算距离”。',steps:[['收集输入','Input Objects','main.o 缺 add，calc.o 提供 add。'],['安排位置','Layout','合并代码和数据，为输出分配地址。'],['找到定义','Symbol Resolution','把 main.o 的引用指向 calc.o 的定义。'],['填写数值','Relocation','按指令规则写绝对地址或相对距离。']],example:'有两个典型报错：“undefined reference”说明没找到定义；“multiple definition”说明找到多个不能共存的强定义。前者查有没有漏编译、漏链接或名字不一致；后者查头文件中是否错误地放了全局定义。'},
+    {problem:'Windows 的 .obj、.exe 和 .dll 分别处在程序生命中的哪一步？',plain:'先忽略格式名字：.obj 是还要与别的模块合并的半成品，.exe 是准备启动的主程序，.dll 是准备供其他程序装入使用的模块。COFF 主要描述半成品结构；PE 则补上“映像怎样装入内存”的信息。',steps:[['源码','C / C++','由 cl.exe 编译。'],['目标文件','COFF Object','.obj 有代码、符号和重定位。'],['链接成映像','PE Image','link.exe 生成 EXE 或 DLL。'],['系统装载','Windows Loader','映射各节，连接 DLL，转到入口。']],example:'RVA 是相对于映像基址的距离。若基址为 0x140000000，函数 RVA 为 0x2000，函数虚拟地址就是 0x140002000。注意这仍不是磁盘文件偏移：文件与内存的对齐方式可能不同。'},
+    {problem:'双击程序时，系统真的把整个文件一次性读进内存吗？',plain:'通常先建立映射关系，就像先登记“这几页内容在文件的什么位置”，真正读到某页时再把它搬进物理内存。CPU 访问尚未准备好的页，会暂停当前访问并进入内核；内核把页准备好，再让原指令重试。',steps:[['读取程序说明','ELF / PE Headers','确认架构、入口、要装入的区域。'],['建立地址映射','Virtual Mapping','登记虚拟范围、文件偏移和权限。'],['首次访问缺页','Page Fault','内核准备物理页，并建立映射。'],['恢复执行','Resume Execution','原来的读或执行指令重新进行。']],example:'一个程序包含大量从未使用的功能，启动时只走了一条短路径，很多代码页就可能根本没读入物理内存。把文件大小、虚拟地址空间大小和实际驻留内存混为一谈，会误判程序内存消耗。'},
+    {problem:'共享库每次装在不同地址，main 怎样还能找到 add？',plain:'让调用先经过一个可以更新的“地址槽”。程序不必提前知道最终门牌，只要知道去哪里查门牌。动态链接器装入 libcalc 后，找到 add 的真实地址，填进对应槽位；后面的调用经由这个槽跳到函数。',steps:[['程序记录需要谁','DT_NEEDED','例如 libcalc.so.1。'],['找到并映射库','Dynamic Loader','给共享库安排当前进程中的地址。'],['解析函数地址','Symbol Lookup','在库的动态符号表中找到 add。'],['补好间接地址','GOT / PLT','让调用最终到达真实函数。']],example:'GOT 可以先理解成“运行时地址本”；PLT 可以理解成“外部函数调用的转接站”。延迟绑定时第一次调用要查地址并回填，之后用已存好的地址。是否使用这条路径取决于架构、编译选项与绑定策略。'},
+    {problem:'机器上已经有 libcalc.so，程序为什么还会说找不到库？',plain:'编译时链接器和运行时动态链接器是两位不同的查找者。-L. 只告诉前者“在当前目录找”；程序记录的可能是 SONAME，例如 libcalc.so.1。启动时，后者按自己的路径规则寻找这个名字，并不自动继承构建目录。',steps:[['开发时的名字','Link Name','-lcalc 通常使用 libcalc.so。'],['程序记录的名字','SONAME','链接后记录 libcalc.so.1。'],['实际文件','Real Name','例如 libcalc.so.1.2.0。'],['运行时找到文件','Library Search','通过指定路径、缓存和默认目录定位。']],example:'先用 readelf -d 看程序到底需要什么名字，再用 LD_DEBUG=libs 看它依次找了哪些位置。这样能区分“名称不对”“路径不对”“架构不对”和“接口不兼容”，而不只是反复复制 .so。'},
+    {problem:'Windows 链接时用的是 .lib，运行时为什么还要 .dll？',plain:'导入库就像一份订购单，帮助链接器写好“我要哪个 DLL 的哪个函数”；函数的真正实现仍在 DLL 中。启动时，Windows 装载器取来 DLL，把函数地址填到导入地址表。另有一类 .lib 是静态库，会直接提供代码，不能只凭扩展名区分。',steps:[['DLL 导出函数','Export','例如公开 add。'],['EXE 使用导入库','Import Library','链接时生成导入记录。'],['装载器寻找 DLL','Loader','映射库并查导出表。'],['填写调用地址','IAT','EXE 通过地址表进入 DLL 函数。']],example:'跨 DLL 返回一个动态对象时，最好由提供对象的模块同时提供 destroy 函数。这样“谁申请，谁释放”的责任清楚，也避免两个模块使用不同运行库堆时错误释放。'},
+    {problem:'为什么函数返回后，局部变量的地址就不能放心用了？',plain:'局部变量的空间往往属于这次函数调用的栈帧。函数返回时，这块空间便允许下一次调用复用。旧地址可能仍能读出旧值，但那只是还没被覆盖。动态分配的对象则由你决定何时释放，所以必须额外管理所有权。',steps:[['调用函数','Function Call','建立这一次调用需要的现场。'],['使用局部对象','Stack Frame','局部值和保存的寄存器等在这里工作。'],['函数返回','Return','现场恢复，栈空间可以被复用。'],['再次使用旧地址','Dangling Pointer','地址还在，对象的有效生命期已经结束。']],example:'malloc(100) 请求的是“可使用的 100 字节”，不是要求内核恰好给你 100 字节物理内存。分配器通常从已有的大块空间中切分，因此小对象申请与系统调用不会一一对应。'},
+    {problem:'main 已经是入口了，为什么程序里还有 _start？',plain:'操作系统只会按二进制约定把控制权交给入口，它不会直接帮 C++ 构造全局对象，也不会替 stdio 建缓冲。启动代码先准备语言需要的环境，再调用你的 main；main 返回后，退出代码继续做析构、回调和输出刷新。',steps:[['系统交接','Entry Point','从 _start 或平台入口开始。'],['运行库准备','Runtime Initialization','准备状态并调用全局构造等。'],['应用逻辑','main','执行你写的业务代码。'],['正常收尾','exit','退出回调、析构、刷新后再请求内核终止。']],example:'printf("hello") 后调用 _exit，终端未必看到 hello，因为没有换行的输出可能仍留在用户态缓冲。正常 return main 通常经过退出清理并刷新流。是否立刻显示还受流的缓冲模式影响。'},
+    {problem:'应用没有权限操作硬盘，为什么还能打开文件？',plain:'应用把请求交给内核，内核检查后代办。系统调用就是这条受控通道：应用提供操作编号和参数，CPU 切换到内核规定入口，内核检查地址与权限并完成工作，再带结果返回。',steps:[['调用熟悉的函数','API','例如 fopen 或 printf。'],['用户态包装处理','Runtime Wrapper','组织参数、管理缓冲和错误。'],['跨过权限边界','System Call','进入内核处理打开或写入请求。'],['得到结果','Return / Error','应用拿到返回值并判断成功或失败。']],example:'fopen 返回的 FILE* 指向用户态的流对象；Linux open 返回的整数文件描述符则索引内核维护的打开文件状态。FILE*、文件描述符和磁盘上的文件，是相关但不同的三件东西。'},
+    {problem:'如果拿掉系统自带的运行库，还缺什么才能让 main 跑起来？',plain:'从一个最小目标做起：先能进入 main，再能输出文字，再能正常退出；接着补动态内存和文件；最后才加 C++ 的构造析构与 new/delete。每增加一项，都对应编译器或程序提出的一份新契约。',steps:[['接住系统入口','Startup','提供 _start 并按 ABI 取参数。'],['搭起基础服务','Mini CRT','提供输出、内存分配与退出。'],['执行程序','main','应用使用你实现的接口。'],['补齐语言支持','C++ Runtime','处理构造、析构及隐式辅助符号。']],example:'用 -nostdlib 链接出现 printf 未定义，是因为它不属于 CPU 指令，也不是内核直接提供的同名函数。你的最小运行库可以先用 write 输出固定文字，再逐步实现格式化；这正好把 API 与系统调用两层连接起来。'}
+  ];
+  lessons.forEach((l,i)=>{const chapter=document.querySelector('#ch'+(i+1));chapter.querySelector('.chapter-head').insertAdjacentHTML('afterend','<section class="lesson"><h4>从一个实际问题开始</h4><p><b>'+l.problem+'</b></p><p>'+l.plain+'</p>'+flow(l.steps)+'<h4>把它连回程序</h4><p>'+l.example+'</p></section>')});
+  const compilerSteps=[
+    ['词法分析','Lexical Analysis','先切成有意义的小块。','int result = 20 + 22;','关键字 int｜名字 result｜符号 =｜整数 20｜符号 +｜整数 22｜分号 ;','每一块称为词法单元（Token）。此时只辨认“词”，还没理解整句话。'],
+    ['语法分析','Syntax Analysis','检查这些小块能不能组成一句合法的代码。','Token 序列','变量声明：类型 int；名字 result；初始值是加法表达式。','得到抽象语法树（Abstract Syntax Tree，AST）。例如 int = result; 的词都认识，但组合方式不对。'],
+    ['语义分析','Semantic Analysis','句子能读通，还要检查它有没有道理。','语法树 + 已知声明','确认 result 的类型是 int；加法两边可以做整数运算；初始化类型合适。','符号表（Symbol Table）记录名字和属性。这里可发现未声明变量、许多类型不匹配和参数数量错误。'],
+    ['中间代码生成','Intermediate Representation Generation','把代码改写成便于工具继续处理的统一写法。','经过检查的程序结构','示意：t1 = add 20, 22；result = t1','中间表示（Intermediate Representation，IR）是编译器内部语言，具体格式因工具不同。这里是教学写法。'],
+    ['优化','Optimization','提前做好能确定的工作，减少运行时重复劳动。','t1 = add 20, 22','示意：result = 42','常量折叠（Constant Folding）把已知计算提前完成。如果这个局部值从不使用，整句还可能被消除。'],
+    ['目标代码生成','Code Generation','按目标 CPU 的规矩选择指令、安排寄存器。','优化后的中间表示','汇编示意：mov eax, 42','假设函数要返回 42，某些 x86-64 结果可用这一类指令。具体指令受架构、优化与上下文影响。']
+  ];
+  const compSection=[...document.querySelectorAll('#ch2 .section')].find(s=>s.querySelector('h3').textContent.startsWith('2.2'));
+  compSection.querySelector('p').textContent='拿 int result = 20 + 22; 这一句，一步一步看编译器怎样处理它。你可以把它理解成：先认字，再组句，再检查意思，然后改写、简化，最后翻译成 CPU 的语言。下面是帮助理解的流程；实际编译器可能合并、交错或重复执行其中一些步骤。';
+  compSection.querySelector('p').insertAdjacentHTML('afterend',flow(compilerSteps.map(s=>[s[0],s[1],s[2]]))+'<div class="lesson">'+compilerSteps.map((s,i)=>'<h4>'+String(i+1)+'. '+s[0]+'（'+s[1]+'）</h4><p>'+s[2]+'</p><p><b>这一阶段拿到：</b>'+escapeHtml(s[3])+'</p><pre>'+escapeHtml(s[4])+'</pre><p>'+s[5]+'</p>').join('')+'<h4>最后还有汇编和链接</h4><p>上面的目标代码生成通常先产出汇编文本。汇编器（Assembler）把它编码成目标文件（Object File）；链接器（Linker）再连接其他模块与库。编译器内部流程和“预处理→编译→汇编→链接”的构建流程，观察的是不同层次。</p></div>');
+  const os=[...document.querySelectorAll('#ch1 .section')].find(s=>s.querySelector('h3').textContent.startsWith('1.4'));
+  os.querySelector('p').textContent='假设你正一边听音乐，一边在浏览器下载文件。如果应用各自随意占用 CPU、改写别人的内存、直接给硬盘发命令，机器很快就会乱套。操作系统（Operating System，OS）的工作，就是让它们有规则地使用硬件，并把难用的硬件包装成程序容易使用的接口。';
+  os.querySelector('p').insertAdjacentHTML('afterend','<div class="lesson"><h4>1. CPU：轮到谁跑，由调度器安排</h4><p>单个核心同一时刻通常只执行一条线程的指令流。浏览器运行一会儿后，调度器（Scheduler）可以保存它的执行现场，再恢复播放器。保存、恢复现场叫上下文切换（Context Switch）。遇到磁盘等待时，当前线程可以睡眠，让其他线程利用这段时间。</p><h4>2. 内存：每个程序都看到自己的地址空间</h4><p>进程（Process）通常使用虚拟地址（Virtual Address）。内存管理单元（Memory Management Unit，MMU）结合页表（Page Table）把它转换为物理地址（Physical Address）。所以两个进程中“相同数字的指针”，可能对应不同物理内存。越界访问还会被权限检查拦住。</p><h4>3. 文件：你说“打开这个名字”，系统负责找实际数据</h4><p>应用用路径打开文件，不必知道数据在哪个磁盘块。文件系统（File System）维护名字、目录、位置和权限；存储驱动负责与设备交互。文件是操作系统提供的抽象（Abstraction）：把底层细节藏起来，给你一个更好用的操作对象。</p><h4>4. 权限：危险操作必须经过检查</h4><p>应用在用户态（User Mode）运行，不能直接修改页表或随意读写硬盘。它通过系统调用（System Call）请求内核（Kernel）执行。内核检查“你是谁、参数是否合法、能不能访问”，再返回结果。</p>'+flow([['应用说要什么','Request','读取 report.txt 的 100 字节。'],['内核检查','Permission Check','有权限吗？句柄有效吗？'],['设备完成工作','Device I/O','驱动与设备交换数据。'],['返回应用','Result','读到了多少？有没有出错？']])+'</div>');
+  document.querySelectorAll('.term-en').forEach(el=>{el.textContent='（'+el.textContent+'）'});
+  const vocabulary={
+    '词法':['Lexical Analysis','先把字符识别成关键字、名字、数字和标点等小块'],
+    'Token':['Token','切分后的一块有意义的代码，例如关键字 int 或整数 20'],
+    '语法':['Syntax Analysis','检查这些小块如何组成合法结构'],
+    '语义':['Semantic Analysis','检查已组成的代码在类型、声明和使用上是否说得通'],
+    'AST':['Abstract Syntax Tree','用树形结构表达代码中声明、运算和调用的关系'],
+    '优化':['Optimization','在语言规则允许的范围内，减少不必要的工作或改善执行方式'],
+    'CPU':['Central Processing Unit','执行机器指令的处理器'],
+    'API':['Application Programming Interface','给程序调用的接口约定'],
+    'ABI':['Application Binary Interface','编译后的模块如何协作：参数怎么传、对象怎么摆、名字怎么编码'],
+    'IR':['Intermediate Representation','编译器内部便于分析、优化的中间写法'],
+    'PIC':['Position-Independent Code','装到不同地址仍能正确工作的代码'],
+    'GOT':['Global Offset Table','保存运行时实际地址的表'],
+    'PLT':['Procedure Linkage Table','外部函数调用的跳板，可配合地址表完成绑定'],
+    'TLS':['Thread-Local Storage','每个线程各有一份的存储'],
+    'ASLR':['Address Space Layout Randomization','让若干内存区域的基址随机变化'],
+    'COMDAT':['COMDAT Section','让链接器按规则选择并合并重复实体的一类节机制'],
+    'SONAME':['Shared Object Name','共享库对外声明的兼容系列名称'],
+    'VMA':['Virtual Memory Area','内核记录的一段虚拟地址区域及其属性'],
+    'RVA':['Relative Virtual Address','相对于映像基址的距离'],
+    'ELF':['Executable and Linkable Format','Linux 等系统常用的二进制格式'],
+    'PE':['Portable Executable','Windows 的可执行映像格式'],
+    'COFF':['Common Object File Format','目标文件格式家族'],
+    'IAT':['Import Address Table','Windows 装载器填入导入函数地址的表'],
+    'CRT':['C Runtime','准备并支持 C/C++ 程序运行的代码与库'],
+    'DWARF':['DWARF Debugging Information Format','把机器地址对应回源码、类型和变量的调试格式'],
+    'PDB':['Program Database','Windows 工具链常用的调试信息文件'],
+    'RTTI':['Run-Time Type Information','C++ 在运行时辨别对象类型的信息'],
+    'IPC':['Interprocess Communication','不同进程交换数据的机制'],
+    '内核':['Kernel','操作系统中拥有较高权限、管理核心资源的部分'],
+    '页表':['Page Table','记录虚拟页到物理页及访问权限的映射'],
+    '缺页':['Page Fault','访问的页面尚未就绪或访问不被允许时触发的异常'],
+    '寄存器':['Register','CPU 内部快速保存数值与地址的小存储单元'],
+    '虚表':['Virtual Table / vtable','C++ 常见实现中用来支持虚函数调用的函数地址表'],
+    '缓冲':['Buffering','先在内存中攒数据，减少对较慢设备或系统接口的频繁访问'],
+    '重定位':['Relocation','位置确定后，按规则修补代码或数据中的地址引用'],
+    '符号':['Symbol','工具链用来识别函数或变量的名字及相关属性']
+  };
+  document.querySelectorAll('.section').forEach(section=>{const heading=section.querySelector('h3'),number=heading.textContent.split(' ')[0];section.id='sec-'+number.replace('.','-');const text=section.textContent;let found=Object.entries(vocabulary).filter(([term])=>text.includes(term));if(!found.length){const c=chapters[Number(number.split('.')[0])-1];found=c.terms.slice(0,2).map(([term,meaning])=>[term,[english[term],meaning]])}heading.insertAdjacentHTML('afterend','<details class="word-notes" open><summary>本节先认词</summary>'+found.map(([term,[en,meaning]])=>'<div><b>'+term+'（'+en+'）</b>：'+meaning.replace(/。$/,'')+'。</div>').join('')+'</details>')});
+  document.querySelectorAll('.toc a').forEach(a=>{if(!/^#ch\d+$/.test(a.hash))return;const chapter=document.querySelector(a.hash);const details=document.createElement('details');details.innerHTML='<summary>'+a.textContent+'</summary><a href="'+a.hash+'">本章问题与流程图</a>'+[...chapter.querySelectorAll('.section')].map(section=>'<a href="#'+section.id+'">'+section.querySelector('h3').textContent+'</a>').join('');a.replaceWith(details)});
+  document.querySelector('.hero .eyebrow').textContent='从读懂到动手 · 完整阅读版';
+  document.querySelector('.hero .lead').textContent='围绕“源代码怎样变成正在运行的程序”，逐章讲清楚每一步解决什么问题、交给谁处理、留下什么结果。先用白话搭桥，再认识术语和英文，最后通过示例与命令把它验证出来。';
+  document.querySelector('.subtitle').textContent='一个文件 · 13 章 · 68 节 · 可离线阅读';
+  document.querySelector('.hero .notice').innerHTML='<b>实验怎么跟：</b>Linux 命令在 Linux 或 Windows 的 WSL 终端执行；Windows 命令在 Visual Studio 的 x64 Native Tools Command Prompt 执行。把下方三份源码放进同一个实验目录。每章实验会说明它依赖的文件，命令不要跨终端混用。';
+  document.querySelector('.hero .story').insertAdjacentHTML('beforebegin','<section class="lesson"><h3>开始前：先把工具认清</h3><p>命令行里的 <code>gcc</code> 是编译工具入口，<code>readelf</code> 看 ELF 结构，<code>nm</code> 看符号，<code>objdump</code> 看反汇编，<code>ar</code> 打包静态库，<code>strace</code> 观察系统调用。命令参数不是全都要背；每次执行前先说出“我现在要看哪一层”。</p><pre>gcc --version\nreadelf --version\nnm --version\nstrace --version</pre><p>在已具备 Ubuntu/WSL 环境时，若提示找不到这些命令，可在该 Ubuntu 终端安装：<code>sudo apt update</code>，然后 <code>sudo apt install build-essential binutils strace</code>。这条安装命令不适用于普通 Windows PowerShell。</p><p><code>-o</code> 指定输出文件名；<code>-c</code> 停在目标文件阶段；<code>-I</code> 增加头文件目录；<code>-L</code> 增加链接时库目录；<code>-lcalc</code> 请求名为 calc 的库；<code>-Wl,参数</code> 把参数交给链接器。<code>.</code> 是当前目录，<code>./calculator</code> 表示运行当前目录下的程序。</p></section>');
+  function labCode(n,code,intro){const lab=document.querySelector('#ch'+n+' .lab');lab.querySelector('pre code').textContent=code;if(intro)lab.querySelector('p').textContent=intro}
+  labCode(4,'gcc -c main.c calc.c\nar rcs libcalc.a calc.o\ngcc main.o ./libcalc.a -Wl,-Map=calculator.map -o calculator-static\n./calculator-static\ngrep add calculator.map','先生成两个目标文件，再明确指定静态库文件，避免目录里已有 .so 时选中共享库。');
+  labCode(6,'gcc maps-wait.c -o maps-wait\n./maps-wait &\npid=$!\ncat /proc/$pid/maps\nwait "$pid"','先保存下方 maps-wait.c。程序停留 30 秒，便于在 Bash 中读取映射；它结束后 /proc 中对应条目会消失。');
+  document.querySelector('#ch6 .lab pre').insertAdjacentHTML('beforebegin','<h4>先保存 maps-wait.c</h4><pre>'+escapeHtml('#include <stdio.h>\n#include <unistd.h>\nint main(void) {\n    printf("pid=%ld\\n", (long)getpid());\n    fflush(stdout);\n    sleep(30);\n    return 0;\n}')+'</pre><h4>再执行命令（Bash）</h4>');
+  document.querySelector('#ch6 .lab .lab-grid p').textContent='maps 中每行包括虚拟地址范围、权限、文件偏移和映射来源。r-xp 常对应代码，rw-p 常对应可写数据；[stack] 是线程栈。短程序未必出现 [heap]，不能以此判断装载失败。';
+  labCode(9,'cl /LD calc.c /Fecalc.dll /link /DEF:calc.def\ncl main.c calc.lib /Fecalculator.exe\ncalculator.exe\ndumpbin /exports calc.dll\ndumpbin /imports calculator.exe','沿用计算器三份源码，并另存下方 calc.def；在 x64 Native Tools Command Prompt 中执行。calc.dll 与 EXE 保持在同一目录。');
+  document.querySelector('#ch9 .lab pre').insertAdjacentHTML('beforebegin','<h4>calc.def：明确导出 add</h4><pre>LIBRARY calc\nEXPORTS\n    add</pre><p>这里用模块定义文件（Module-Definition File）提供导出，不用另外改 calc.c。链接器会同时生成导入库 calc.lib。</p>');
+  labCode(10,'gcc addr.c -o addr\n./addr &\npid=$!\ncat /proc/$pid/maps\nwait "$pid"','先保存完整的 addr.c，再在 Bash 中运行。程序打印地址后等待 30 秒，我们趁它仍存在时查看对应映射。');
+  document.querySelector('#ch10 .lab pre').insertAdjacentHTML('beforebegin','<h4>addr.c</h4><pre>'+escapeHtml('#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\nint global = 7;\nint main(void) {\n    int local = 1;\n    int *heap = malloc(sizeof *heap);\n    if (!heap) return 1;\n    *heap = 42;\n    printf("global=%p local=%p heap=%p\\n",\n        (void *)&global, (void *)&local, (void *)heap);\n    fflush(stdout);\n    sleep(30);\n    free(heap);\n    return 0;\n}')+'</pre>');
+  labCode(7,'gcc -fPIC -c calc.c -o calc.pic.o\ngcc -shared calc.pic.o -Wl,-soname,libcalc.so.1 -o libcalc.so.1\nln -sfn libcalc.so.1 libcalc.so\ngcc main.c -L. -lcalc -o calculator\nLD_LIBRARY_PATH=. ./calculator\nreadelf -d calculator | grep NEEDED','这组命令接在计算器源码准备之后执行；libcalc.so 是链接时的名字，libcalc.so.1 是运行时的兼容名字。');
+  labCode(8,'LD_LIBRARY_PATH=. ldd ./calculator\nreadelf -d ./calculator | grep -E "NEEDED|RPATH|RUNPATH"\nLD_DEBUG=libs LD_LIBRARY_PATH=. ./calculator','先完成第 7 章共享库实验。只对刚刚自己构建的 calculator 使用 ldd。');
+  document.querySelectorAll('.lab pre code').forEach(el=>{if(el.textContent.includes('&lt;_start&gt;'))el.textContent=el.textContent.replace('&lt;_start&gt;','<_start>')});
+  const extraFlows={
+    '3.4':[['文件头','ELF Header','告诉工具其他表放在哪里。'],['节头表','Section Headers','链接器据此处理代码、数据和符号。'],['程序头表','Program Headers','装载器据此映射区域并设置权限。']],
+    '4.2':[['发现外部引用','Undefined Reference','main.o 需要 add。'],['匹配符号定义','Symbol Resolution','calc.o 提供 add。'],['计算并修补','Relocation','把正确位移写回调用位置。']],
+    '7.4':[['第一次调用','First Call','PLT 转到解析路径。'],['解析并记住','Resolve and Cache','动态链接器找到函数并填地址。'],['以后直接使用','Subsequent Calls','经已填好的槽跳到函数。']],
+    '11.5':[['fread 请求数据','Buffered I/O','先看 FILE 缓冲里有没有。'],['缓冲不够','Buffer Refill','需要时调用底层 read。'],['读回并复制','Copy to Caller','返回完整读入的元素数。']],
+    '12.2':[['用户态准备','User Mode','放好操作编号和参数。'],['受控进入内核','System Call Entry','CPU 切换权限并进入规定入口。'],['内核检查处理','Kernel Handler','验证参数并执行请求。'],['返回用户态','Return','恢复现场并交回结果。']]
+  };
+  Object.entries(extraFlows).forEach(([key,steps])=>{document.getElementById('sec-'+key.replace('.','-')).querySelector('h3').insertAdjacentHTML('afterend',flow(steps))});
+  const footer=document.querySelector('.footer');footer.innerHTML='<p>更新：2026-11-02。章节结构参照《程序员的自我修养——链接、装载与库》，解释与教学示例为重新整理。命令与示例中的地址不保证在不同系统上逐字相同。</p><p>继续查阅：<a href="https://gcc.gnu.org/onlinedocs/gcc/Overall-Options.html">GCC 官方：构建阶段及 -E、-S、-c</a> · <a href="https://learn.microsoft.com/en-us/cpp/build/reference/exports?view=msvc-170">Microsoft 官方：DLL 导出与 DEF 文件</a></p><p><a href="#top">回到顶部 ↑</a></p>';
+}
+render();buildToc();
+enhanceReading();
+const search=document.querySelector('#search');search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();document.querySelectorAll('.chapter').forEach(el=>el.classList.toggle('filtered-out',q&&!el.textContent.toLowerCase().includes(q)))})
+const saved=localStorage.getItem('notes-theme');if(saved)document.documentElement.dataset.theme=saved;document.querySelector('#theme').onclick=()=>{const dark=document.documentElement.dataset.theme==='dark';document.documentElement.dataset.theme=dark?'light':'dark';localStorage.setItem('notes-theme',dark?'light':'dark')};document.querySelector('#menu').onclick=()=>document.querySelector('#sidebar').classList.toggle('open');
+const links=[...document.querySelectorAll('.toc a')];const observed=[...document.querySelectorAll('.chapter,.hero')];const io=new IntersectionObserver(es=>{const hit=es.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!hit)return;links.forEach(a=>a.classList.toggle('active',a.hash==='#'+hit.target.id))},{rootMargin:'-15% 0px -70%',threshold:[0,.1]});observed.forEach(x=>io.observe(x));
+addEventListener('scroll',()=>{const d=document.documentElement;const max=d.scrollHeight-d.clientHeight;document.querySelector('#progress').style.width=(max?d.scrollTop/max*100:0)+'%'},{passive:true});
+</script>
+</body>
+</html>

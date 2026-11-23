@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="理解坐标系、相机标定、深度与位姿，让三维结果有明确含义，也有验证依据。"><link rel="icon" href="data:,">
+<title>视觉三维定位技术学习笔记</title><style>
+    :root{--bg:#f6f2e9;--paper:#fffdf7;--ink:#25251f;--muted:#6b6a61;--line:#ddd6c7;--accent:#b44b2a;--accent2:#1f6a61;--code:#202722;--codeInk:#e9f1e8;--shadow:0 14px 40px #40372714;--sans:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--serif:"Noto Serif SC","Songti SC",SimSun,serif}
+    [data-theme="dark"]{--bg:#161a18;--paper:#202521;--ink:#eef0e9;--muted:#aeb5ab;--line:#394139;--accent:#f08a63;--accent2:#79c7b6;--code:#101411;--codeInk:#dce9dc;--shadow:none}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.82 var(--serif)}button,input{font:inherit}button{cursor:pointer}.progress{position:fixed;z-index:30;left:0;top:0;width:0;height:4px;background:linear-gradient(90deg,var(--accent),#e3a93f);transition:width .15s}
+    .layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:30px 22px;background:var(--paper);border-right:1px solid var(--line);overflow:auto}.brand{font:800 21px/1.3 var(--sans);color:var(--accent);margin-bottom:6px}.subtitle{font:13px/1.5 var(--sans);color:var(--muted);margin-bottom:20px}.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:18px}.tools input{min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}.iconbtn{border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:7px 10px}.toc a{display:block;padding:6px 9px;margin:1px 0;border-left:3px solid transparent;color:var(--muted);text-decoration:none;font:14px/1.35 var(--sans);border-radius:0 6px 6px 0}.toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+    main{width:min(900px,calc(100% - 48px));margin:0 auto;padding:74px 0 120px}.hero{padding-bottom:60px;border-bottom:1px solid var(--line)}.eyebrow{font:700 13px var(--sans);letter-spacing:.16em;color:var(--accent);text-transform:uppercase}h1{max-width:780px;font:900 clamp(38px,6vw,72px)/1.05 var(--sans);letter-spacing:-.04em;margin:15px 0 22px}.lead{font-size:21px;color:var(--muted);max-width:720px}.notice{border-left:4px solid var(--accent2);padding:14px 18px;background:color-mix(in srgb,var(--accent2) 8%,var(--paper));border-radius:0 10px 10px 0;margin:30px 0}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:32px 0}.route div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:15px;font:14px/1.5 var(--sans);box-shadow:var(--shadow)}.route b{display:block;color:var(--accent);margin-bottom:4px}.chapter{padding:70px 0 20px;border-bottom:1px solid var(--line)}.chapter-head{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:start}.num{font:900 50px/1 var(--sans);color:color-mix(in srgb,var(--accent) 35%,var(--line))}h2{font:850 35px/1.25 var(--sans);margin:0 0 10px}h3{font:800 23px/1.35 var(--sans);margin:48px 0 12px}h4{font:800 18px/1.4 var(--sans);margin:30px 0 8px}.question{font:15px var(--sans);color:var(--accent2);margin:0}.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:28px 0}.term{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 15px}.term b{font-family:var(--sans);color:var(--accent)}.term span{display:block;color:var(--muted);font-size:15px;line-height:1.65}.section{position:relative}.takeaway{padding:12px 15px;margin:14px 0;border-radius:8px;background:color-mix(in srgb,var(--accent) 8%,var(--paper));font-size:15px}.takeaway b{font-family:var(--sans);color:var(--accent)}code{font-family:Consolas,monospace;background:color-mix(in srgb,var(--accent2) 10%,var(--paper));padding:.12em .35em;border-radius:4px}pre{overflow:auto;background:var(--code);color:var(--codeInk);padding:18px;border-radius:10px;font:14px/1.65 Consolas,monospace}.diagram{white-space:pre;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;font:14px/1.6 Consolas,monospace;color:var(--accent2)}table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px}th,td{padding:10px 12px;border:1px solid var(--line);text-align:left}th{background:color-mix(in srgb,var(--accent2) 9%,var(--paper));font-family:var(--sans)}details.quiz{margin:24px 0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 17px}details summary{font:700 16px var(--sans);color:var(--accent2)}.chapter-summary{margin:36px 0 12px;padding:20px;border-top:2px solid var(--accent);border-bottom:1px solid var(--line)}.chapter-summary b{font-family:var(--sans)}.filtered-out{display:none}.footer{padding-top:70px;color:var(--muted);font:14px/1.7 var(--sans)}.mobile-menu{display:none}
+    .term-en{display:inline!important;margin-left:.45em;color:var(--accent2)!important;font:600 12px/1.4 var(--sans)!important;letter-spacing:.04em}.story,.lab{margin:30px 0;padding:20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.story{border-top:4px solid var(--accent2)}.lab{border-top:4px solid var(--accent)}.lab h3,.story h3{margin-top:0}.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.lab-grid>*{min-width:0}.lab-grid h4{margin-top:8px}.story pre,.lab pre{max-width:100%}.explain{padding:12px 15px;border-left:3px solid var(--accent2);background:color-mix(in srgb,var(--accent2) 7%,transparent);font-size:15px}.platform{display:inline-block;padding:3px 8px;border-radius:20px;background:color-mix(in srgb,var(--accent) 12%,transparent);font:700 12px var(--sans);color:var(--accent)}.deep{display:none;margin:18px 0 26px;border-left:3px solid var(--accent2);padding:4px 0 4px 18px}.detail-mode .deep{display:block}.deep h4{margin:16px 0 5px}.deep p{margin:5px 0 12px}.deep .pitfall{padding:10px 13px;background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:8px}.detail-badge{display:none}.detail-mode .detail-badge{display:inline-block;margin-left:8px;padding:4px 9px;border-radius:20px;background:var(--accent2);color:var(--paper);font:700 12px var(--sans)}
+    @media(max-width:850px){.layout{display:block}.sidebar{position:sticky;z-index:20;top:0;width:100%;height:auto;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand,.subtitle{display:none}.tools{margin:0}.mobile-menu{display:inline}.toc{display:none;max-height:55vh;overflow:auto;margin-top:10px}.sidebar.open .toc{display:block}main{width:min(100% - 30px,720px);padding-top:42px}.route,.lab-grid{grid-template-columns:1fr 1fr}.chapter-head{grid-template-columns:52px 1fr}.num{font-size:36px}h2{font-size:29px}.terms{grid-template-columns:1fr}}@media(max-width:560px){.route,.lab-grid{grid-template-columns:1fr}}
+    @media print{.sidebar,.progress,.quiz{display:none!important}.layout{display:block}main{width:100%;padding:0}.chapter{break-before:page}.hero{min-height:95vh}body{background:#fff;color:#111;font-size:12pt}.term,.route div{box-shadow:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress{transition:none}}
+
+main{width:min(920px,calc(100% - 64px))}h1{font-size:clamp(36px,4.4vw,60px);line-height:1.18;letter-spacing:-.025em}.hero{padding-bottom:36px}.chapter{padding-top:48px}.chapter h3{margin-top:30px}.chapter h2{font-size:30px}.chapter-head{grid-template-columns:58px 1fr}.num{font-size:38px}.chapter p{margin:16px 0}.route{grid-template-columns:repeat(3,1fr)}a{color:var(--accent2);text-underline-offset:3px}pre code{background:transparent;padding:0;color:inherit}li{margin:7px 0}.meta{color:var(--muted);font:14px/1.7 var(--sans)}.table-wrap{overflow:auto}table{min-width:480px}th{white-space:nowrap}.source{font:14px/1.7 var(--sans);color:var(--muted)}.no-results{padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:8px}.tools{grid-template-columns:minmax(0,1fr) auto}.tools input{width:100%}.status{font:12px/1.6 var(--sans);color:var(--muted);margin:8px 0 14px}.simple .hero h1{font-size:clamp(34px,4vw,52px)}.simple main{max-width:860px}.simple .chapter{padding-top:34px}.simple h2{font-size:27px}.simple .num{font-size:30px}.note-links{font:14px/1.8 var(--sans)}.note-links a{display:block;margin:6px 0}summary{cursor:pointer}.lab h3{margin-top:0}.tools .mobile-menu{grid-column:1/-1}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}p,li,td{overflow-wrap:anywhere}.diagram{line-height:1.8}.toc a{line-height:1.6}.back{font:13px var(--sans)}
+@media(max-width:850px){main{width:calc(100% - 32px)}html{scroll-padding-top:110px}.sidebar{padding:10px 16px}.status{margin:3px 0 0}.tools{grid-template-columns:minmax(0,1fr) auto auto}.tools .mobile-menu{grid-column:auto}.route{grid-template-columns:1fr}.chapter-head{grid-template-columns:38px minmax(0,1fr)}.chapter h2{font-size:26px}.num{font-size:29px}pre,.diagram{font-size:12px}.sidebar.open .toc{max-height:48vh}}
+@media print{html{scroll-behavior:auto}body,[data-theme="dark"] body{background:white;color:black}main,.simple main{width:100%;max-width:none;padding:0}.hero{min-height:0;padding-bottom:16px}.chapter{break-before:auto;padding:20px 0 0}.chapter h2{font-size:19pt}.chapter h3{font-size:14pt}.chapter-head,pre,table,.takeaway,.notice{break-inside:avoid}pre{white-space:pre-wrap;background:#f2f2f2;color:#111;border:1px solid #aaa}a{color:#111}.filtered-out{display:block!important}.quiz{display:block!important}.quiz>*{display:block!important}.quiz summary{display:block!important}.no-results,.back,.note-links{display:none!important}.footer{padding-top:25px}.table-wrap{overflow:visible}table{min-width:0}.notice,.takeaway,.term{background:#f6f6f6;color:#111}.num{color:#666}.lead,.meta,.source,.question{color:#444}}
+:root:not([data-theme="dark"]){--bg:#f4f0fb;--paper:#fcfaff;--line:#ded6ed;--title-size:clamp(27px,2.6vw,38px)}.hero h1,.simple .hero h1{font-size:var(--title-size,clamp(27px,2.6vw,38px));line-height:1.35;letter-spacing:-.015em;max-width:none;margin:14px 0 20px}@media print{:root,[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#111;--muted:#444;--line:#aaa;--accent:#333;--accent2:#333;--code:#f3f3f3;--codeInk:#111}.hero h1,.simple .hero h1{font-size:24pt}}</style></head>
+<body class="simple">
+<div class="progress" id="progress" aria-hidden="true"></div><div class="layout">
+<aside class="sidebar" id="sidebar"><div class="brand">从像素走向空间</div><div class="subtitle">岗位知识进阶 · 03</div>
+<div class="tools"><input type="search" id="search" aria-label="搜索笔记正文" placeholder="搜索正文关键词…"><button class="iconbtn" id="theme" aria-label="切换深浅色" aria-pressed="false">◐</button><button class="iconbtn mobile-menu" id="menu" aria-controls="toc" aria-expanded="false">目录</button></div>
+<div id="search-status" class="status" role="status" aria-live="polite"></div><nav class="toc" id="toc" aria-label="笔记目录"><a href="#top">阅读起点</a><a href="#section-1">01 · 三维定位究竟输出什么</a><a href="#section-2">02 · 坐标系与变换方向</a><a href="#section-3">03 · 相机模型与标定</a><a href="#section-4">04 · 双目视差与深度</a><a href="#section-5">05 · PnP 与已知目标位姿</a><a href="#section-6">06 · 深度图、点云与目标位置</a><a href="#section-7">07 · 精度验证与误差排查</a><a href="#section-8">08 · 学习小结与最小练习</a><a href="#references">参考资料</a></nav></aside>
+<main><header class="hero" id="top"><div class="eyebrow">2026 · LEARNING NOTES</div><p class="meta">岗位知识进阶 · 03 · 整理日期 2026-11-23</p><h1>视觉三维定位技术学习笔记</h1><p class="lead">理解坐标系、相机标定、深度与位姿，让三维结果有明确含义，也有验证依据。</p>
+<div class="notice"><p>以视觉定位为主线整理基础知识。公式使用的坐标方向、单位与几何条件均在正文说明，计算例子用于理解方法。</p></div><div class="route"><div><b>建立坐标</b>像素、相机与世界</div><div><b>恢复空间</b>标定、双目、PnP</div><div><b>验证结果</b>有效性、误差与时间</div></div><p class="meta">左侧目录可跳转；搜索按节筛选正文，清空或按 Esc 恢复；深浅色可切换。打印会展开自测答案并保留全文。</p></header>
+<p class="no-results" id="no-results" hidden>没有找到匹配章节。请更换关键词，或清空搜索查看全文。</p>
+<section class="chapter" id="section-1">
+<div class="chapter-head"><div class="num">01</div><div><h2>三维定位究竟输出什么</h2><p class="question">图像里找到目标，是否就得到了它的空间位置？</p></div></div>
+
+<p>二维检测通常给出图像上的像素位置；三维定位需要给出指定参考坐标系下的位置，有些任务还要求姿态。位置常用 X、Y、Z 表示，完整刚体位姿还包括旋转。任何一组三维坐标都必须同时说明参考系、单位、时间和有效性。</p>
+<p>单幅普通图像中的一个像素，通常只确定一条从相机出发的空间射线，无法直接确定射线上的距离。要恢复深度，需要双目、深度相机、多视图、已知几何或其他约束。若目标在已知平面上，可以结合标定和该平面约束换算，但不能把这一方法直接推广到任意高度的目标。</p>
+<div class="table-wrap"><table><thead><tr><th>技术路径</th><th>主要依据</th><th>适用边界</th></tr></thead><tbody><tr><td>双目视觉</td><td>两台相机的视差与基线</td><td>需要匹配、标定和校正；弱纹理、遮挡等会带来困难</td></tr><tr><td>深度相机</td><td>设备提供深度或距离观测</td><td>核对深度定义、量程、无效值和 RGB 对齐</td></tr><tr><td>已知目标 PnP</td><td>已知三维点与二维对应点</td><td>输出目标/世界到相机的位姿，需要可靠对应</td></tr><tr><td>平面映射</td><td>目标位于已知平面</td><td>离开该平面会产生系统误差</td></tr></tbody></table></div>
+<p>本篇采用视觉三维定位方向，先建立坐标、标定和误差的概念，再理解双目与位姿估计；不把学习计算例子当作已完成的现场定位精度。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html">OpenCV 官方｜相机标定与三维重建</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-2">
+<div class="chapter-head"><div class="num">02</div><div><h2>坐标系与变换方向</h2><p class="question">为什么同一个点在不同系统里有完全不同的坐标？</p></div></div>
+
+<p>常见坐标系包括像素坐标系、相机坐标系、世界坐标系和设备或机器人坐标系。像素坐标通常以图像左上角附近为原点；OpenCV 常用相机约定为 X 向右、Y 向下、Z 向前。世界和设备坐标系则由项目定义，必须用图示明确轴方向和左右手约定。</p>
+<div class="diagram">像素点 (u, v) + 深度 → 相机点 P_c
+                               ↓ 相机到世界的变换
+                          世界点 P_w
+                               ↓ 世界到设备的变换
+                          设备点 P_d</div>
+<p>本文用 <code>T_cw</code> 表示“把世界坐标变到相机坐标”的矩阵，列向量约定为 <code>P_c = R_cw P_w + t_cw</code>。逆变换是 <code>P_w = R_cwᵀ(P_c - t_cw)</code>，其中 R 是有效旋转矩阵。不能只把平移取负就认为整个变换已经求逆。</p>
+<p>齐次变换把旋转和平移装进 4×4 矩阵，便于组合。若 <code>P_c = T_cw P_w</code>、<code>P_w = T_wd P_d</code>，则 <code>P_c = T_cw T_wd P_d</code>。矩阵一般不可交换，乘法顺序应从等式推导，而不是凭名称猜测。</p>
+<p>接口中应明确坐标是 mm 还是 m、角度是度还是弧度；欧拉角还要说明旋转顺序。将旋转向量直接当欧拉角显示，是容易出现的错误。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html">OpenCV 官方｜solvePnP 与变换方向</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-3">
+<div class="chapter-head"><div class="num">03</div><div><h2>相机模型与标定</h2><p class="question">相机内参、畸变和外参分别解决什么问题？</p></div></div>
+
+<p>针孔模型把相机坐标投影到像素：<code>u = fx·X/Z + cx</code>、<code>v = fy·Y/Z + cy</code>，这里先忽略畸变。fx、fy 是以像素为单位的焦距参数，cx、cy 为主点。内参描述相机内部成像关系，畸变参数修正镜头引入的偏差，外参描述坐标系之间的位置与朝向。</p>
+<p>标定不是拍一张标定板再读取参数。应让图案覆盖不同位置、角度和距离，保持足够清晰；使用真实格点尺寸，把结果与实际工作分辨率、裁剪和镜头焦距关联。参数若来自一种成像配置，不能直接用于另一种随意缩放或裁剪后的图像。</p>
+<ul><li><b>标定前：</b>确认板型、格点数量与尺寸，区分内角点数量和方格数量。</li><li><b>标定中：</b>保存原图、角点检测结果与异常视图，不只保存最终参数。</li><li><b>标定后：</b>查看重投影误差与分布，用独立位置和距离的已知目标做验证。</li><li><b>配置变化：</b>镜头调整、分辨率改变或相机结构移动后，评估是否需要重标定。</li></ul>
+<p>较小的重投影误差说明投影拟合较好，但不自动等于空间定位绝对精度高。标定板尺寸误差、样本姿态不足和机械结构变化，都可能让结果在现场偏离。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">OpenCV 官方｜相机标定教程</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-4">
+<div class="chapter-head"><div class="num">04</div><div><h2>双目视差与深度</h2><p class="question">左右两张图，怎样换算为距离？</p></div></div>
+
+<p>对经过正确校正、满足标准平行双目几何的图像，同一空间点的水平坐标差形成视差 d。在相应模型中 <code>Z = f·B/d</code>，f 为像素焦距，B 为基线长度，Z 与 B 使用相同长度单位。未校正、存在不同主点等情形，不能直接套用这个简化式。</p>
+<p class="meta">Python</p><pre><code># 教学例子：假设已经完成双目标定与校正。
+def stereo_point(u, v, disparity, fx, fy, cx, cy, baseline_mm):
+    if disparity &lt;= 0 or min(fx, fy, baseline_mm) &lt;= 0:
+        raise ValueError(&#x27;无效视差或标定参数&#x27;)
+    z = fx * baseline_mm / disparity
+    x = (u - cx) * z / fx
+    y = (v - cy) * z / fy
+    return x, y, z
+
+point = stereo_point(720, 400, 48, 800, 800, 640, 360, 120)
+print(point)  # (200.0, 100.0, 2000.0)，单位 mm
+# 使用校正后图像与对应内参；真实视差输出还可能带定点缩放。</code></pre>
+<p>这个例子里的深度为 2 m。若视差误差约为 1 px，一阶近似下深度误差约为 <code>f·B·Δd/d²</code>，约 41.7 mm；距离越远、视差越小，相同视差误差造成的深度误差往往越大。数值只说明几何敏感性，不是某台相机的实测指标。</p>
+<p>视差无效、遮挡、反光或匹配失败时，不应输出一个看似精确的坐标。应保留有效标识、质量信息和失败原因。某些 OpenCV 算法输出的视差带缩放因子，使用前须按对应 API 说明转换，不能把原始整数直接代入公式。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/dd/d53/tutorial_py_depthmap.html">OpenCV 官方｜双目深度</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-5">
+<div class="chapter-head"><div class="num">05</div><div><h2>PnP 与已知目标位姿</h2><p class="question">已经知道目标尺寸，如何估计它相对于相机的位置？</p></div></div>
+
+<p>PnP 使用已知物体/世界三维点和图像中对应的二维点，结合内参和畸变，求解两者之间的位姿。它依赖已知三维几何，与单纯从一个框中心估计任意目标距离不同。点的对应顺序错误，即使函数返回成功，也可能得到没有业务意义的位姿。</p>
+<ol><li>建立目标点坐标并声明单位，例如以标记板某个角点为原点、用 mm 表示。</li><li>按相同顺序组织图像点，检查角点质量、遮挡和重复点。</li><li>按点数和几何条件选择算法，需要时使用 RANSAC 抑制离群对应。</li><li>将求得位姿重新投影到图像，检查误差、可见性和物理合理性。</li></ol>
+<p>OpenCV solvePnP 通常返回满足 <code>P_c = R P_object + t</code> 的旋转和平移。t 是物体原点在相机坐标系中的位置，不是相机在物体坐标系中的位置。若要得到后者，需要求逆。返回的 rvec 是旋转向量，需要按对应表示转换后才能使用。</p>
+<p>所需点数、是否要求共面或特定点序，与算法标志有关。平面目标可能存在多解或姿态歧义，应结合重投影、正深度、连续帧或现场几何选择合理结果，不能只取第一个数值结果。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html">OpenCV 官方｜solvePnP 与变换方向</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-6">
+<div class="chapter-head"><div class="num">06</div><div><h2>深度图、点云与目标位置</h2><p class="question">有一张深度图后，是否可以直接取框中心作为三维坐标？</p></div></div>
+
+<p>检测框中心可能落在孔洞、边缘、遮挡或背景上。更稳妥的思路是在目标区域内筛选有效深度，剔除边缘和明显离群值，再根据任务选择中位数、表面中心、关键点或几何拟合结果。输出点代表“可见表面”还是“物体几何中心”，必须先定义。</p>
+<p>若深度值表示沿相机 Z 轴的距离，可用针孔反投影公式求 X、Y；若设备输出的是沿视线的距离，则要按厂商定义先做换算。深度图可能与彩色图处于不同分辨率、视角和时间，RGB 上的像素不能未经配准直接去深度图取值。</p>
+<ul><li><b>对齐：</b>确认使用的是深度相机内参还是对齐后彩色图内参。</li><li><b>有效性：</b>排除零值、越界值、空洞与低质量深度。</li><li><b>区域统计：</b>结合分割或几何约束，减少背景混入。</li><li><b>点云处理：</b>按工作范围裁剪，按需要做降采样、离群点过滤和模型拟合。</li></ul>
+<p>滤波可以降低波动，也可能引入延迟、侵蚀边界或让相邻表面混合。面对运动目标，还应确认图像、深度和设备姿态的时间对应，不能只检查静态画面。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html">OpenCV 官方｜相机标定与三维重建</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-7">
+<div class="chapter-head"><div class="num">07</div><div><h2>精度验证与误差排查</h2><p class="question">坐标很稳定，是否就说明坐标很准确？</p></div></div>
+
+<p>重复性表示同一条件下结果是否聚集，准确性关注结果与参考真值的接近程度。一个系统可以每次都稳定地偏差 20 mm，因此不能只用坐标波动小来证明绝对定位准确。</p>
+<div class="table-wrap"><table><thead><tr><th>误差来源</th><th>典型表现</th><th>排查方向</th></tr></thead><tbody><tr><td>内参与畸变</td><td>中心位置较好、边缘偏差增大</td><td>工作分辨率、镜头配置、标定覆盖</td></tr><tr><td>外参或单位</td><td>整片坐标偏移、旋转或比例错误</td><td>变换方向、坐标轴、mm/m 与角度表示</td></tr><tr><td>匹配与深度</td><td>远处波动大、反光处空洞</td><td>纹理、光照、有效性与视差质量</td></tr><tr><td>时间不同步</td><td>静态正常、运动中偏差大</td><td>相机时间戳、缓存与触发延迟</td></tr><tr><td>结构变化</td><td>运行一段时间后系统偏移</td><td>安装松动、振动、温漂和重标定条件</td></tr></tbody></table></div>
+<p>验证应覆盖不同距离、视野位置、目标姿态与运动条件，记录参考测量方法、重复次数、平均偏差、波动、最大误差和失败率。各轴误差与空间距离误差分开报告，也要说明统计是否只包含有效结果，避免排除大量失败帧后得到漂亮数字。</p>
+<p>现场验收最好从原始图像、深度/视差、标定参数、位姿结果一直保存到最终业务坐标，保证每层可追溯。多次变换后得到错误坐标时，从已知参考点开始逐级检查，比直接调整最后一个平移量更可靠。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">OpenCV 官方｜相机标定教程</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-8">
+<div class="chapter-head"><div class="num">08</div><div><h2>学习小结与最小练习</h2><p class="question">怎样把公式变成可验证的理解？</p></div></div>
+
+<p>我的核心收获是：三维定位的重点不仅是求一个 Z，而是把成像、标定、坐标变换和质量评估贯通。一个可用于业务的坐标，需要知道它在什么坐标系、对应什么时刻、代表目标什么位置，以及何时应判为无效。</p>
+<ol><li>先用本篇的双目算例验证单位，改变视差观察深度如何变化。</li><li>画出相机、世界和设备的轴方向，并给每个变换写出完整等式。</li><li>用已知空间点做正向变换，再做逆变换，检查是否回到原坐标。</li><li>实际接入相机后，使用独立参考点检查不同距离与视野位置的误差。</li></ol>
+<p>若后续任务是机械臂抓取，还需要进一步学习手眼标定、工具坐标和抓取点定义；若是移动目标跟踪，则需要补充同步、关联与运动预测。本篇先建立视觉三维定位的基础，不把这些延伸能力合并成未经验证的项目成果。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="references"><h2>参考资料</h2><p class="source">以下为核对版本和技术定义的官方资料；正文解释、业务分析和练习为重新整理。外部链接需联网，笔记正文可离线阅读。</p><ul><li><a href="https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html">OpenCV 官方｜相机标定与三维重建</a></li><li><a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">OpenCV 官方｜相机标定教程</a></li><li><a href="https://docs.opencv.org/4.x/dd/d53/tutorial_py_depthmap.html">OpenCV 官方｜双目深度</a></li><li><a href="https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html">OpenCV 官方｜solvePnP 与变换方向</a></li></ul></section><footer class="footer"><p>整理：2026-11-23 · 学习资料归档。教学示例与示例数字仅说明方法，实际项目参数与结论以原始记录和目标环境验证为准。</p><div class="note-links"><b>同组学习资料</b><a href="%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B.html">已有读书笔记｜《链接、装载与库》</a><a href="%E3%80%8AJavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%EF%BC%88%E7%AC%AC5%E7%89%88%EF%BC%89%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html">《JavaScript高级程序设计（第5版）》读书笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B601%E2%80%94%E7%91%9E%E8%8A%AF%E5%BE%AE%E7%9B%92%E5%AD%90%E4%B8%8E%E7%AE%97%E5%8A%9B%E6%A3%92%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0.html">瑞芯微盒子与算力棒使用笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B602%E2%80%94%E8%A1%A8%E9%9D%A2%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html">表面检测技术学习笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B604%E2%80%94AI%E8%BE%85%E5%8A%A9%E6%96%87%E6%A1%A3%E5%B7%A5%E4%BD%9C%E5%AE%9E%E8%B7%B5%E7%AC%94%E8%AE%B0.html">AI 辅助文档工作实践笔记</a></div><p><a href="#top">回到顶部 ↑</a></p></footer></main></div>
+<script>
+(() => {
+  const chapters = [...document.querySelectorAll('.chapter')];
+  const search = document.getElementById('search');
+  const status = document.getElementById('search-status');
+  const empty = document.getElementById('no-results');
+  const links = [...document.querySelectorAll('.toc a')];
+  function updateSearch() {
+    const query = search.value.trim().toLocaleLowerCase();
+    let count = 0;
+    chapters.forEach(section => {
+      const match = !query || section.textContent.toLocaleLowerCase().includes(query);
+      section.classList.toggle('filtered-out', !match);
+      const link = links.find(item => item.hash === '#' + section.id);
+      if (link) link.hidden = !match;
+      if (match) count++;
+    });
+    status.textContent = query ? `匹配 ${count} / ${chapters.length} 节` : `共 ${chapters.length} 节 · 支持全文筛选`;
+    empty.hidden = count !== 0;
+    updateProgress();
+  }
+  search.addEventListener('input', updateSearch);
+  search.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { search.value = ''; updateSearch(); }
+  });
+  const theme = document.getElementById('theme');
+  function setTheme(value) {
+    document.documentElement.dataset.theme = value;
+    theme.setAttribute('aria-pressed', String(value === 'dark'));
+    theme.title = value === 'dark' ? '切换为浅色' : '切换为深色';
+  }
+  try { setTheme(localStorage.getItem('learning-notes-theme') === 'dark' ? 'dark' : 'light'); }
+  catch { setTheme('light'); }
+  theme.addEventListener('click', () => {
+    const value = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    setTheme(value);
+    try { localStorage.setItem('learning-notes-theme', value); } catch {}
+  });
+  const sidebar = document.getElementById('sidebar');
+  const menu = document.getElementById('menu');
+  menu.addEventListener('click', () => {
+    const open = sidebar.classList.toggle('open');
+    menu.setAttribute('aria-expanded', String(open));
+  });
+  links.forEach(link => link.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    menu.setAttribute('aria-expanded', 'false');
+  }));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting);
+      if (!visible.length) return;
+      const id = visible[visible.length - 1].target.id;
+      links.forEach(link => {
+        const active = link.hash === '#' + id;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-12% 0px -66% 0px' });
+    chapters.forEach(section => observer.observe(section));
+  }
+  function updateProgress() {
+    const root = document.documentElement;
+    const maximum = root.scrollHeight - root.clientHeight;
+    document.getElementById('progress').style.width = (maximum > 0 ? root.scrollTop / maximum * 100 : 0) + '%';
+  }
+  addEventListener('scroll', updateProgress, { passive: true });
+  addEventListener('resize', updateProgress);
+  let printState = [];
+  addEventListener('beforeprint', () => {
+    printState = [...document.querySelectorAll('details')].map(element => [element, element.open]);
+    printState.forEach(([element]) => { element.open = true; });
+  });
+  addEventListener('afterprint', () => {
+    printState.forEach(([element, wasOpen]) => { element.open = wasOpen; });
+    printState = [];
+  });
+  updateSearch();
+})();
+</script></body></html>

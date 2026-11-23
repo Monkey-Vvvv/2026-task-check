@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="从缺陷定义、稳定成像到算法评价，建立表面检测的基础知识与排查思路。"><link rel="icon" href="data:,">
+<title>表面检测技术学习笔记</title><style>
+    :root{--bg:#f6f2e9;--paper:#fffdf7;--ink:#25251f;--muted:#6b6a61;--line:#ddd6c7;--accent:#b44b2a;--accent2:#1f6a61;--code:#202722;--codeInk:#e9f1e8;--shadow:0 14px 40px #40372714;--sans:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--serif:"Noto Serif SC","Songti SC",SimSun,serif}
+    [data-theme="dark"]{--bg:#161a18;--paper:#202521;--ink:#eef0e9;--muted:#aeb5ab;--line:#394139;--accent:#f08a63;--accent2:#79c7b6;--code:#101411;--codeInk:#dce9dc;--shadow:none}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.82 var(--serif)}button,input{font:inherit}button{cursor:pointer}.progress{position:fixed;z-index:30;left:0;top:0;width:0;height:4px;background:linear-gradient(90deg,var(--accent),#e3a93f);transition:width .15s}
+    .layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:30px 22px;background:var(--paper);border-right:1px solid var(--line);overflow:auto}.brand{font:800 21px/1.3 var(--sans);color:var(--accent);margin-bottom:6px}.subtitle{font:13px/1.5 var(--sans);color:var(--muted);margin-bottom:20px}.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:18px}.tools input{min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}.iconbtn{border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:7px 10px}.toc a{display:block;padding:6px 9px;margin:1px 0;border-left:3px solid transparent;color:var(--muted);text-decoration:none;font:14px/1.35 var(--sans);border-radius:0 6px 6px 0}.toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+    main{width:min(900px,calc(100% - 48px));margin:0 auto;padding:74px 0 120px}.hero{padding-bottom:60px;border-bottom:1px solid var(--line)}.eyebrow{font:700 13px var(--sans);letter-spacing:.16em;color:var(--accent);text-transform:uppercase}h1{max-width:780px;font:900 clamp(38px,6vw,72px)/1.05 var(--sans);letter-spacing:-.04em;margin:15px 0 22px}.lead{font-size:21px;color:var(--muted);max-width:720px}.notice{border-left:4px solid var(--accent2);padding:14px 18px;background:color-mix(in srgb,var(--accent2) 8%,var(--paper));border-radius:0 10px 10px 0;margin:30px 0}.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:32px 0}.route div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:15px;font:14px/1.5 var(--sans);box-shadow:var(--shadow)}.route b{display:block;color:var(--accent);margin-bottom:4px}.chapter{padding:70px 0 20px;border-bottom:1px solid var(--line)}.chapter-head{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:start}.num{font:900 50px/1 var(--sans);color:color-mix(in srgb,var(--accent) 35%,var(--line))}h2{font:850 35px/1.25 var(--sans);margin:0 0 10px}h3{font:800 23px/1.35 var(--sans);margin:48px 0 12px}h4{font:800 18px/1.4 var(--sans);margin:30px 0 8px}.question{font:15px var(--sans);color:var(--accent2);margin:0}.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:28px 0}.term{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 15px}.term b{font-family:var(--sans);color:var(--accent)}.term span{display:block;color:var(--muted);font-size:15px;line-height:1.65}.section{position:relative}.takeaway{padding:12px 15px;margin:14px 0;border-radius:8px;background:color-mix(in srgb,var(--accent) 8%,var(--paper));font-size:15px}.takeaway b{font-family:var(--sans);color:var(--accent)}code{font-family:Consolas,monospace;background:color-mix(in srgb,var(--accent2) 10%,var(--paper));padding:.12em .35em;border-radius:4px}pre{overflow:auto;background:var(--code);color:var(--codeInk);padding:18px;border-radius:10px;font:14px/1.65 Consolas,monospace}.diagram{white-space:pre;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;font:14px/1.6 Consolas,monospace;color:var(--accent2)}table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px}th,td{padding:10px 12px;border:1px solid var(--line);text-align:left}th{background:color-mix(in srgb,var(--accent2) 9%,var(--paper));font-family:var(--sans)}details.quiz{margin:24px 0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 17px}details summary{font:700 16px var(--sans);color:var(--accent2)}.chapter-summary{margin:36px 0 12px;padding:20px;border-top:2px solid var(--accent);border-bottom:1px solid var(--line)}.chapter-summary b{font-family:var(--sans)}.filtered-out{display:none}.footer{padding-top:70px;color:var(--muted);font:14px/1.7 var(--sans)}.mobile-menu{display:none}
+    .term-en{display:inline!important;margin-left:.45em;color:var(--accent2)!important;font:600 12px/1.4 var(--sans)!important;letter-spacing:.04em}.story,.lab{margin:30px 0;padding:20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.story{border-top:4px solid var(--accent2)}.lab{border-top:4px solid var(--accent)}.lab h3,.story h3{margin-top:0}.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.lab-grid>*{min-width:0}.lab-grid h4{margin-top:8px}.story pre,.lab pre{max-width:100%}.explain{padding:12px 15px;border-left:3px solid var(--accent2);background:color-mix(in srgb,var(--accent2) 7%,transparent);font-size:15px}.platform{display:inline-block;padding:3px 8px;border-radius:20px;background:color-mix(in srgb,var(--accent) 12%,transparent);font:700 12px var(--sans);color:var(--accent)}.deep{display:none;margin:18px 0 26px;border-left:3px solid var(--accent2);padding:4px 0 4px 18px}.detail-mode .deep{display:block}.deep h4{margin:16px 0 5px}.deep p{margin:5px 0 12px}.deep .pitfall{padding:10px 13px;background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:8px}.detail-badge{display:none}.detail-mode .detail-badge{display:inline-block;margin-left:8px;padding:4px 9px;border-radius:20px;background:var(--accent2);color:var(--paper);font:700 12px var(--sans)}
+    @media(max-width:850px){.layout{display:block}.sidebar{position:sticky;z-index:20;top:0;width:100%;height:auto;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand,.subtitle{display:none}.tools{margin:0}.mobile-menu{display:inline}.toc{display:none;max-height:55vh;overflow:auto;margin-top:10px}.sidebar.open .toc{display:block}main{width:min(100% - 30px,720px);padding-top:42px}.route,.lab-grid{grid-template-columns:1fr 1fr}.chapter-head{grid-template-columns:52px 1fr}.num{font-size:36px}h2{font-size:29px}.terms{grid-template-columns:1fr}}@media(max-width:560px){.route,.lab-grid{grid-template-columns:1fr}}
+    @media print{.sidebar,.progress,.quiz{display:none!important}.layout{display:block}main{width:100%;padding:0}.chapter{break-before:page}.hero{min-height:95vh}body{background:#fff;color:#111;font-size:12pt}.term,.route div{box-shadow:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress{transition:none}}
+
+main{width:min(920px,calc(100% - 64px))}h1{font-size:clamp(36px,4.4vw,60px);line-height:1.18;letter-spacing:-.025em}.hero{padding-bottom:36px}.chapter{padding-top:48px}.chapter h3{margin-top:30px}.chapter h2{font-size:30px}.chapter-head{grid-template-columns:58px 1fr}.num{font-size:38px}.chapter p{margin:16px 0}.route{grid-template-columns:repeat(3,1fr)}a{color:var(--accent2);text-underline-offset:3px}pre code{background:transparent;padding:0;color:inherit}li{margin:7px 0}.meta{color:var(--muted);font:14px/1.7 var(--sans)}.table-wrap{overflow:auto}table{min-width:480px}th{white-space:nowrap}.source{font:14px/1.7 var(--sans);color:var(--muted)}.no-results{padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:8px}.tools{grid-template-columns:minmax(0,1fr) auto}.tools input{width:100%}.status{font:12px/1.6 var(--sans);color:var(--muted);margin:8px 0 14px}.simple .hero h1{font-size:clamp(34px,4vw,52px)}.simple main{max-width:860px}.simple .chapter{padding-top:34px}.simple h2{font-size:27px}.simple .num{font-size:30px}.note-links{font:14px/1.8 var(--sans)}.note-links a{display:block;margin:6px 0}summary{cursor:pointer}.lab h3{margin-top:0}.tools .mobile-menu{grid-column:1/-1}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}p,li,td{overflow-wrap:anywhere}.diagram{line-height:1.8}.toc a{line-height:1.6}.back{font:13px var(--sans)}
+@media(max-width:850px){main{width:calc(100% - 32px)}html{scroll-padding-top:110px}.sidebar{padding:10px 16px}.status{margin:3px 0 0}.tools{grid-template-columns:minmax(0,1fr) auto auto}.tools .mobile-menu{grid-column:auto}.route{grid-template-columns:1fr}.chapter-head{grid-template-columns:38px minmax(0,1fr)}.chapter h2{font-size:26px}.num{font-size:29px}pre,.diagram{font-size:12px}.sidebar.open .toc{max-height:48vh}}
+@media print{html{scroll-behavior:auto}body,[data-theme="dark"] body{background:white;color:black}main,.simple main{width:100%;max-width:none;padding:0}.hero{min-height:0;padding-bottom:16px}.chapter{break-before:auto;padding:20px 0 0}.chapter h2{font-size:19pt}.chapter h3{font-size:14pt}.chapter-head,pre,table,.takeaway,.notice{break-inside:avoid}pre{white-space:pre-wrap;background:#f2f2f2;color:#111;border:1px solid #aaa}a{color:#111}.filtered-out{display:block!important}.quiz{display:block!important}.quiz>*{display:block!important}.quiz summary{display:block!important}.no-results,.back,.note-links{display:none!important}.footer{padding-top:25px}.table-wrap{overflow:visible}table{min-width:0}.notice,.takeaway,.term{background:#f6f6f6;color:#111}.num{color:#666}.lead,.meta,.source,.question{color:#444}}
+:root:not([data-theme="dark"]){--bg:#fff2eb;--paper:#fffaf6;--line:#ecd9cd;--title-size:clamp(27px,2.6vw,38px)}.hero h1,.simple .hero h1{font-size:var(--title-size,clamp(27px,2.6vw,38px));line-height:1.35;letter-spacing:-.015em;max-width:none;margin:14px 0 20px}@media print{:root,[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#111;--muted:#444;--line:#aaa;--accent:#333;--accent2:#333;--code:#f3f3f3;--codeInk:#111}.hero h1,.simple .hero h1{font-size:24pt}}</style></head>
+<body class="simple">
+<div class="progress" id="progress" aria-hidden="true"></div><div class="layout">
+<aside class="sidebar" id="sidebar"><div class="brand">先看清，再判断</div><div class="subtitle">岗位知识进阶 · 02</div>
+<div class="tools"><input type="search" id="search" aria-label="搜索笔记正文" placeholder="搜索正文关键词…"><button class="iconbtn" id="theme" aria-label="切换深浅色" aria-pressed="false">◐</button><button class="iconbtn mobile-menu" id="menu" aria-controls="toc" aria-expanded="false">目录</button></div>
+<div id="search-status" class="status" role="status" aria-live="polite"></div><nav class="toc" id="toc" aria-label="笔记目录"><a href="#top">阅读起点</a><a href="#section-1">01 · 先定义“什么算缺陷”</a><a href="#section-2">02 · 先把图像拍稳定</a><a href="#section-3">03 · 传统图像处理的基本链路</a><a href="#section-4">04 · 模型方法与数据准备</a><a href="#section-5">05 · 漏检、误报与评价口径</a><a href="#section-6">06 · 部署、联动与错例闭环</a><a href="#section-7">07 · 学习小结</a><a href="#references">参考资料</a></nav></aside>
+<main><header class="hero" id="top"><div class="eyebrow">2026 · LEARNING NOTES</div><p class="meta">岗位知识进阶 · 02 · 整理日期 2026-11-23</p><h1>表面检测技术学习笔记</h1><p class="lead">从缺陷定义、稳定成像到算法评价，建立表面检测的基础知识与排查思路。</p>
+<div class="notice"><p>以工业视觉表面检测为学习背景。案例与参数为教学说明，内容侧重原理、流程和判断方法。</p></div><div class="route"><div><b>定义问题</b>缺陷、尺度与成像</div><div><b>建立方法</b>规则基线与模型数据</div><div><b>形成闭环</b>评价口径与现场联动</div></div><p class="meta">左侧目录可跳转；搜索按节筛选正文，清空或按 Esc 恢复；深浅色可切换。打印会展开自测答案并保留全文。</p></header>
+<p class="no-results" id="no-results" hidden>没有找到匹配章节。请更换关键词，或清空搜索查看全文。</p>
+<section class="chapter" id="section-1">
+<div class="chapter-head"><div class="num">01</div><div><h2>先定义“什么算缺陷”</h2><p class="question">检测之前，需要先把哪些业务规则说清楚？</p></div></div>
+
+<p>表面检测的目标不是把所有与背景不同的地方都框出来，而是按质量标准识别需要处理的异常。划伤、裂纹、凹坑、污渍和氧化等外观可能相近，业务处置却不同；正常纹理、反光和接缝也可能被误判。</p>
+<p>我把问题分为四层：有没有缺陷、属于哪类、位置和范围在哪里、是否达到报警或剔除条件。分类、目标检测、分割与异常检测分别适合不同输出，不能用一个笼统的“识别准确率”概括全部能力。</p>
+<div class="table-wrap"><table><thead><tr><th>任务</th><th>输出</th><th>适合的需求</th></tr></thead><tbody><tr><td>分类</td><td>整图或区域的类别</td><td>判定样本是否异常、属于哪类</td></tr><tr><td>目标检测</td><td>框、类别、置信度</td><td>找缺陷大致位置与数量</td></tr><tr><td>分割</td><td>像素级区域</td><td>测面积、轮廓和细长裂纹范围</td></tr><tr><td>异常检测</td><td>偏离正常模式的评分或区域</td><td>缺陷样本少，需要先发现异常</td></tr></tbody></table></div>
+<p>学习时应先写一份缺陷定义表：名称、外观特征、最小可接受尺寸、易混淆情况、标注方式和处置规则。本篇是通用技术学习笔记，流程和阈值示例不代表已经完成现场精度验证。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-2">
+<div class="chapter-head"><div class="num">02</div><div><h2>先把图像拍稳定</h2><p class="question">算法调不好，是否可能是成像条件没有固定？</p></div></div>
+
+<p>工业表面常有强反光、重复纹理和局部遮挡。光照角度一变，正常区域就可能看起来像缺陷。学习算法之前，应固定相机安装、镜头、工作距离、曝光、增益和光源方案，再确认目标缺陷在图像上是否可见。</p>
+<ul><li><b>明场与暗场：</b>通过光照与观察角度改变缺陷对比；具体方案需以实际材质和缺陷验证。</li><li><b>漫射与偏振：</b>可用于改善反光，但不同表面、角度与光源组合的效果不同。</li><li><b>曝光与运动：</b>曝光太长可能造成拖影；过短又会使信号不足，应与照明和触发协同。</li><li><b>面阵与线阵：</b>按视野、连续运动和分辨率需求选择，线阵还需关注行频与运动同步。</li></ul>
+<p>如果视野宽度为 200 mm、图像宽度为 2000 px，理想平均尺度约为 0.1 mm/px；0.3 mm 缺陷只有约 3 px 宽，边缘模糊或噪声就可能明显影响识别。这个教学换算不等于测量精度承诺，实际还受镜头畸变、空间位置和标定影响。</p>
+<p>应保留正常样本、明显缺陷、临界缺陷和难样本，观察不同位置、速度和光照下是否都能形成稳定对比。看不清的细节，不应完全寄希望于后续模型“猜出来”。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-3">
+<div class="chapter-head"><div class="num">03</div><div><h2>传统图像处理的基本链路</h2><p class="question">在使用模型之前，如何建立可解释的基线？</p></div></div>
+
+<p>传统方法适合成像稳定、缺陷与背景差异明确的场景。常见流程是确定 ROI、灰度或颜色变换、去噪、背景校正、阈值分割、形态学处理、连通域筛选和几何统计。每一步都应该能解释它要消除什么干扰。</p>
+<p>全局阈值使用同一分界；Otsu 根据灰度分布选择阈值，但并不保证对所有图像有效；自适应阈值按局部邻域计算。开运算先腐蚀后膨胀，有助于去除小的亮前景；闭运算先膨胀后腐蚀，可连接局部间隙和填小孔。核大小直接影响细小缺陷是否被保留。</p>
+<p class="meta">Python / OpenCV 4.x</p><pre><code># 学习示例：生成一张带暗斑的灰度图，无需外部图片。
+# 依赖：opencv-python、numpy；阈值仅用于合成图演示。
+import cv2 as cv
+import numpy as np
+
+image = np.full((180, 320), 180, dtype=np.uint8)
+cv.rectangle(image, (80, 60), (115, 90), 40, -1)
+blurred = cv.GaussianBlur(image, (3, 3), 0)
+_, mask = cv.threshold(blurred, 0, 255,
+                       cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
+kernel = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
+mask = cv.morphologyEx(mask, cv.MORPH_OPEN, kernel)
+count, labels, stats, centers = cv.connectedComponentsWithStats(mask)
+for index in range(1, count): # 0 是背景
+    x, y, width, height, area = stats[index]
+    if area &gt;= 20:
+        print({&#x27;box&#x27;: (int(x), int(y), int(width), int(height)),
+               &#x27;area_px&#x27;: int(area)})
+# 预期：打印主要暗斑的区域；没有把输出面积解释为真实 mm²。</code></pre>
+<p>这段示例验证流程本身，不构成现场检测器。面对划伤等细长目标，简单开运算可能把有意义的前景消掉；面对复杂纹理，阈值分割也可能把正常纹理当成异常。参数必须用目标样本和业务尺度选择。</p>
+<p class="source">延伸核对：<a href="https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html">OpenCV 官方｜阈值分割</a> · <a href="https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html">OpenCV 官方｜形态学操作</a> · <a href="https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html">OpenCV 官方｜连通域与形状分析</a></p><p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-4">
+<div class="chapter-head"><div class="num">04</div><div><h2>模型方法与数据准备</h2><p class="question">什么时候需要深度学习，样本又该怎样组织？</p></div></div>
+
+<p>当缺陷变化大、背景复杂或规则难以稳定描述时，可考虑检测、分割或异常检测模型。选型应围绕输出和业务约束，而不是只按模型名称。普通框检测适合定位与计数，细裂纹和面积统计往往需要更细的轮廓表达。</p>
+<p>小缺陷在整图缩小后可能消失，可以考虑高分辨率输入或切片；同时要处理切片边界、重叠区域和跨片合并。切片会增加推理次数，也可能损失全局上下文，所以需要把漏检改善与时延开销一起评价。</p>
+<ol><li><b>统一标注：</b>明确难以判断、遮挡、边界和多缺陷重叠时的规则。</li><li><b>覆盖变化：</b>包含批次、材质、相机位置、正常纹理和困难负样本。</li><li><b>按来源划分：</b>相邻视频帧或同一工件的近似切片应避免跨训练、测试集合泄漏。</li><li><b>保存版本：</b>记录样本来源、标签版本、训练参数、模型与评估集合。</li></ol>
+<p>增强方法需要符合实际成像规律：任意改变颜色或几何关系可能制造现场不会出现的样本。模型错例应回到原图和成像条件分析，不能只靠继续加轮数训练解决。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-5">
+<div class="chapter-head"><div class="num">05</div><div><h2>漏检、误报与评价口径</h2><p class="question">为什么一个很高的准确率仍可能没有业务价值？</p></div></div>
+
+<p>缺陷通常是低频事件。如果一千件里只有十件有缺陷，系统全部判为正常，也有 99% 的件级准确率，却漏掉了全部缺陷。因此要按实际处置需求区分漏检与误报，再明确分母和统计单位。</p>
+<div class="table-wrap"><table><thead><tr><th>指标</th><th>含义</th><th>注意事项</th></tr></thead><tbody><tr><td>Precision = TP / (TP + FP)</td><td>报出缺陷的结果中有多少正确</td><td>误报多会降低；分母为零时需说明处理方式</td></tr><tr><td>Recall = TP / (TP + FN)</td><td>真实缺陷中有多少被找出</td><td>关注漏检；需定义匹配规则</td></tr><tr><td>漏检率 = FN / (TP + FN)</td><td>真实缺陷中漏掉的比例</td><td>与同一口径下 Recall 互补</td></tr><tr><td>良品误判率</td><td>良品中被判为异常的比例</td><td>属于件级指标，不等于 1 - Precision</td></tr></tbody></table></div>
+<p>TP、FP、FN 必须在指定统计层面定义：按图、按工件、按缺陷实例还是按像素。检测框需要明确匹配规则与 IoU 阈值；同一缺陷被重复报警是否合并，也会改变统计结果。不要把像素级指标直接当成工件合格判断能力。</p>
+<p>教学例子：100 个真实缺陷找到 90 个，同时错误报出 10 个，则在这一缺陷实例口径下 Precision 和 Recall 都是 90%。若另外有大量良品，该结果仍不能直接给出良品误判率。示例只说明口径，不是实际测试成绩。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-6">
+<div class="chapter-head"><div class="num">06</div><div><h2>部署、联动与错例闭环</h2><p class="question">检测结果如何真正进入业务流程？</p></div></div>
+
+<p>检测器输出只是中间结果，还需要映射回原图、合并同一工件的多帧结果、记录缺陷位置、形成报警并与现场处置衔接。报警应带时间、工件标识、图像、区域、类别、置信度和模型版本，让结果能够追溯。</p>
+<p>业务阈值不一定只看模型置信度，还可能考虑缺陷尺寸、位置、连续出现次数或等级。连续帧去重需要兼顾漏报与重复报警；涉及触发、剔除或其他执行设备时，应把传感器位置、输送速度、通信和执行延迟一起纳入联调。</p>
+<ol><li>分别保留漏检、误报、定位偏差和类别混淆样本。</li><li>检查成像是否变化，再检查标注、数据分布、预处理和模型输出。</li><li>固定回归集合，验证新模型是否改善旧问题并引入新问题。</li><li>部署记录关联模型、阈值、环境和测试结果，支持回滚。</li></ol>
+<p>如果吞吐跟不上，应明确丢帧或降采样策略是否允许，不应无界排队，让结果在很久以后才出现。端到端延迟、稳定运行和故障恢复，与识别精度同样需要验收。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="section-7">
+<div class="chapter-head"><div class="num">07</div><div><h2>学习小结</h2><p class="question">我应该如何判断下一步优化成像还是算法？</p></div></div>
+
+<p>这次整理让我认识到，表面检测是一条由质量规则、成像、数据、算法和现场联动共同构成的链路。先确认缺陷是否可见，再建立可解释的基线；有了清楚的错例和统计口径，才能判断下一步值得投入在哪里。</p>
+<ul><li><b>看不清：</b>优先检查视野、分辨率、光照、曝光和运动模糊。</li><li><b>看得清但规则不稳：</b>检查背景变化、缺陷定义、传统方法的适用条件。</li><li><b>模型表现波动：</b>检查数据覆盖、标注一致性、分布变化和预处理契约。</li><li><b>离线好、现场差：</b>检查传输、图像缩放、阈值、连续帧和实际业务口径。</li></ul>
+<p>后续练习可从固定成像条件下的一类缺陷开始，保留一组正常、异常和临界样本，记录每次规则调整的漏检与误报变化。先形成可复查的小闭环，再扩展类别和工况。</p>
+<p class="back"><a href="#top">返回顶部 ↑</a></p></section><section class="chapter" id="references"><h2>参考资料</h2><p class="source">以下为核对版本和技术定义的官方资料；正文解释、业务分析和练习为重新整理。外部链接需联网，笔记正文可离线阅读。</p><ul><li><a href="https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html">OpenCV 官方｜阈值分割</a></li><li><a href="https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html">OpenCV 官方｜形态学操作</a></li><li><a href="https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html">OpenCV 官方｜连通域与形状分析</a></li></ul></section><footer class="footer"><p>整理：2026-11-23 · 学习资料归档。教学示例与示例数字仅说明方法，实际项目参数与结论以原始记录和目标环境验证为准。</p><div class="note-links"><b>同组学习资料</b><a href="%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B.html">已有读书笔记｜《链接、装载与库》</a><a href="%E3%80%8AJavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%EF%BC%88%E7%AC%AC5%E7%89%88%EF%BC%89%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html">《JavaScript高级程序设计（第5版）》读书笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B601%E2%80%94%E7%91%9E%E8%8A%AF%E5%BE%AE%E7%9B%92%E5%AD%90%E4%B8%8E%E7%AE%97%E5%8A%9B%E6%A3%92%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0.html">瑞芯微盒子与算力棒使用笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B603%E2%80%94%E8%A7%86%E8%A7%89%E4%B8%89%E7%BB%B4%E5%AE%9A%E4%BD%8D%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html">视觉三维定位技术学习笔记</a><a href="%E5%B2%97%E4%BD%8D%E8%BF%9B%E9%98%B604%E2%80%94AI%E8%BE%85%E5%8A%A9%E6%96%87%E6%A1%A3%E5%B7%A5%E4%BD%9C%E5%AE%9E%E8%B7%B5%E7%AC%94%E8%AE%B0.html">AI 辅助文档工作实践笔记</a></div><p><a href="#top">回到顶部 ↑</a></p></footer></main></div>
+<script>
+(() => {
+  const chapters = [...document.querySelectorAll('.chapter')];
+  const search = document.getElementById('search');
+  const status = document.getElementById('search-status');
+  const empty = document.getElementById('no-results');
+  const links = [...document.querySelectorAll('.toc a')];
+  function updateSearch() {
+    const query = search.value.trim().toLocaleLowerCase();
+    let count = 0;
+    chapters.forEach(section => {
+      const match = !query || section.textContent.toLocaleLowerCase().includes(query);
+      section.classList.toggle('filtered-out', !match);
+      const link = links.find(item => item.hash === '#' + section.id);
+      if (link) link.hidden = !match;
+      if (match) count++;
+    });
+    status.textContent = query ? `匹配 ${count} / ${chapters.length} 节` : `共 ${chapters.length} 节 · 支持全文筛选`;
+    empty.hidden = count !== 0;
+    updateProgress();
+  }
+  search.addEventListener('input', updateSearch);
+  search.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { search.value = ''; updateSearch(); }
+  });
+  const theme = document.getElementById('theme');
+  function setTheme(value) {
+    document.documentElement.dataset.theme = value;
+    theme.setAttribute('aria-pressed', String(value === 'dark'));
+    theme.title = value === 'dark' ? '切换为浅色' : '切换为深色';
+  }
+  try { setTheme(localStorage.getItem('learning-notes-theme') === 'dark' ? 'dark' : 'light'); }
+  catch { setTheme('light'); }
+  theme.addEventListener('click', () => {
+    const value = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    setTheme(value);
+    try { localStorage.setItem('learning-notes-theme', value); } catch {}
+  });
+  const sidebar = document.getElementById('sidebar');
+  const menu = document.getElementById('menu');
+  menu.addEventListener('click', () => {
+    const open = sidebar.classList.toggle('open');
+    menu.setAttribute('aria-expanded', String(open));
+  });
+  links.forEach(link => link.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    menu.setAttribute('aria-expanded', 'false');
+  }));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting);
+      if (!visible.length) return;
+      const id = visible[visible.length - 1].target.id;
+      links.forEach(link => {
+        const active = link.hash === '#' + id;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-12% 0px -66% 0px' });
+    chapters.forEach(section => observer.observe(section));
+  }
+  function updateProgress() {
+    const root = document.documentElement;
+    const maximum = root.scrollHeight - root.clientHeight;
+    document.getElementById('progress').style.width = (maximum > 0 ? root.scrollTop / maximum * 100 : 0) + '%';
+  }
+  addEventListener('scroll', updateProgress, { passive: true });
+  addEventListener('resize', updateProgress);
+  let printState = [];
+  addEventListener('beforeprint', () => {
+    printState = [...document.querySelectorAll('details')].map(element => [element, element.open]);
+    printState.forEach(([element]) => { element.open = true; });
+  });
+  addEventListener('afterprint', () => {
+    printState.forEach(([element, wasOpen]) => { element.open = wasOpen; });
+    printState = [];
+  });
+  updateSearch();
+})();
+</script></body></html>
